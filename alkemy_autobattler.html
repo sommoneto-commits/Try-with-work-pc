@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alkemy Autobattler</title>
+    <title>Alkemy Project Manager</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -13,8 +13,9 @@
             min-height: 100vh;
             padding: 15px;
         }
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; }
 
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -24,43 +25,55 @@
             border-radius: 12px;
             margin-bottom: 15px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
         }
-        .round { font-size: 26px; color: #e94560; font-weight: bold; }
-        .stats { font-size: 18px; display: flex; gap: 20px; flex-wrap: wrap; }
-        .gold { color: #f1c40f; font-weight: bold; }
-        .health { color: #e74c3c; }
-        .tier { color: #9b59b6; }
-        .ai-stats { color: #ff6b6b; }
+        .project-info {
+            font-size: 24px;
+            color: #e94560;
+            font-weight: bold;
+        }
+        .phase-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .phase-staffing { background: #3498db; }
+        .phase-delivery { background: #e67e22; }
+        .stats { font-size: 16px; display: flex; gap: 20px; }
+        .budget { color: #f1c40f; font-weight: bold; }
+        .score { color: #2ecc71; }
 
+        /* Main Layout */
         .main {
             display: grid;
-            grid-template-columns: 280px 1fr;
+            grid-template-columns: 300px 1fr;
             gap: 15px;
         }
         @media (max-width: 900px) {
             .main { grid-template-columns: 1fr; }
         }
 
-        .shop {
+        /* HR Shop */
+        .hr-panel {
             background: rgba(0,0,0,0.4);
             border-radius: 12px;
             padding: 15px;
         }
-        .shop h2 {
+        .hr-panel h2 {
             text-align: center;
             margin-bottom: 15px;
-            color: #3498db;
+            color: #9b59b6;
             font-size: 18px;
         }
-        .shop-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .hr-buttons {
+            display: flex;
             gap: 8px;
             margin-bottom: 15px;
         }
-        .shop-buttons button {
-            padding: 10px 5px;
+        .hr-buttons button {
+            flex: 1;
+            padding: 10px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -68,95 +81,108 @@
             font-size: 12px;
             transition: all 0.2s;
         }
-        .shop-buttons button:hover:not(:disabled) { transform: scale(1.03); filter: brightness(1.1); }
-        .shop-buttons button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-reroll { background: #3498db; color: white; }
-        .btn-tierup { background: #9b59b6; color: white; }
+        .hr-buttons button:hover:not(:disabled) { transform: scale(1.03); }
+        .hr-buttons button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-refresh { background: #3498db; color: white; }
         .btn-freeze { background: #1abc9c; color: white; }
         .btn-freeze.frozen { background: #e74c3c; }
 
+        /* Game Area */
         .game-area { display: flex; flex-direction: column; gap: 12px; }
 
-        .board-section {
+        /* Sections */
+        .section {
             background: rgba(0,0,0,0.4);
             border-radius: 12px;
-            padding: 12px;
+            padding: 15px;
         }
-        .board-section h3 {
-            margin-bottom: 8px;
+        .section h3 {
+            margin-bottom: 10px;
             font-size: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        .board-section.enemy h3 { color: #e74c3c; }
-        .board-section.player h3 { color: #3498db; }
-        .board {
+        .section.client h3 { color: #e74c3c; }
+        .section.team h3 { color: #3498db; }
+        .section.pool h3 { color: #9b59b6; }
+
+        /* Cards Container */
+        .cards {
             display: flex;
-            gap: 8px;
-            min-height: 120px;
+            gap: 10px;
+            min-height: 130px;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
         }
 
+        /* Card Style */
         .card {
-            width: 95px;
-            height: 125px;
+            width: 100px;
+            height: 140px;
             border-radius: 10px;
-            padding: 8px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             cursor: pointer;
             transition: all 0.2s;
             position: relative;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-align: center;
         }
         .card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
-        .card-name {
-            font-size: 10px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 2px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        .card.selected {
+            border: 3px solid #f1c40f;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.5);
         }
-        .card-tribe {
-            font-size: 8px;
-            text-align: center;
-            opacity: 0.8;
-            margin-bottom: 4px;
+        .card.leader {
+            border: 3px solid #e74c3c;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
         }
-        .card-stats {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            flex-grow: 1;
-            align-items: center;
-        }
-        .card-stats .atk { color: #c0392b; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-        .card-stats .hp { color: #27ae60; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-        .card-cost {
-            text-align: center;
-            font-size: 11px;
-            color: #f1c40f;
-            font-weight: bold;
-        }
-        .card-badges {
+        .card.leader::after {
+            content: '👑';
             position: absolute;
-            top: 3px;
-            right: 3px;
+            top: -10px;
+            right: -5px;
+            font-size: 20px;
+        }
+        .card-name {
             font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-role {
+            font-size: 9px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        .card-performance {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f1c40f;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-performance span { font-size: 12px; margin-left: 3px; }
+        .card-cost {
+            font-size: 11px;
+            color: #3498db;
+            font-weight: bold;
         }
         .empty-slot {
-            width: 95px;
-            height: 125px;
+            width: 100px;
+            height: 140px;
             border: 2px dashed #444;
             border-radius: 10px;
             display: flex;
@@ -164,55 +190,135 @@
             justify-content: center;
             color: #555;
             font-size: 12px;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .empty-slot.required {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+        .empty-slot.leader-slot {
+            border-color: #f1c40f;
+            color: #f1c40f;
         }
 
+        /* Tribe Colors */
         .tribe-STAFF { background: linear-gradient(145deg, #27ae60, #1e8449); }
         .tribe-CONSULTING { background: linear-gradient(145deg, #3498db, #2980b9); }
         .tribe-DATA_ANALYTICS { background: linear-gradient(145deg, #f1c40f, #d4ac0d); color: #000; }
         .tribe-MARKETING_MEDIA { background: linear-gradient(145deg, #e67e22, #d35400); }
         .tribe-BRAND_EXPERIENCE { background: linear-gradient(145deg, #e74c3c, #c0392b); }
-        .tribe-TECH { background: linear-gradient(145deg, #ecf0f1, #bdc3c7); color: #000; }
-        .tribe-NEUTRAL { background: linear-gradient(145deg, #95a5a6, #7f8c8d); }
+        .tribe-TECH { background: linear-gradient(145deg, #9b59b6, #8e44ad); }
 
-        .hand-section {
-            background: rgba(52, 73, 94, 0.6);
+        /* Client Card */
+        .client-card {
+            width: 200px;
+            height: 160px;
+            background: linear-gradient(145deg, #2c3e50, #34495e);
             border-radius: 12px;
-            padding: 12px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
         }
-        .hand-section h3 { color: #95a5a6; margin-bottom: 5px; font-size: 14px; }
-        .hand-hint { font-size: 11px; color: #777; margin-bottom: 8px; }
+        .client-card.hidden {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+        }
+        .client-card .client-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        .client-card .client-requirement {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+        .client-card .required-performance {
+            font-size: 36px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .client-card .required-staff {
+            font-size: 12px;
+            color: #f1c40f;
+            margin-top: 10px;
+        }
 
-        .fight-section {
+        /* Action Buttons */
+        .actions {
             display: flex;
             justify-content: center;
             gap: 15px;
-            padding: 10px;
+            padding: 15px;
+            flex-wrap: wrap;
         }
-        .btn-fight {
+        .btn-action {
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-action:hover:not(:disabled) { transform: scale(1.05); }
+        .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-delivery {
+            background: linear-gradient(145deg, #e67e22, #d35400);
+            color: white;
+        }
+        .btn-calculate {
+            background: linear-gradient(145deg, #27ae60, #1e8449);
+            color: white;
+        }
+        .btn-sell {
             background: linear-gradient(145deg, #e74c3c, #c0392b);
             color: white;
-            border: none;
-            padding: 15px 60px;
-            font-size: 22px;
-            font-weight: bold;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
-        }
-        .btn-fight:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6); }
-        .btn-newgame {
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 15px 25px;
+            padding: 10px 20px;
             font-size: 14px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
         }
-        .btn-newgame:hover { transform: scale(1.05); }
+        .btn-newgame {
+            background: #3498db;
+            color: white;
+            padding: 10px 25px;
+            font-size: 14px;
+        }
 
+        /* Performance Summary */
+        .performance-summary {
+            background: rgba(0,0,0,0.6);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .performance-summary h3 {
+            color: #f1c40f;
+            margin-bottom: 15px;
+        }
+        .performance-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .perf-item {
+            text-align: center;
+        }
+        .perf-item .value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        .perf-item .label {
+            font-size: 12px;
+            color: #aaa;
+        }
+        .perf-item.total .value { color: #2ecc71; }
+        .perf-item.required .value { color: #e74c3c; }
+        .perf-item.leader .value { color: #f1c40f; }
+
+        /* Log */
         .log-section {
             background: rgba(0,0,0,0.5);
             border-radius: 12px;
@@ -221,7 +327,7 @@
         }
         .log-section h3 { margin-bottom: 8px; color: #f39c12; font-size: 14px; }
         .log {
-            height: 140px;
+            height: 120px;
             overflow-y: auto;
             font-family: 'Consolas', monospace;
             font-size: 11px;
@@ -230,454 +336,607 @@
             padding: 10px;
             border-radius: 8px;
         }
-        .log div { margin-bottom: 2px; }
-        .log .win { color: #f1c40f; }
+        .log .win { color: #f1c40f; font-weight: bold; }
         .log .lose { color: #e74c3c; }
-        .log .combat { color: #3498db; }
+        .log .info { color: #3498db; }
 
-        .game-over {
+        /* Result Overlay */
+        .overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
         }
-        .game-over-content {
+        .overlay-content {
             text-align: center;
             padding: 50px;
             background: linear-gradient(145deg, #16213e, #1a1a2e);
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            max-width: 500px;
         }
-        .game-over h1 { font-size: 52px; margin-bottom: 20px; }
-        .game-over.victory h1 { color: #f1c40f; text-shadow: 0 0 20px rgba(241, 196, 15, 0.5); }
-        .game-over.defeat h1 { color: #e74c3c; text-shadow: 0 0 20px rgba(231, 76, 60, 0.5); }
-        .game-over p { margin-bottom: 25px; font-size: 18px; color: #aaa; }
-
-        .tooltip {
-            position: fixed;
-            background: rgba(0,0,0,0.9);
+        .overlay h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .overlay.victory h1 {
+            color: #f1c40f;
+            text-shadow: 0 0 30px rgba(241, 196, 15, 0.5);
+        }
+        .overlay.defeat h1 {
+            color: #e74c3c;
+            text-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+        }
+        .overlay p {
+            margin-bottom: 25px;
+            font-size: 18px;
+            color: #aaa;
+        }
+        .overlay .stats-display {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+        .overlay button {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn-next {
+            background: linear-gradient(145deg, #27ae60, #1e8449);
             color: white;
-            padding: 10px;
+        }
+        .btn-restart {
+            background: linear-gradient(145deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        /* Instructions */
+        .instructions {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 15px;
             border-radius: 8px;
             font-size: 12px;
-            max-width: 200px;
-            z-index: 100;
-            pointer-events: none;
-            display: none;
+            color: #888;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <div class="round">Round <span id="round">1</span></div>
-            <div class="stats">
-                <span class="health">❤️ <span id="player-hp">30</span></span>
-                <span class="gold">💰 <span id="player-gold">3</span></span>
-                <span class="tier">⭐ Tier <span id="player-tier">1</span></span>
+            <div class="project-info">
+                📋 Progetto #<span id="project-num">1</span>
             </div>
-            <div class="stats ai-stats">
-                👹 AI: <span id="ai-hp">30</span> HP
+            <div class="phase-badge phase-staffing" id="phase-badge">
+                STAFFING
+            </div>
+            <div class="stats">
+                <span class="budget">💰 Budget: <span id="budget">10</span></span>
+                <span class="score">🏆 Progetti completati: <span id="completed">0</span></span>
             </div>
         </div>
 
         <div class="main">
-            <div class="shop">
-                <h2>🏪 SHOP</h2>
-                <div class="shop-buttons">
-                    <button class="btn-reroll" id="btn-reroll" onclick="reroll()">🔄 Reroll (1G)</button>
-                    <button class="btn-tierup" id="btn-tierup" onclick="tierUp()">⬆️ Tier Up</button>
-                    <button class="btn-freeze" id="btn-freeze" onclick="freezeShop()">❄️ Freeze</button>
-                    <button class="btn-reroll" onclick="sellMode = !sellMode; updateUI();">💸 Sell Mode</button>
+            <!-- HR Panel (Shop) -->
+            <div class="hr-panel" id="hr-panel">
+                <h2>👥 HR - Risorse Disponibili</h2>
+                <div class="hr-buttons">
+                    <button class="btn-refresh" id="btn-refresh" onclick="refreshHR()">🔄 Refresh (1💰)</button>
+                    <button class="btn-freeze" id="btn-freeze" onclick="freezeHR()">❄️ Freeze</button>
                 </div>
-                <div id="shop-cards" class="board"></div>
+                <div id="hr-cards" class="cards"></div>
             </div>
 
+            <!-- Game Area -->
             <div class="game-area">
-                <div class="board-section enemy">
-                    <h3>👹 ENEMY BOARD (<span id="enemy-count">0</span>/7)</h3>
-                    <div id="enemy-board" class="board"></div>
+                <!-- Client Section -->
+                <div class="section client">
+                    <h3>🏢 CLIENTE</h3>
+                    <div class="cards" id="client-area">
+                        <!-- Client card will be here -->
+                    </div>
                 </div>
 
-                <div class="fight-section">
-                    <button class="btn-fight" onclick="fight()">⚔️ FIGHT!</button>
-                    <button class="btn-newgame" onclick="newGame()">🔄 New Game</button>
+                <!-- Performance Summary (shown during delivery) -->
+                <div class="performance-summary" id="perf-summary" style="display: none;">
+                    <h3>📊 CALCOLO PERFORMANCE</h3>
+                    <div class="performance-breakdown">
+                        <div class="perf-item">
+                            <div class="value" id="perf-base">0</div>
+                            <div class="label">Team Base</div>
+                        </div>
+                        <div class="perf-item leader">
+                            <div class="value" id="perf-leader">+0</div>
+                            <div class="label">Bonus Capo Progetto</div>
+                        </div>
+                        <div class="perf-item total">
+                            <div class="value" id="perf-total">=0</div>
+                            <div class="label">TOTALE</div>
+                        </div>
+                        <div class="perf-item required">
+                            <div class="value" id="perf-required">0</div>
+                            <div class="label">Richiesto</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="board-section player">
-                    <h3>🛡️ YOUR BOARD (<span id="player-board-count">0</span>/7)</h3>
-                    <div id="player-board" class="board"></div>
+                <!-- Actions -->
+                <div class="actions">
+                    <button class="btn-action btn-delivery" id="btn-delivery" onclick="goToDelivery()">
+                        📦 VAI ALLA DELIVERY
+                    </button>
+                    <button class="btn-action btn-calculate" id="btn-calculate" onclick="calculatePerformance()" style="display: none;">
+                        📊 CALCOLA PERFORMANCE
+                    </button>
+                    <button class="btn-action btn-sell" id="btn-sell" onclick="toggleSellMode()">
+                        💸 Vendi Risorsa
+                    </button>
+                    <button class="btn-action btn-newgame" onclick="newGame()">
+                        🔄 Nuovo Gioco
+                    </button>
                 </div>
 
-                <div class="hand-section">
-                    <h3>✋ YOUR HAND</h3>
-                    <div class="hand-hint">Click carta per giocarla | Attiva "Sell Mode" per vendere</div>
-                    <div id="player-hand" class="board"></div>
+                <!-- Team Section -->
+                <div class="section team">
+                    <h3>👔 TEAM STAFFATO (<span id="team-count">0</span>/<span id="team-required">3</span>)
+                        <small style="color: #f1c40f; margin-left: 10px;">👑 = Capo Progetto (doppi punti)</small>
+                    </h3>
+                    <div class="instructions">
+                        Click su una carta nel Pool per staffarla. Click su 👑 per scegliere il Capo Progetto.
+                    </div>
+                    <div id="team-cards" class="cards"></div>
+                </div>
+
+                <!-- Pool Section -->
+                <div class="section pool">
+                    <h3>📁 IL TUO POOL (<span id="pool-count">0</span>/8)</h3>
+                    <div id="pool-cards" class="cards"></div>
                 </div>
             </div>
         </div>
 
+        <!-- Log -->
         <div class="log-section">
-            <h3>📜 Combat Log</h3>
+            <h3>📜 Log Attività</h3>
             <div id="log" class="log"></div>
         </div>
     </div>
 
-    <div id="game-over" class="game-over" style="display: none;">
-        <div class="game-over-content">
-            <h1 id="game-over-text"></h1>
-            <p id="game-over-stats"></p>
-            <button class="btn-newgame" onclick="newGame(); document.getElementById('game-over').style.display='none';" style="font-size: 18px; padding: 20px 40px;">
-                🎮 Gioca Ancora
+    <!-- Result Overlay -->
+    <div id="overlay" class="overlay" style="display: none;">
+        <div class="overlay-content">
+            <h1 id="overlay-title">VITTORIA!</h1>
+            <p id="overlay-message">Hai soddisfatto il cliente!</p>
+            <div class="stats-display" id="overlay-stats"></div>
+            <button class="btn-next" id="btn-next" onclick="nextProject()">
+                ➡️ Prossimo Progetto
+            </button>
+            <button class="btn-restart" onclick="newGame()">
+                🔄 Ricomincia
             </button>
         </div>
     </div>
 
-    <div id="tooltip" class="tooltip"></div>
-
     <script>
-    // ==================== GAME DATA ====================
-    const TRIBES = ['STAFF', 'CONSULTING', 'DATA_ANALYTICS', 'MARKETING_MEDIA', 'BRAND_EXPERIENCE', 'TECH', 'NEUTRAL'];
+    // ==================== RISORSE (CARTE) ====================
+    const RESOURCES = {
+        // STAFF
+        office_assistant: { name: "Office Assistant", tribe: "STAFF", tier: 1, performance: 2, cost: 2 },
+        hr_specialist: { name: "HR Specialist", tribe: "STAFF", tier: 2, performance: 3, cost: 3 },
+        office_manager: { name: "Office Manager", tribe: "STAFF", tier: 3, performance: 5, cost: 4 },
 
-    const UNITS = {
-        // TIER 1
-        office_assistant: { name: "Office Assistant", tribe: "STAFF", tier: 1, attack: 1, health: 3, cost: 3, ability: "death_buff" },
-        junior_consultant: { name: "Junior Consultant", tribe: "CONSULTING", tier: 1, attack: 3, health: 1, cost: 3 },
-        data_intern: { name: "Data Intern", tribe: "DATA_ANALYTICS", tier: 1, attack: 1, health: 2, cost: 3, ability: "on_attack_buff" },
-        social_media_intern: { name: "Social Media Intern", tribe: "MARKETING_MEDIA", tier: 1, attack: 2, health: 1, cost: 3 },
-        junior_designer: { name: "Junior Designer", tribe: "BRAND_EXPERIENCE", tier: 1, attack: 1, health: 2, cost: 3 },
-        junior_developer: { name: "Junior Developer", tribe: "TECH", tier: 1, attack: 2, health: 2, cost: 3 },
-        freelancer: { name: "Freelancer", tribe: "NEUTRAL", tier: 1, attack: 2, health: 2, cost: 3 },
-        // TIER 2
-        hr_specialist: { name: "HR Specialist", tribe: "STAFF", tier: 2, attack: 1, health: 4, cost: 3, ability: "death_summon" },
-        business_analyst: { name: "Business Analyst", tribe: "CONSULTING", tier: 2, attack: 3, health: 2, cost: 3, ability: "on_kill_buff" },
-        data_analyst: { name: "Data Analyst", tribe: "DATA_ANALYTICS", tier: 2, attack: 2, health: 3, cost: 3 },
-        content_creator: { name: "Content Creator", tribe: "MARKETING_MEDIA", tier: 2, attack: 2, health: 2, cost: 3, ability: "aura_adjacent" },
-        event_coordinator: { name: "Event Coordinator", tribe: "BRAND_EXPERIENCE", tier: 2, attack: 2, health: 3, cost: 3 },
-        backend_developer: { name: "Backend Developer", tribe: "TECH", tier: 2, attack: 3, health: 3, cost: 3 },
-        // TIER 3
-        office_manager: { name: "Office Manager", tribe: "STAFF", tier: 3, attack: 2, health: 5, cost: 3, ability: "death_buff" },
-        senior_consultant: { name: "Senior Consultant", tribe: "CONSULTING", tier: 3, attack: 4, health: 3, cost: 3 },
-        data_scientist: { name: "Data Scientist", tribe: "DATA_ANALYTICS", tier: 3, attack: 3, health: 4, cost: 3 },
-        marketing_manager: { name: "Marketing Manager", tribe: "MARKETING_MEDIA", tier: 3, attack: 3, health: 3, cost: 3 },
-        creative_director: { name: "Creative Director", tribe: "BRAND_EXPERIENCE", tier: 3, attack: 3, health: 4, cost: 3, ability: "divine_shield" },
-        senior_developer: { name: "Senior Developer", tribe: "TECH", tier: 3, attack: 4, health: 4, cost: 3 },
-        // TIER 4
-        tech_lead: { name: "Tech Lead", tribe: "TECH", tier: 4, attack: 5, health: 4, cost: 4 },
-        strategy_director: { name: "Strategy Director", tribe: "CONSULTING", tier: 4, attack: 5, health: 5, cost: 4, ability: "taunt" },
-        // TIER 5
-        cto: { name: "CTO", tribe: "TECH", tier: 5, attack: 6, health: 5, cost: 5 },
+        // CONSULTING
+        junior_consultant: { name: "Junior Consultant", tribe: "CONSULTING", tier: 1, performance: 3, cost: 3 },
+        business_analyst: { name: "Business Analyst", tribe: "CONSULTING", tier: 2, performance: 4, cost: 4 },
+        senior_consultant: { name: "Senior Consultant", tribe: "CONSULTING", tier: 3, performance: 6, cost: 5 },
+        strategy_director: { name: "Strategy Director", tribe: "CONSULTING", tier: 4, performance: 8, cost: 6 },
+
+        // DATA & ANALYTICS
+        data_intern: { name: "Data Intern", tribe: "DATA_ANALYTICS", tier: 1, performance: 2, cost: 2 },
+        data_analyst: { name: "Data Analyst", tribe: "DATA_ANALYTICS", tier: 2, performance: 4, cost: 3 },
+        data_scientist: { name: "Data Scientist", tribe: "DATA_ANALYTICS", tier: 3, performance: 6, cost: 5 },
+
+        // MARKETING
+        social_media_intern: { name: "Social Media Intern", tribe: "MARKETING_MEDIA", tier: 1, performance: 2, cost: 2 },
+        content_creator: { name: "Content Creator", tribe: "MARKETING_MEDIA", tier: 2, performance: 3, cost: 3 },
+        marketing_manager: { name: "Marketing Manager", tribe: "MARKETING_MEDIA", tier: 3, performance: 5, cost: 4 },
+
+        // BRAND EXPERIENCE
+        junior_designer: { name: "Junior Designer", tribe: "BRAND_EXPERIENCE", tier: 1, performance: 2, cost: 2 },
+        event_coordinator: { name: "Event Coordinator", tribe: "BRAND_EXPERIENCE", tier: 2, performance: 4, cost: 3 },
+        creative_director: { name: "Creative Director", tribe: "BRAND_EXPERIENCE", tier: 3, performance: 6, cost: 5 },
+
+        // TECH
+        junior_developer: { name: "Junior Developer", tribe: "TECH", tier: 1, performance: 3, cost: 3 },
+        backend_developer: { name: "Backend Developer", tribe: "TECH", tier: 2, performance: 4, cost: 4 },
+        senior_developer: { name: "Senior Developer", tribe: "TECH", tier: 3, performance: 6, cost: 5 },
+        tech_lead: { name: "Tech Lead", tribe: "TECH", tier: 4, performance: 8, cost: 6 },
+        cto: { name: "CTO", tribe: "TECH", tier: 5, performance: 10, cost: 8 },
     };
 
-    // ==================== GAME STATE ====================
-    let gameState = {};
-    let sellMode = false;
-    let logMessages = [];
+    // ==================== CLIENTI ====================
+    const CLIENTS = [
+        { name: "Startup Innovativa", requiredPerformance: 8, requiredStaff: 2, description: "Progetto semplice" },
+        { name: "PMI Tradizionale", requiredPerformance: 12, requiredStaff: 3, description: "Progetto standard" },
+        { name: "Azienda Media", requiredPerformance: 18, requiredStaff: 3, description: "Progetto impegnativo" },
+        { name: "Grande Impresa", requiredPerformance: 25, requiredStaff: 4, description: "Progetto complesso" },
+        { name: "Multinazionale", requiredPerformance: 35, requiredStaff: 4, description: "Progetto sfidante" },
+        { name: "Enterprise Global", requiredPerformance: 45, requiredStaff: 5, description: "Progetto critico" },
+        { name: "Governo", requiredPerformance: 55, requiredStaff: 5, description: "Progetto strategico" },
+    ];
 
-    function createCard(unitId) {
-        const template = UNITS[unitId];
+    // ==================== GAME STATE ====================
+    let game = {};
+    let sellMode = false;
+    let logs = [];
+
+    function createResource(resourceId) {
+        const template = RESOURCES[resourceId];
         return {
             id: Math.random().toString(36).substr(2, 9),
-            unitId,
+            resourceId,
             name: template.name,
             tribe: template.tribe,
             tier: template.tier,
-            attack: template.attack,
-            health: template.health,
-            maxHealth: template.health,
-            cost: template.cost,
-            ability: template.ability || null,
-            divineShield: template.ability === 'divine_shield',
-            taunt: template.ability === 'taunt'
+            performance: template.performance,
+            cost: template.cost
         };
     }
 
     function initGame() {
-        gameState = {
-            round: 0,
-            player: { health: 30, gold: 0, tier: 1, board: [], hand: [] },
-            ai: { health: 30, tier: 1, board: [] },
-            shop: { cards: [], frozen: false },
+        game = {
+            projectNum: 1,
+            phase: 'staffing', // 'staffing' | 'delivery'
+            budget: 10,
+            completedProjects: 0,
+            pool: [], // max 8 risorse possedute
+            team: [], // risorse staffate per questo progetto
+            leaderId: null, // id del capo progetto
+            hr: { cards: [], frozen: false },
+            client: null,
+            requiredStaff: 2,
             gameOver: false
         };
-        logMessages = [];
+        logs = [];
         sellMode = false;
-        log("🎮 Nuovo gioco iniziato!");
-        startNewRound();
-    }
 
-    function startNewRound() {
-        gameState.round++;
-        const p = gameState.player;
-        p.gold = Math.min(10, 2 + gameState.round);
-
-        if (!gameState.shop.frozen) {
-            refreshShop();
-        } else {
-            gameState.shop.frozen = false;
-        }
-
-        // AI gets units
-        gameState.ai.tier = Math.min(6, Math.floor(gameState.round / 2) + 1);
-
-        log(`\n=== ROUND ${gameState.round} ===`);
-        log(`💰 Gold: ${p.gold} | ⭐ Tier: ${p.tier}`);
+        generateClient();
+        refreshHR();
+        log("🎮 Nuovo gioco iniziato!", "info");
+        log(`📋 Progetto #${game.projectNum} - Fase di Staffing`, "info");
         updateUI();
     }
 
-    function refreshShop() {
-        const tier = gameState.player.tier;
-        const available = Object.keys(UNITS).filter(id => UNITS[id].tier <= tier);
-        const shopSize = Math.min(3 + Math.floor(tier / 2), 6);
+    function generateClient() {
+        // Scala difficoltà con numero progetto
+        const difficulty = Math.min(game.projectNum - 1, CLIENTS.length - 1);
+        const baseClient = CLIENTS[difficulty];
 
-        gameState.shop.cards = [];
-        for (let i = 0; i < shopSize; i++) {
-            const unitId = available[Math.floor(Math.random() * available.length)];
-            gameState.shop.cards.push(createCard(unitId));
+        // Aggiungi variazione casuale
+        const variation = Math.floor(game.projectNum / 3);
+
+        game.client = {
+            name: baseClient.name,
+            requiredPerformance: baseClient.requiredPerformance + (variation * 5),
+            requiredStaff: baseClient.requiredStaff,
+            description: baseClient.description,
+            revealed: false
+        };
+        game.requiredStaff = game.client.requiredStaff;
+    }
+
+    function refreshHR() {
+        if (game.phase !== 'staffing') return;
+        if (game.budget < 1 && !game.hr.frozen) {
+            log("❌ Budget insufficiente per refresh!", "lose");
+            return;
         }
+
+        if (!game.hr.frozen) {
+            game.budget--;
+        }
+
+        game.hr.frozen = false;
+        game.hr.cards = [];
+
+        // Genera 4 risorse casuali
+        const availableIds = Object.keys(RESOURCES);
+        const maxTier = Math.min(1 + Math.floor(game.projectNum / 2), 5);
+        const filtered = availableIds.filter(id => RESOURCES[id].tier <= maxTier);
+
+        for (let i = 0; i < 4; i++) {
+            const id = filtered[Math.floor(Math.random() * filtered.length)];
+            game.hr.cards.push(createResource(id));
+        }
+
+        log("🔄 HR aggiornato con nuove risorse");
+        updateUI();
+    }
+
+    function freezeHR() {
+        game.hr.frozen = !game.hr.frozen;
+        log(game.hr.frozen ? "❄️ HR congelato per il prossimo progetto" : "🔥 HR scongelato");
+        updateUI();
     }
 
     function log(msg, type = '') {
-        logMessages.push({ msg, type });
-        if (logMessages.length > 100) logMessages.shift();
+        logs.push({ msg, type });
+        if (logs.length > 50) logs.shift();
+        updateLog();
     }
 
-    // ==================== PLAYER ACTIONS ====================
-    function buyCard(index) {
-        const p = gameState.player;
-        const card = gameState.shop.cards[index];
-        if (!card) return;
+    function updateLog() {
+        const logDiv = document.getElementById('log');
+        logDiv.innerHTML = logs.map(l => `<div class="${l.type}">${l.msg}</div>`).join('');
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
 
-        if (p.gold < card.cost) {
-            log("❌ Non abbastanza gold!");
+    // ==================== AZIONI GIOCATORE ====================
+
+    function hireResource(index) {
+        if (game.phase !== 'staffing') return;
+
+        const resource = game.hr.cards[index];
+        if (!resource) return;
+
+        if (game.budget < resource.cost) {
+            log(`❌ Budget insufficiente! Serve ${resource.cost}💰`, "lose");
             return;
         }
-        if (p.hand.length >= 10 && p.board.length >= 7) {
-            log("❌ Nessuno spazio!");
+
+        if (game.pool.length >= 8) {
+            log("❌ Pool pieno! Vendi una risorsa prima.", "lose");
             return;
         }
 
-        p.gold -= card.cost;
-        gameState.shop.cards.splice(index, 1);
-        log(`✅ Comprato ${card.name}!`);
-
-        // Auto-play if board has space
-        if (p.board.length < 7) {
-            p.board.push(card);
-            log(`▶️ Giocato ${card.name}`);
-        } else {
-            p.hand.push(card);
-        }
+        game.budget -= resource.cost;
+        game.hr.cards.splice(index, 1);
+        game.pool.push(resource);
+        log(`✅ Assunto ${resource.name} (${resource.performance}⭐)`, "info");
         updateUI();
     }
 
-    function playCard(index) {
-        const p = gameState.player;
+    function staffResource(poolIndex) {
         if (sellMode) {
-            sellCard('hand', index);
+            sellResource('pool', poolIndex);
             return;
         }
-        if (p.board.length >= 7) {
-            log("❌ Board piena!");
+
+        if (game.phase !== 'staffing') return;
+
+        const resource = game.pool[poolIndex];
+        if (!resource) return;
+
+        if (game.team.length >= game.requiredStaff) {
+            log("❌ Team già completo!", "lose");
             return;
         }
-        const card = p.hand.splice(index, 1)[0];
-        p.board.push(card);
-        log(`▶️ Giocato ${card.name}`);
+
+        // Muovi da pool a team
+        game.pool.splice(poolIndex, 1);
+        game.team.push(resource);
+
+        // Se è il primo, diventa automaticamente leader
+        if (game.team.length === 1) {
+            game.leaderId = resource.id;
+            log(`👑 ${resource.name} è il Capo Progetto!`, "info");
+        }
+
+        log(`📌 ${resource.name} staffato sul progetto`);
         updateUI();
     }
 
-    function sellCard(location, index) {
-        const p = gameState.player;
-        const list = location === 'board' ? p.board : p.hand;
+    function unstaffResource(teamIndex) {
+        if (sellMode) {
+            sellResource('team', teamIndex);
+            return;
+        }
+
+        if (game.phase !== 'staffing') return;
+
+        const resource = game.team[teamIndex];
+        if (!resource) return;
+
+        // Rimuovi da team e rimetti nel pool
+        game.team.splice(teamIndex, 1);
+        game.pool.push(resource);
+
+        // Se era il leader, rimuovi
+        if (game.leaderId === resource.id) {
+            game.leaderId = game.team.length > 0 ? game.team[0].id : null;
+            if (game.leaderId) {
+                const newLeader = game.team.find(r => r.id === game.leaderId);
+                log(`👑 ${newLeader.name} è il nuovo Capo Progetto`);
+            }
+        }
+
+        log(`↩️ ${resource.name} rimosso dal team`);
+        updateUI();
+    }
+
+    function setLeader(teamIndex) {
+        if (game.phase !== 'staffing') return;
+
+        const resource = game.team[teamIndex];
+        if (!resource) return;
+
+        game.leaderId = resource.id;
+        log(`👑 ${resource.name} nominato Capo Progetto!`, "info");
+        updateUI();
+    }
+
+    function sellResource(location, index) {
+        const list = location === 'pool' ? game.pool : game.team;
         if (index >= list.length) return;
 
-        const card = list.splice(index, 1)[0];
-        const sellValue = 1;
-        p.gold += sellValue;
-        log(`💸 Venduto ${card.name} per ${sellValue}G`);
+        const resource = list.splice(index, 1)[0];
+        const sellValue = Math.ceil(resource.cost / 2);
+        game.budget += sellValue;
+
+        if (game.leaderId === resource.id) {
+            game.leaderId = game.team.length > 0 ? game.team[0].id : null;
+        }
+
+        log(`💸 Venduto ${resource.name} per ${sellValue}💰`);
+        sellMode = false;
         updateUI();
     }
 
-    function reroll() {
-        const p = gameState.player;
-        if (p.gold < 1) {
-            log("❌ Non abbastanza gold per reroll!");
-            return;
-        }
-        p.gold--;
-        refreshShop();
-        log("🔄 Shop refreshato!");
+    function toggleSellMode() {
+        sellMode = !sellMode;
+        log(sellMode ? "💸 Modalità vendita attiva - clicca una risorsa" : "Modalità vendita disattivata");
         updateUI();
     }
 
-    function tierUp() {
-        const p = gameState.player;
-        const costs = { 1: 5, 2: 7, 3: 8, 4: 9, 5: 10 };
-        const cost = costs[p.tier] || 999;
+    // ==================== FASI DI GIOCO ====================
 
-        if (p.tier >= 6) {
-            log("❌ Già al tier massimo!");
-            return;
-        }
-        if (p.gold < cost) {
-            log(`❌ Servono ${cost}G per il tier up!`);
+    function goToDelivery() {
+        if (game.team.length < game.requiredStaff) {
+            log(`❌ Devi staffare almeno ${game.requiredStaff} risorse!`, "lose");
             return;
         }
 
-        p.gold -= cost;
-        p.tier++;
-        refreshShop();
-        log(`⬆️ Tier Up! Ora sei Tier ${p.tier}`);
+        if (!game.leaderId) {
+            log("❌ Devi scegliere un Capo Progetto!", "lose");
+            return;
+        }
+
+        game.phase = 'delivery';
+        game.client.revealed = true;
+
+        log("\n📦 === FASE DELIVERY ===", "info");
+        log(`🏢 Cliente: ${game.client.name}`, "info");
+        log(`📊 Performance richiesta: ${game.client.requiredPerformance}⭐`);
+
         updateUI();
     }
 
-    function freezeShop() {
-        gameState.shop.frozen = !gameState.shop.frozen;
-        log(gameState.shop.frozen ? "❄️ Shop congelato!" : "🔥 Shop scongelato!");
-        updateUI();
-    }
+    function calculatePerformance() {
+        if (game.phase !== 'delivery') return;
 
-    // ==================== COMBAT ====================
-    function fight() {
-        log("\n--- 👹 AI SHOPPING ---", "combat");
+        // Calcola performance totale
+        let basePerformance = 0;
+        let leaderBonus = 0;
 
-        // Simple AI: fill board
-        const ai = gameState.ai;
-        ai.board = [];
-        const aiUnits = Object.keys(UNITS).filter(id => UNITS[id].tier <= ai.tier);
-        const boardSize = Math.min(7, 2 + Math.floor(gameState.round / 2));
-
-        for (let i = 0; i < boardSize; i++) {
-            const unitId = aiUnits[Math.floor(Math.random() * aiUnits.length)];
-            ai.board.push(createCard(unitId));
-        }
-        log(`AI ha ${ai.board.length} unità`);
-
-        // Combat
-        log("\n--- ⚔️ COMBATTIMENTO ---", "combat");
-        const result = resolveCombat();
-
-        if (result.winner === 'player') {
-            const damage = gameState.player.tier + result.surviving;
-            ai.health -= damage;
-            log(`🎉 HAI VINTO! AI prende ${damage} danni`, "win");
-        } else if (result.winner === 'ai') {
-            const damage = ai.tier + result.surviving;
-            gameState.player.health -= damage;
-            log(`💀 HAI PERSO! Prendi ${damage} danni`, "lose");
-        } else {
-            log("🤝 PAREGGIO!", "combat");
-        }
-
-        // Check game over
-        if (gameState.player.health <= 0) {
-            gameState.gameOver = true;
-            showGameOver(false);
-        } else if (ai.health <= 0) {
-            gameState.gameOver = true;
-            showGameOver(true);
-        } else {
-            startNewRound();
-        }
-    }
-
-    function resolveCombat() {
-        // Clone boards for combat
-        const pBoard = gameState.player.board.map(c => ({...c}));
-        const aBoard = gameState.ai.board.map(c => ({...c}));
-
-        let turn = Math.random() < 0.5;
-        let pIndex = 0, aIndex = 0;
-
-        while (pBoard.filter(c => c.health > 0).length > 0 &&
-               aBoard.filter(c => c.health > 0).length > 0) {
-
-            const attackers = turn ? pBoard : aBoard;
-            const defenders = turn ? aBoard : pBoard;
-            const attackerName = turn ? "Tu" : "AI";
-
-            // Get attacker
-            const aliveAttackers = attackers.filter(c => c.health > 0);
-            if (aliveAttackers.length === 0) break;
-            const attacker = aliveAttackers[turn ? (pIndex++ % aliveAttackers.length) : (aIndex++ % aliveAttackers.length)];
-
-            // Get defender (taunt first)
-            let aliveDefenders = defenders.filter(c => c.health > 0);
-            const tauntUnits = aliveDefenders.filter(c => c.taunt);
-            if (tauntUnits.length > 0) aliveDefenders = tauntUnits;
-
-            if (aliveDefenders.length === 0) break;
-            const defender = aliveDefenders[Math.floor(Math.random() * aliveDefenders.length)];
-
-            log(`${attackerName}: ${attacker.name} (${attacker.attack}/${attacker.health}) → ${defender.name}`);
-
-            // Deal damage
-            const atkDmg = attacker.attack;
-            const defDmg = defender.attack;
-
-            if (defender.divineShield) {
-                defender.divineShield = false;
-                log(`  🛡️ Divine Shield assorbe!`);
+        game.team.forEach(resource => {
+            if (resource.id === game.leaderId) {
+                // Capo progetto: punti doppi
+                basePerformance += resource.performance;
+                leaderBonus = resource.performance; // bonus extra
             } else {
-                defender.health -= atkDmg;
+                basePerformance += resource.performance;
             }
+        });
 
-            if (attacker.divineShield) {
-                attacker.divineShield = false;
+        const totalPerformance = basePerformance + leaderBonus;
+        const required = game.client.requiredPerformance;
+
+        // Aggiorna display
+        document.getElementById('perf-base').textContent = basePerformance;
+        document.getElementById('perf-leader').textContent = '+' + leaderBonus;
+        document.getElementById('perf-total').textContent = '=' + totalPerformance;
+        document.getElementById('perf-required').textContent = required;
+
+        log(`\n📊 RISULTATO:`, "info");
+        log(`Team base: ${basePerformance}⭐`);
+        log(`Bonus Capo Progetto: +${leaderBonus}⭐`);
+        log(`TOTALE: ${totalPerformance}⭐ vs ${required}⭐ richiesti`);
+
+        // Determina risultato
+        setTimeout(() => {
+            if (totalPerformance >= required) {
+                showResult(true, totalPerformance, required);
             } else {
-                attacker.health -= defDmg;
+                showResult(false, totalPerformance, required);
             }
-
-            if (defender.health <= 0) log(`  💀 ${defender.name} muore!`);
-            if (attacker.health <= 0) log(`  💀 ${attacker.name} muore!`);
-
-            turn = !turn;
-        }
-
-        const pAlive = pBoard.filter(c => c.health > 0).length;
-        const aAlive = aBoard.filter(c => c.health > 0).length;
-
-        if (pAlive > 0 && aAlive === 0) return { winner: 'player', surviving: pAlive };
-        if (aAlive > 0 && pAlive === 0) return { winner: 'ai', surviving: aAlive };
-        return { winner: 'draw', surviving: 0 };
+        }, 1000);
     }
 
-    function showGameOver(victory) {
-        const overlay = document.getElementById('game-over');
+    function showResult(victory, achieved, required) {
+        const overlay = document.getElementById('overlay');
         overlay.style.display = 'flex';
-        overlay.className = 'game-over ' + (victory ? 'victory' : 'defeat');
-        document.getElementById('game-over-text').textContent = victory ? '🏆 VITTORIA!' : '💀 SCONFITTA';
-        document.getElementById('game-over-stats').textContent =
-            `Round: ${gameState.round} | HP rimasti: ${gameState.player.health}`;
+        overlay.className = 'overlay ' + (victory ? 'victory' : 'defeat');
+
+        document.getElementById('overlay-title').textContent = victory ? '🎉 PROGETTO COMPLETATO!' : '💀 PROGETTO FALLITO!';
+        document.getElementById('overlay-message').textContent = victory
+            ? `Hai soddisfatto ${game.client.name}!`
+            : `${game.client.name} non è soddisfatto...`;
+
+        document.getElementById('overlay-stats').innerHTML = `
+            <div style="font-size: 24px; margin-bottom: 10px;">
+                Performance: <span style="color: ${victory ? '#2ecc71' : '#e74c3c'}">${achieved}⭐</span> / ${required}⭐
+            </div>
+            <div>Progetto #${game.projectNum}</div>
+        `;
+
+        document.getElementById('btn-next').style.display = victory ? 'inline-block' : 'none';
+
+        if (victory) {
+            game.completedProjects++;
+            log(`🎉 VITTORIA! Progetto #${game.projectNum} completato!`, "win");
+        } else {
+            game.gameOver = true;
+            log(`💀 SCONFITTA! Game Over dopo ${game.completedProjects} progetti completati`, "lose");
+        }
+    }
+
+    function nextProject() {
+        document.getElementById('overlay').style.display = 'none';
+
+        // Prepara prossimo progetto
+        game.projectNum++;
+        game.phase = 'staffing';
+        game.budget += 5 + game.projectNum; // Budget crescente
+
+        // Rimetti le risorse del team nel pool
+        game.team.forEach(r => game.pool.push(r));
+        game.team = [];
+        game.leaderId = null;
+
+        // Genera nuovo cliente
+        generateClient();
+
+        // Refresh HR se non frozen
+        if (!game.hr.frozen) {
+            refreshHR();
+        } else {
+            game.hr.frozen = false;
+        }
+
+        log(`\n📋 === PROGETTO #${game.projectNum} ===`, "info");
+        log(`💰 Budget: ${game.budget}`);
+
+        updateUI();
     }
 
     function newGame() {
-        document.getElementById('game-over').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
         initGame();
     }
 
     // ==================== UI ====================
-    function createCardElement(card, onClick, showCost = false) {
-        const div = document.createElement('div');
-        div.className = `card tribe-${card.tribe}`;
 
-        let badges = '';
-        if (card.divineShield) badges += '🛡️';
-        if (card.taunt) badges += '⚔️';
+    function createResourceCard(resource, onClick, showCost = false, isLeader = false) {
+        const div = document.createElement('div');
+        div.className = `card tribe-${resource.tribe}`;
+        if (isLeader) div.classList.add('leader');
+        if (sellMode) div.style.border = '3px solid #e74c3c';
 
         div.innerHTML = `
-            <div class="card-badges">${badges}</div>
-            <div class="card-name">${card.name}</div>
-            <div class="card-tribe">${card.tribe.replace('_', ' ')}</div>
-            <div class="card-stats">
-                <span class="atk">⚔${card.attack}</span>
-                <span class="hp">♥${card.health}</span>
-            </div>
-            ${showCost ? `<div class="card-cost">💰 ${card.cost}G</div>` : ''}
+            <div class="card-name">${resource.name}</div>
+            <div class="card-role">${resource.tribe.replace('_', ' ')}</div>
+            <div class="card-performance">${resource.performance}<span>⭐</span></div>
+            ${showCost ? `<div class="card-cost">💰 ${resource.cost}</div>` : ''}
         `;
 
         if (onClick) div.onclick = onClick;
@@ -685,95 +944,119 @@
     }
 
     function updateUI() {
-        const p = gameState.player;
-        const ai = gameState.ai;
-        const shop = gameState.shop;
-
         // Header
-        document.getElementById('round').textContent = gameState.round;
-        document.getElementById('player-hp').textContent = p.health;
-        document.getElementById('player-gold').textContent = p.gold;
-        document.getElementById('player-tier').textContent = p.tier;
-        document.getElementById('ai-hp').textContent = ai.health;
+        document.getElementById('project-num').textContent = game.projectNum;
+        document.getElementById('budget').textContent = game.budget;
+        document.getElementById('completed').textContent = game.completedProjects;
 
-        // Buttons
-        const costs = { 1: 5, 2: 7, 3: 8, 4: 9, 5: 10 };
-        const tierCost = costs[p.tier] || 0;
-        document.getElementById('btn-tierup').textContent = p.tier >= 6 ? '⬆️ MAX' : `⬆️ Tier Up (${tierCost}G)`;
-        document.getElementById('btn-tierup').disabled = p.tier >= 6 || p.gold < tierCost;
-        document.getElementById('btn-reroll').disabled = p.gold < 1;
+        const phaseBadge = document.getElementById('phase-badge');
+        phaseBadge.textContent = game.phase === 'staffing' ? 'STAFFING' : 'DELIVERY';
+        phaseBadge.className = `phase-badge phase-${game.phase}`;
+
+        // HR Panel
+        document.getElementById('hr-panel').style.display = game.phase === 'staffing' ? 'block' : 'none';
 
         const freezeBtn = document.getElementById('btn-freeze');
-        freezeBtn.textContent = shop.frozen ? '🔥 Unfreeze' : '❄️ Freeze';
-        freezeBtn.classList.toggle('frozen', shop.frozen);
+        freezeBtn.textContent = game.hr.frozen ? '🔥 Unfreeze' : '❄️ Freeze';
+        freezeBtn.classList.toggle('frozen', game.hr.frozen);
 
-        // Shop
-        const shopDiv = document.getElementById('shop-cards');
-        shopDiv.innerHTML = '';
-        shop.cards.forEach((card, i) => {
-            const canBuy = p.gold >= card.cost && (p.hand.length < 10 || p.board.length < 7);
-            const el = createCardElement(card, canBuy ? () => buyCard(i) : null, true);
-            if (!canBuy) el.style.opacity = '0.5';
-            shopDiv.appendChild(el);
+        document.getElementById('btn-refresh').disabled = game.budget < 1;
+
+        // HR Cards
+        const hrDiv = document.getElementById('hr-cards');
+        hrDiv.innerHTML = '';
+        game.hr.cards.forEach((res, i) => {
+            const canAfford = game.budget >= res.cost && game.pool.length < 8;
+            const el = createResourceCard(res, canAfford ? () => hireResource(i) : null, true);
+            if (!canAfford) el.style.opacity = '0.5';
+            hrDiv.appendChild(el);
         });
-        if (shop.cards.length === 0) {
-            shopDiv.innerHTML = '<div class="empty-slot">Vuoto</div>';
-        }
 
-        // Enemy board
-        document.getElementById('enemy-count').textContent = ai.board.length;
-        const enemyDiv = document.getElementById('enemy-board');
-        enemyDiv.innerHTML = '';
-        if (ai.board.length > 0) {
-            ai.board.forEach(card => {
-                const el = createCardElement(card, null);
-                el.style.cursor = 'default';
-                enemyDiv.appendChild(el);
-            });
+        // Client Area
+        const clientDiv = document.getElementById('client-area');
+        clientDiv.innerHTML = '';
+
+        const clientCard = document.createElement('div');
+        clientCard.className = 'client-card' + (game.client.revealed ? '' : ' hidden');
+
+        if (game.client.revealed) {
+            clientCard.innerHTML = `
+                <div class="client-name">${game.client.name}</div>
+                <div class="client-requirement">${game.client.description}</div>
+                <div class="required-performance">${game.client.requiredPerformance}⭐</div>
+                <div class="required-staff">Staff richiesto: ${game.client.requiredStaff}</div>
+            `;
         } else {
-            for (let i = 0; i < 3; i++) {
+            clientCard.innerHTML = `
+                <div class="client-name">???</div>
+                <div class="client-requirement">Cliente nascosto</div>
+                <div class="required-performance" style="font-size: 48px;">?</div>
+                <div class="required-staff">Vai alla Delivery per scoprirlo</div>
+            `;
+        }
+        clientDiv.appendChild(clientCard);
+
+        // Performance Summary
+        document.getElementById('perf-summary').style.display = game.phase === 'delivery' ? 'block' : 'none';
+
+        // Buttons
+        document.getElementById('btn-delivery').style.display = game.phase === 'staffing' ? 'inline-block' : 'none';
+        document.getElementById('btn-calculate').style.display = game.phase === 'delivery' ? 'inline-block' : 'none';
+        document.getElementById('btn-sell').style.display = game.phase === 'staffing' ? 'inline-block' : 'none';
+
+        const canDelivery = game.team.length >= game.requiredStaff && game.leaderId;
+        document.getElementById('btn-delivery').disabled = !canDelivery;
+
+        // Team
+        document.getElementById('team-count').textContent = game.team.length;
+        document.getElementById('team-required').textContent = game.requiredStaff;
+
+        const teamDiv = document.getElementById('team-cards');
+        teamDiv.innerHTML = '';
+
+        // Mostra slot richiesti
+        for (let i = 0; i < game.requiredStaff; i++) {
+            if (i < game.team.length) {
+                const res = game.team[i];
+                const isLeader = res.id === game.leaderId;
+                const el = createResourceCard(res,
+                    game.phase === 'staffing' ? () => unstaffResource(i) : null,
+                    false, isLeader);
+
+                // Aggiungi bottone per cambiare leader
+                if (game.phase === 'staffing' && !isLeader) {
+                    const crownBtn = document.createElement('button');
+                    crownBtn.textContent = '👑';
+                    crownBtn.style.cssText = 'position:absolute;top:-10px;left:-5px;font-size:16px;border:none;background:none;cursor:pointer;';
+                    crownBtn.onclick = (e) => { e.stopPropagation(); setLeader(i); };
+                    el.appendChild(crownBtn);
+                }
+
+                teamDiv.appendChild(el);
+            } else {
                 const slot = document.createElement('div');
-                slot.className = 'empty-slot';
-                slot.textContent = '?';
-                slot.style.background = 'rgba(231, 76, 60, 0.2)';
-                enemyDiv.appendChild(slot);
+                slot.className = 'empty-slot' + (i === 0 ? ' leader-slot' : ' required');
+                slot.innerHTML = i === 0 ? '👑<br>Capo Progetto' : `Risorsa ${i + 1}`;
+                teamDiv.appendChild(slot);
             }
         }
 
-        // Player board
-        document.getElementById('player-board-count').textContent = p.board.length;
-        const boardDiv = document.getElementById('player-board');
-        boardDiv.innerHTML = '';
-        p.board.forEach((card, i) => {
-            const el = createCardElement(card, sellMode ? () => sellCard('board', i) : null);
-            if (sellMode) el.style.border = '2px solid #e74c3c';
-            boardDiv.appendChild(el);
-        });
-        if (p.board.length === 0) {
-            boardDiv.innerHTML = '<div class="empty-slot">Vuoto</div>';
-        }
+        // Pool
+        document.getElementById('pool-count').textContent = game.pool.length;
 
-        // Hand
-        const handDiv = document.getElementById('player-hand');
-        handDiv.innerHTML = '';
-        p.hand.forEach((card, i) => {
-            const el = createCardElement(card, () => playCard(i));
-            if (sellMode) el.style.border = '2px solid #e74c3c';
-            handDiv.appendChild(el);
+        const poolDiv = document.getElementById('pool-cards');
+        poolDiv.innerHTML = '';
+        game.pool.forEach((res, i) => {
+            const el = createResourceCard(res, () => staffResource(i));
+            poolDiv.appendChild(el);
         });
-        if (p.hand.length === 0) {
-            handDiv.innerHTML = '<div class="empty-slot">Vuoto</div>';
-        }
 
-        // Log
-        const logDiv = document.getElementById('log');
-        logDiv.innerHTML = logMessages.map(l =>
-            `<div class="${l.type}">${l.msg}</div>`
-        ).join('');
-        logDiv.scrollTop = logDiv.scrollHeight;
+        if (game.pool.length === 0) {
+            poolDiv.innerHTML = '<div class="empty-slot">Pool vuoto<br>Assumi da HR</div>';
+        }
     }
 
-    // Start game
+    // Start
     initGame();
     </script>
 </body>
