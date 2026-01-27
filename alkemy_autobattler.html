@@ -11,6 +11,103 @@
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
             min-height: 100vh;
+        }
+
+        /* ==================== WELCOME SCREEN ==================== */
+        .welcome-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .welcome-box {
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        .welcome-box h1 {
+            color: #e94560;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .welcome-box .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+        }
+        .welcome-box input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .welcome-box input::placeholder { color: #666; }
+        .welcome-box input:focus { outline: 2px solid #e94560; }
+        .btn-start {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(145deg, #e94560, #c73e54);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+        .btn-start:hover { transform: scale(1.02); }
+        .btn-start:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-leaderboard {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #f1c40f;
+            border: 2px solid #f1c40f;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        /* ==================== LEADERBOARD ==================== */
+        .leaderboard-section {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .leaderboard-section h3 {
+            color: #f1c40f;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .leaderboard-table th {
+            background: rgba(241, 196, 15, 0.2);
+            padding: 10px 5px;
+            text-align: left;
+            color: #f1c40f;
+        }
+        .leaderboard-table td {
+            padding: 8px 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .leaderboard-table tr:hover { background: rgba(255,255,255,0.05); }
+        .no-data { color: #666; text-align: center; padding: 20px; }
+
+        /* ==================== GAME SCREEN ==================== */
+        .game-screen {
+            display: none;
             padding: 15px;
         }
         .container { max-width: 1200px; margin: 0 auto; }
@@ -21,33 +118,39 @@
             justify-content: space-between;
             align-items: center;
             background: rgba(0,0,0,0.4);
-            padding: 15px 25px;
+            padding: 12px 20px;
             border-radius: 12px;
             margin-bottom: 15px;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 10px;
         }
+        .player-info {
+            font-size: 14px;
+            color: #aaa;
+        }
+        .player-info strong { color: #e94560; }
         .project-info {
-            font-size: 24px;
+            font-size: 20px;
             color: #e94560;
             font-weight: bold;
         }
         .phase-badge {
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
         }
         .phase-staffing { background: #3498db; }
         .phase-delivery { background: #e67e22; }
-        .stats { font-size: 16px; display: flex; gap: 20px; }
-        .budget { color: #f1c40f; font-weight: bold; }
-        .score { color: #2ecc71; }
+        .stats { font-size: 14px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .money { color: #2ecc71; font-weight: bold; }
+        .budget { color: #f1c40f; }
+        .score { color: #3498db; }
 
         /* Main Layout */
         .main {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 280px 1fr;
             gap: 15px;
         }
         @media (max-width: 900px) {
@@ -64,7 +167,7 @@
             text-align: center;
             margin-bottom: 15px;
             color: #9b59b6;
-            font-size: 18px;
+            font-size: 16px;
         }
         .hr-buttons {
             display: flex;
@@ -73,12 +176,12 @@
         }
         .hr-buttons button {
             flex: 1;
-            padding: 10px;
+            padding: 8px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             transition: all 0.2s;
         }
         .hr-buttons button:hover:not(:disabled) { transform: scale(1.03); }
@@ -88,30 +191,31 @@
         .btn-freeze.frozen { background: #e74c3c; }
 
         /* Game Area */
-        .game-area { display: flex; flex-direction: column; gap: 12px; }
+        .game-area { display: flex; flex-direction: column; gap: 10px; }
 
         /* Sections */
         .section {
             background: rgba(0,0,0,0.4);
             border-radius: 12px;
-            padding: 15px;
+            padding: 12px;
         }
         .section h3 {
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         .section.client h3 { color: #e74c3c; }
+        .section.leader h3 { color: #f1c40f; }
         .section.team h3 { color: #3498db; }
         .section.pool h3 { color: #9b59b6; }
 
         /* Cards Container */
         .cards {
             display: flex;
-            gap: 10px;
-            min-height: 130px;
+            gap: 8px;
+            min-height: 120px;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
@@ -119,10 +223,10 @@
 
         /* Card Style */
         .card {
-            width: 100px;
-            height: 140px;
+            width: 90px;
+            height: 125px;
             border-radius: 10px;
-            padding: 10px;
+            padding: 8px;
             display: flex;
             flex-direction: column;
             cursor: pointer;
@@ -132,40 +236,36 @@
             text-align: center;
         }
         .card:hover {
-            transform: translateY(-8px) scale(1.02);
+            transform: translateY(-5px) scale(1.02);
             box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
-        .card.selected {
-            border: 3px solid #f1c40f;
-            box-shadow: 0 0 20px rgba(241, 196, 15, 0.5);
-        }
         .card.leader {
-            border: 3px solid #e74c3c;
-            box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
+            border: 3px solid #f1c40f;
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
         }
         .card.leader::after {
             content: '👑';
             position: absolute;
-            top: -10px;
-            right: -5px;
-            font-size: 20px;
+            top: -12px;
+            right: -8px;
+            font-size: 18px;
         }
         .card-name {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
-            margin-bottom: 5px;
-            min-height: 28px;
+            margin-bottom: 3px;
+            min-height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .card-role {
-            font-size: 9px;
+            font-size: 8px;
             opacity: 0.8;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
         .card-performance {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: #f1c40f;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
@@ -174,32 +274,35 @@
             align-items: center;
             justify-content: center;
         }
-        .card-performance span { font-size: 12px; margin-left: 3px; }
+        .card-performance span { font-size: 10px; margin-left: 2px; }
         .card-cost {
-            font-size: 11px;
-            color: #3498db;
+            font-size: 10px;
+            color: #2ecc71;
             font-weight: bold;
         }
         .empty-slot {
-            width: 100px;
-            height: 140px;
+            width: 90px;
+            height: 125px;
             border: 2px dashed #444;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #555;
-            font-size: 12px;
+            font-size: 11px;
             flex-direction: column;
-            gap: 5px;
-        }
-        .empty-slot.required {
-            border-color: #e74c3c;
-            color: #e74c3c;
+            gap: 3px;
+            text-align: center;
+            padding: 5px;
         }
         .empty-slot.leader-slot {
             border-color: #f1c40f;
             color: #f1c40f;
+            background: rgba(241, 196, 15, 0.1);
+        }
+        .empty-slot.required {
+            border-color: #e74c3c;
+            color: #e74c3c;
         }
 
         /* Tribe Colors */
@@ -212,13 +315,12 @@
 
         /* Client Card */
         .client-card {
-            width: 200px;
-            height: 160px;
+            width: 220px;
+            min-height: 180px;
             background: linear-gradient(145deg, #2c3e50, #34495e);
             border-radius: 12px;
             padding: 15px;
             text-align: center;
-            position: relative;
         }
         .client-card.hidden {
             background: linear-gradient(145deg, #1a1a2e, #16213e);
@@ -227,93 +329,76 @@
             font-size: 16px;
             font-weight: bold;
             color: #e74c3c;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-        .client-card .client-requirement {
-            font-size: 14px;
+        .client-card .client-desc {
+            font-size: 12px;
             color: #aaa;
             margin-bottom: 10px;
         }
         .client-card .required-performance {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: bold;
             color: #e74c3c;
         }
-        .client-card .required-staff {
-            font-size: 12px;
-            color: #f1c40f;
+        .client-card .client-details {
+            font-size: 11px;
+            color: #888;
             margin-top: 10px;
+        }
+        .client-card .ticket-info {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 11px;
+        }
+        .client-card .ticket-info .reward {
+            color: #2ecc71;
+            font-weight: bold;
+            font-size: 14px;
         }
 
         /* Action Buttons */
         .actions {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            padding: 15px;
+            gap: 10px;
+            padding: 10px;
             flex-wrap: wrap;
         }
         .btn-action {
-            padding: 15px 40px;
-            font-size: 16px;
+            padding: 12px 30px;
+            font-size: 14px;
             font-weight: bold;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
         }
         .btn-action:hover:not(:disabled) { transform: scale(1.05); }
         .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-delivery {
-            background: linear-gradient(145deg, #e67e22, #d35400);
-            color: white;
-        }
-        .btn-calculate {
-            background: linear-gradient(145deg, #27ae60, #1e8449);
-            color: white;
-        }
-        .btn-sell {
-            background: linear-gradient(145deg, #e74c3c, #c0392b);
-            color: white;
-            padding: 10px 20px;
-            font-size: 14px;
-        }
-        .btn-newgame {
-            background: #3498db;
-            color: white;
-            padding: 10px 25px;
-            font-size: 14px;
-        }
+        .btn-delivery { background: linear-gradient(145deg, #e67e22, #d35400); color: white; }
+        .btn-calculate { background: linear-gradient(145deg, #27ae60, #1e8449); color: white; }
+        .btn-sell { background: linear-gradient(145deg, #e74c3c, #c0392b); color: white; font-size: 12px; padding: 8px 15px; }
+        .btn-menu { background: #34495e; color: white; font-size: 12px; padding: 8px 15px; }
 
         /* Performance Summary */
         .performance-summary {
             background: rgba(0,0,0,0.6);
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
-            margin: 15px 0;
         }
-        .performance-summary h3 {
-            color: #f1c40f;
-            margin-bottom: 15px;
-        }
+        .performance-summary h3 { color: #f1c40f; margin-bottom: 12px; font-size: 14px; }
         .performance-breakdown {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 20px;
             flex-wrap: wrap;
         }
-        .perf-item {
-            text-align: center;
-        }
-        .perf-item .value {
-            font-size: 32px;
-            font-weight: bold;
-        }
-        .perf-item .label {
-            font-size: 12px;
-            color: #aaa;
-        }
+        .perf-item { text-align: center; }
+        .perf-item .value { font-size: 28px; font-weight: bold; }
+        .perf-item .label { font-size: 10px; color: #aaa; }
         .perf-item.total .value { color: #2ecc71; }
         .perf-item.required .value { color: #e74c3c; }
         .perf-item.leader .value { color: #f1c40f; }
@@ -322,23 +407,24 @@
         .log-section {
             background: rgba(0,0,0,0.5);
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px;
             margin-top: 15px;
         }
-        .log-section h3 { margin-bottom: 8px; color: #f39c12; font-size: 14px; }
+        .log-section h3 { margin-bottom: 6px; color: #f39c12; font-size: 12px; }
         .log {
-            height: 120px;
+            height: 100px;
             overflow-y: auto;
             font-family: 'Consolas', monospace;
-            font-size: 11px;
+            font-size: 10px;
             color: #0f0;
             background: #0a0a0a;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
         }
         .log .win { color: #f1c40f; font-weight: bold; }
         .log .lose { color: #e74c3c; }
         .log .info { color: #3498db; }
+        .log .money { color: #2ecc71; }
 
         /* Result Overlay */
         .overlay {
@@ -352,163 +438,199 @@
         }
         .overlay-content {
             text-align: center;
-            padding: 50px;
+            padding: 40px;
             background: linear-gradient(145deg, #16213e, #1a1a2e);
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            max-width: 500px;
+            max-width: 450px;
         }
-        .overlay h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        .overlay.victory h1 {
-            color: #f1c40f;
-            text-shadow: 0 0 30px rgba(241, 196, 15, 0.5);
-        }
-        .overlay.defeat h1 {
-            color: #e74c3c;
-            text-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
-        }
-        .overlay p {
-            margin-bottom: 25px;
-            font-size: 18px;
-            color: #aaa;
-        }
+        .overlay h1 { font-size: 36px; margin-bottom: 15px; }
+        .overlay.victory h1 { color: #f1c40f; text-shadow: 0 0 30px rgba(241, 196, 15, 0.5); }
+        .overlay.defeat h1 { color: #e74c3c; text-shadow: 0 0 30px rgba(231, 76, 60, 0.5); }
+        .overlay p { margin-bottom: 15px; font-size: 16px; color: #aaa; }
         .overlay .stats-display {
-            margin: 20px 0;
+            margin: 15px 0;
             padding: 15px;
             background: rgba(0,0,0,0.3);
             border-radius: 10px;
+            font-size: 14px;
+        }
+        .overlay .reward-display {
+            color: #2ecc71;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
         }
         .overlay button {
-            padding: 15px 40px;
-            font-size: 18px;
+            padding: 12px 30px;
+            font-size: 16px;
             font-weight: bold;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             margin: 5px;
         }
-        .btn-next {
-            background: linear-gradient(145deg, #27ae60, #1e8449);
-            color: white;
-        }
-        .btn-restart {
-            background: linear-gradient(145deg, #3498db, #2980b9);
-            color: white;
-        }
+        .btn-next { background: linear-gradient(145deg, #27ae60, #1e8449); color: white; }
+        .btn-restart { background: linear-gradient(145deg, #3498db, #2980b9); color: white; }
 
-        /* Instructions */
-        .instructions {
+        /* Session Stats Bar */
+        .session-stats {
             background: rgba(0,0,0,0.3);
-            padding: 10px 15px;
+            padding: 8px 15px;
             border-radius: 8px;
-            font-size: 12px;
-            color: #888;
             margin-bottom: 10px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 12px;
         }
+        .session-stat { text-align: center; }
+        .session-stat .value { font-weight: bold; font-size: 16px; }
+        .session-stat .label { color: #888; font-size: 10px; }
+        .session-stat.money .value { color: #2ecc71; }
+        .session-stat.perf .value { color: #f1c40f; }
+        .session-stat.projects .value { color: #3498db; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="project-info">
-                📋 Progetto #<span id="project-num">1</span>
-            </div>
-            <div class="phase-badge phase-staffing" id="phase-badge">
-                STAFFING
-            </div>
-            <div class="stats">
-                <span class="budget">💰 Budget: <span id="budget">10</span></span>
-                <span class="score">🏆 Progetti completati: <span id="completed">0</span></span>
-            </div>
-        </div>
+    <!-- ==================== WELCOME SCREEN ==================== -->
+    <div class="welcome-screen" id="welcome-screen">
+        <div class="welcome-box">
+            <h1>Alkemy Project Manager</h1>
+            <p class="subtitle">Gestisci progetti, staffa il team, soddisfa i clienti!</p>
 
-        <div class="main">
-            <!-- HR Panel (Shop) -->
-            <div class="hr-panel" id="hr-panel">
-                <h2>👥 HR - Risorse Disponibili</h2>
-                <div class="hr-buttons">
-                    <button class="btn-refresh" id="btn-refresh" onclick="refreshHR()">🔄 Refresh (1💰)</button>
-                    <button class="btn-freeze" id="btn-freeze" onclick="freezeHR()">❄️ Freeze</button>
-                </div>
-                <div id="hr-cards" class="cards"></div>
-            </div>
+            <input type="text" id="input-nome" placeholder="Nome" maxlength="30">
+            <input type="text" id="input-cognome" placeholder="Cognome" maxlength="30">
 
-            <!-- Game Area -->
-            <div class="game-area">
-                <!-- Client Section -->
-                <div class="section client">
-                    <h3>🏢 CLIENTE</h3>
-                    <div class="cards" id="client-area">
-                        <!-- Client card will be here -->
-                    </div>
-                </div>
+            <button class="btn-start" id="btn-start" onclick="startGame()">
+                🎮 INIZIA A GIOCARE
+            </button>
 
-                <!-- Performance Summary (shown during delivery) -->
-                <div class="performance-summary" id="perf-summary" style="display: none;">
-                    <h3>📊 CALCOLO PERFORMANCE</h3>
-                    <div class="performance-breakdown">
-                        <div class="perf-item">
-                            <div class="value" id="perf-base">0</div>
-                            <div class="label">Team Base</div>
-                        </div>
-                        <div class="perf-item leader">
-                            <div class="value" id="perf-leader">+0</div>
-                            <div class="label">Bonus Capo Progetto</div>
-                        </div>
-                        <div class="perf-item total">
-                            <div class="value" id="perf-total">=0</div>
-                            <div class="label">TOTALE</div>
-                        </div>
-                        <div class="perf-item required">
-                            <div class="value" id="perf-required">0</div>
-                            <div class="label">Richiesto</div>
-                        </div>
-                    </div>
-                </div>
+            <button class="btn-leaderboard" onclick="toggleLeaderboard()">
+                🏆 Mostra Leaderboard
+            </button>
 
-                <!-- Actions -->
-                <div class="actions">
-                    <button class="btn-action btn-delivery" id="btn-delivery" onclick="goToDelivery()">
-                        📦 VAI ALLA DELIVERY
-                    </button>
-                    <button class="btn-action btn-calculate" id="btn-calculate" onclick="calculatePerformance()" style="display: none;">
-                        📊 CALCOLA PERFORMANCE
-                    </button>
-                    <button class="btn-action btn-sell" id="btn-sell" onclick="toggleSellMode()">
-                        💸 Vendi Risorsa
-                    </button>
-                    <button class="btn-action btn-newgame" onclick="newGame()">
-                        🔄 Nuovo Gioco
-                    </button>
-                </div>
-
-                <!-- Team Section -->
-                <div class="section team">
-                    <h3>👔 TEAM STAFFATO (<span id="team-count">0</span>/<span id="team-required">3</span>)
-                        <small style="color: #f1c40f; margin-left: 10px;">👑 = Capo Progetto (doppi punti)</small>
-                    </h3>
-                    <div class="instructions">
-                        Click su una carta nel Pool per staffarla. Click su 👑 per scegliere il Capo Progetto.
-                    </div>
-                    <div id="team-cards" class="cards"></div>
-                </div>
-
-                <!-- Pool Section -->
-                <div class="section pool">
-                    <h3>📁 IL TUO POOL (<span id="pool-count">0</span>/8)</h3>
-                    <div id="pool-cards" class="cards"></div>
-                </div>
+            <div class="leaderboard-section" id="leaderboard-section" style="display: none;">
+                <h3>🏆 LEADERBOARD</h3>
+                <div id="leaderboard-content"></div>
             </div>
         </div>
+    </div>
 
-        <!-- Log -->
-        <div class="log-section">
-            <h3>📜 Log Attività</h3>
-            <div id="log" class="log"></div>
+    <!-- ==================== GAME SCREEN ==================== -->
+    <div class="game-screen" id="game-screen">
+        <div class="container">
+            <!-- Session Stats -->
+            <div class="session-stats">
+                <div class="session-stat">
+                    <div class="label">Giocatore</div>
+                    <div class="value" id="stat-player">-</div>
+                </div>
+                <div class="session-stat money">
+                    <div class="label">Soldi Generati</div>
+                    <div class="value" id="stat-money">€0</div>
+                </div>
+                <div class="session-stat projects">
+                    <div class="label">Progetti Superati</div>
+                    <div class="value" id="stat-projects">0</div>
+                </div>
+                <div class="session-stat perf">
+                    <div class="label">Performance Totale</div>
+                    <div class="value" id="stat-perf">0⭐</div>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="header">
+                <div class="project-info">
+                    📋 Progetto #<span id="project-num">1</span>
+                </div>
+                <div class="phase-badge phase-staffing" id="phase-badge">STAFFING</div>
+                <div class="stats">
+                    <span class="money">💶 Cassa: €<span id="budget">0</span></span>
+                </div>
+                <button class="btn-menu" onclick="backToMenu()">🏠 Menu</button>
+            </div>
+
+            <div class="main">
+                <!-- HR Panel -->
+                <div class="hr-panel" id="hr-panel">
+                    <h2>👥 HR - Risorse</h2>
+                    <div class="hr-buttons">
+                        <button class="btn-refresh" id="btn-refresh" onclick="refreshHR()">🔄 Refresh (€1k)</button>
+                        <button class="btn-freeze" id="btn-freeze" onclick="freezeHR()">❄️ Freeze</button>
+                    </div>
+                    <div id="hr-cards" class="cards"></div>
+                </div>
+
+                <!-- Game Area -->
+                <div class="game-area">
+                    <!-- Client Section -->
+                    <div class="section client">
+                        <h3>🏢 CLIENTE</h3>
+                        <div class="cards" id="client-area"></div>
+                    </div>
+
+                    <!-- Performance Summary -->
+                    <div class="performance-summary" id="perf-summary" style="display: none;">
+                        <h3>📊 CALCOLO PERFORMANCE</h3>
+                        <div class="performance-breakdown">
+                            <div class="perf-item">
+                                <div class="value" id="perf-base">0</div>
+                                <div class="label">Team</div>
+                            </div>
+                            <div class="perf-item leader">
+                                <div class="value" id="perf-leader">+0</div>
+                                <div class="label">Bonus CP</div>
+                            </div>
+                            <div class="perf-item total">
+                                <div class="value" id="perf-total">=0</div>
+                                <div class="label">TOTALE</div>
+                            </div>
+                            <div class="perf-item required">
+                                <div class="value" id="perf-required">0</div>
+                                <div class="label">Richiesto</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="actions">
+                        <button class="btn-action btn-delivery" id="btn-delivery" onclick="goToDelivery()">
+                            📦 VAI ALLA DELIVERY
+                        </button>
+                        <button class="btn-action btn-calculate" id="btn-calculate" onclick="calculatePerformance()" style="display: none;">
+                            📊 CALCOLA PERFORMANCE
+                        </button>
+                        <button class="btn-action btn-sell" id="btn-sell" onclick="toggleSellMode()">💸 Vendi</button>
+                    </div>
+
+                    <!-- Capo Progetto Section (SEPARATE) -->
+                    <div class="section leader">
+                        <h3>👑 CAPO PROGETTO <small style="color: #888; font-weight: normal;">(punti x2)</small></h3>
+                        <div id="leader-area" class="cards"></div>
+                    </div>
+
+                    <!-- Team Section -->
+                    <div class="section team">
+                        <h3>👔 TEAM (<span id="team-count">0</span>/<span id="team-required">2</span>)</h3>
+                        <div id="team-cards" class="cards"></div>
+                    </div>
+
+                    <!-- Pool Section -->
+                    <div class="section pool">
+                        <h3>📁 POOL (<span id="pool-count">0</span>/8)</h3>
+                        <div id="pool-cards" class="cards"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log -->
+            <div class="log-section">
+                <h3>📜 Log</h3>
+                <div id="log" class="log"></div>
+            </div>
         </div>
     </div>
 
@@ -517,68 +639,169 @@
         <div class="overlay-content">
             <h1 id="overlay-title">VITTORIA!</h1>
             <p id="overlay-message">Hai soddisfatto il cliente!</p>
+            <div class="reward-display" id="overlay-reward"></div>
             <div class="stats-display" id="overlay-stats"></div>
-            <button class="btn-next" id="btn-next" onclick="nextProject()">
-                ➡️ Prossimo Progetto
-            </button>
-            <button class="btn-restart" onclick="newGame()">
-                🔄 Ricomincia
-            </button>
+            <button class="btn-next" id="btn-next" onclick="nextProject()">➡️ Prossimo Progetto</button>
+            <button class="btn-restart" onclick="backToMenu()">🏠 Menu</button>
         </div>
     </div>
 
     <script>
-    // ==================== RISORSE (CARTE) ====================
+    // ==================== RESOURCES ====================
     const RESOURCES = {
         // STAFF
         office_assistant: { name: "Office Assistant", tribe: "STAFF", tier: 1, performance: 2, cost: 2 },
         hr_specialist: { name: "HR Specialist", tribe: "STAFF", tier: 2, performance: 3, cost: 3 },
-        office_manager: { name: "Office Manager", tribe: "STAFF", tier: 3, performance: 5, cost: 4 },
-
+        office_manager: { name: "Office Manager", tribe: "STAFF", tier: 3, performance: 5, cost: 5 },
         // CONSULTING
         junior_consultant: { name: "Junior Consultant", tribe: "CONSULTING", tier: 1, performance: 3, cost: 3 },
         business_analyst: { name: "Business Analyst", tribe: "CONSULTING", tier: 2, performance: 4, cost: 4 },
-        senior_consultant: { name: "Senior Consultant", tribe: "CONSULTING", tier: 3, performance: 6, cost: 5 },
-        strategy_director: { name: "Strategy Director", tribe: "CONSULTING", tier: 4, performance: 8, cost: 6 },
-
+        senior_consultant: { name: "Senior Consultant", tribe: "CONSULTING", tier: 3, performance: 6, cost: 6 },
+        strategy_director: { name: "Strategy Director", tribe: "CONSULTING", tier: 4, performance: 8, cost: 8 },
         // DATA & ANALYTICS
         data_intern: { name: "Data Intern", tribe: "DATA_ANALYTICS", tier: 1, performance: 2, cost: 2 },
-        data_analyst: { name: "Data Analyst", tribe: "DATA_ANALYTICS", tier: 2, performance: 4, cost: 3 },
-        data_scientist: { name: "Data Scientist", tribe: "DATA_ANALYTICS", tier: 3, performance: 6, cost: 5 },
-
+        data_analyst: { name: "Data Analyst", tribe: "DATA_ANALYTICS", tier: 2, performance: 4, cost: 4 },
+        data_scientist: { name: "Data Scientist", tribe: "DATA_ANALYTICS", tier: 3, performance: 6, cost: 6 },
         // MARKETING
         social_media_intern: { name: "Social Media Intern", tribe: "MARKETING_MEDIA", tier: 1, performance: 2, cost: 2 },
         content_creator: { name: "Content Creator", tribe: "MARKETING_MEDIA", tier: 2, performance: 3, cost: 3 },
-        marketing_manager: { name: "Marketing Manager", tribe: "MARKETING_MEDIA", tier: 3, performance: 5, cost: 4 },
-
+        marketing_manager: { name: "Marketing Manager", tribe: "MARKETING_MEDIA", tier: 3, performance: 5, cost: 5 },
         // BRAND EXPERIENCE
         junior_designer: { name: "Junior Designer", tribe: "BRAND_EXPERIENCE", tier: 1, performance: 2, cost: 2 },
-        event_coordinator: { name: "Event Coordinator", tribe: "BRAND_EXPERIENCE", tier: 2, performance: 4, cost: 3 },
-        creative_director: { name: "Creative Director", tribe: "BRAND_EXPERIENCE", tier: 3, performance: 6, cost: 5 },
-
+        event_coordinator: { name: "Event Coordinator", tribe: "BRAND_EXPERIENCE", tier: 2, performance: 4, cost: 4 },
+        creative_director: { name: "Creative Director", tribe: "BRAND_EXPERIENCE", tier: 3, performance: 6, cost: 6 },
         // TECH
         junior_developer: { name: "Junior Developer", tribe: "TECH", tier: 1, performance: 3, cost: 3 },
         backend_developer: { name: "Backend Developer", tribe: "TECH", tier: 2, performance: 4, cost: 4 },
-        senior_developer: { name: "Senior Developer", tribe: "TECH", tier: 3, performance: 6, cost: 5 },
-        tech_lead: { name: "Tech Lead", tribe: "TECH", tier: 4, performance: 8, cost: 6 },
-        cto: { name: "CTO", tribe: "TECH", tier: 5, performance: 10, cost: 8 },
+        senior_developer: { name: "Senior Developer", tribe: "TECH", tier: 3, performance: 6, cost: 6 },
+        tech_lead: { name: "Tech Lead", tribe: "TECH", tier: 4, performance: 8, cost: 8 },
+        cto: { name: "CTO", tribe: "TECH", tier: 5, performance: 10, cost: 10 },
     };
 
-    // ==================== CLIENTI ====================
+    // ==================== CLIENTS ====================
     const CLIENTS = [
-        { name: "Startup Innovativa", requiredPerformance: 8, requiredStaff: 2, description: "Progetto semplice" },
-        { name: "PMI Tradizionale", requiredPerformance: 12, requiredStaff: 3, description: "Progetto standard" },
-        { name: "Azienda Media", requiredPerformance: 18, requiredStaff: 3, description: "Progetto impegnativo" },
-        { name: "Grande Impresa", requiredPerformance: 25, requiredStaff: 4, description: "Progetto complesso" },
-        { name: "Multinazionale", requiredPerformance: 35, requiredStaff: 4, description: "Progetto sfidante" },
-        { name: "Enterprise Global", requiredPerformance: 45, requiredStaff: 5, description: "Progetto critico" },
-        { name: "Governo", requiredPerformance: 55, requiredStaff: 5, description: "Progetto strategico" },
+        { name: "Startup Innovativa", requiredPerformance: 8, requiredStaff: 2, ticket: 15, discount: 20, desc: "Progetto semplice" },
+        { name: "PMI Tradizionale", requiredPerformance: 12, requiredStaff: 2, ticket: 20, discount: 15, desc: "Progetto standard" },
+        { name: "Azienda Media", requiredPerformance: 18, requiredStaff: 3, ticket: 30, discount: 10, desc: "Progetto impegnativo" },
+        { name: "Grande Impresa", requiredPerformance: 25, requiredStaff: 3, ticket: 45, discount: 15, desc: "Progetto complesso" },
+        { name: "Multinazionale", requiredPerformance: 35, requiredStaff: 4, ticket: 60, discount: 20, desc: "Progetto sfidante" },
+        { name: "Enterprise Global", requiredPerformance: 45, requiredStaff: 4, ticket: 80, discount: 25, desc: "Progetto critico" },
+        { name: "Governo", requiredPerformance: 55, requiredStaff: 5, ticket: 100, discount: 30, desc: "Progetto strategico" },
     ];
 
     // ==================== GAME STATE ====================
     let game = {};
+    let session = {};
     let sellMode = false;
     let logs = [];
+
+    // ==================== LEADERBOARD ====================
+    function getLeaderboard() {
+        const data = localStorage.getItem('alkemy_leaderboard');
+        return data ? JSON.parse(data) : [];
+    }
+
+    function saveToLeaderboard(entry) {
+        const lb = getLeaderboard();
+        lb.push(entry);
+        lb.sort((a, b) => b.moneyGenerated - a.moneyGenerated);
+        localStorage.setItem('alkemy_leaderboard', JSON.stringify(lb.slice(0, 50))); // Keep top 50
+    }
+
+    function renderLeaderboard() {
+        const lb = getLeaderboard();
+        const container = document.getElementById('leaderboard-content');
+
+        if (lb.length === 0) {
+            container.innerHTML = '<div class="no-data">Nessuna partita registrata</div>';
+            return;
+        }
+
+        let html = '<table class="leaderboard-table"><thead><tr>';
+        html += '<th>#</th><th>Nome</th><th>Sessione</th><th>€ Generati</th><th>Progetti</th><th>Perf Tot</th>';
+        html += '</tr></thead><tbody>';
+
+        lb.slice(0, 20).forEach((entry, i) => {
+            html += `<tr>
+                <td>${i + 1}</td>
+                <td>${entry.name}</td>
+                <td>#${entry.sessionNum}</td>
+                <td style="color:#2ecc71">€${entry.moneyGenerated}k</td>
+                <td>${entry.projectsCompleted}</td>
+                <td style="color:#f1c40f">${entry.totalPerformance}⭐</td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    function toggleLeaderboard() {
+        const section = document.getElementById('leaderboard-section');
+        if (section.style.display === 'none') {
+            section.style.display = 'block';
+            renderLeaderboard();
+        } else {
+            section.style.display = 'none';
+        }
+    }
+
+    function getNextSessionNum(name) {
+        const lb = getLeaderboard();
+        const playerSessions = lb.filter(e => e.name === name);
+        return playerSessions.length + 1;
+    }
+
+    // ==================== GAME INIT ====================
+    function startGame() {
+        const nome = document.getElementById('input-nome').value.trim();
+        const cognome = document.getElementById('input-cognome').value.trim();
+
+        if (!nome || !cognome) {
+            alert('Inserisci nome e cognome!');
+            return;
+        }
+
+        const fullName = `${nome} ${cognome}`;
+        const sessionNum = getNextSessionNum(fullName);
+
+        session = {
+            playerName: fullName,
+            sessionNum: sessionNum,
+            moneyGenerated: 0,
+            projectsCompleted: 0,
+            totalPerformance: 0
+        };
+
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+
+        initGame();
+    }
+
+    function initGame() {
+        game = {
+            projectNum: 1,
+            phase: 'staffing',
+            budget: 10, // Starting budget in thousands
+            pool: [],
+            team: [],
+            leader: null,
+            hr: { cards: [], frozen: false },
+            client: null,
+            requiredStaff: 2,
+            gameOver: false
+        };
+        logs = [];
+        sellMode = false;
+
+        generateClient();
+        refreshHR();
+        log("🎮 Nuova sessione iniziata!", "info");
+        log(`👤 Giocatore: ${session.playerName}`, "info");
+        log(`📋 Progetto #${game.projectNum}`, "info");
+        updateUI();
+    }
 
     function createResource(resourceId) {
         const template = RESOURCES[resourceId];
@@ -593,63 +816,41 @@
         };
     }
 
-    function initGame() {
-        game = {
-            projectNum: 1,
-            phase: 'staffing', // 'staffing' | 'delivery'
-            budget: 10,
-            completedProjects: 0,
-            pool: [], // max 8 risorse possedute
-            team: [], // risorse staffate per questo progetto
-            leaderId: null, // id del capo progetto
-            hr: { cards: [], frozen: false },
-            client: null,
-            requiredStaff: 2,
-            gameOver: false
-        };
-        logs = [];
-        sellMode = false;
-
-        generateClient();
-        refreshHR();
-        log("🎮 Nuovo gioco iniziato!", "info");
-        log(`📋 Progetto #${game.projectNum} - Fase di Staffing`, "info");
-        updateUI();
-    }
-
     function generateClient() {
-        // Scala difficoltà con numero progetto
         const difficulty = Math.min(game.projectNum - 1, CLIENTS.length - 1);
         const baseClient = CLIENTS[difficulty];
-
-        // Aggiungi variazione casuale
         const variation = Math.floor(game.projectNum / 3);
 
         game.client = {
             name: baseClient.name,
-            requiredPerformance: baseClient.requiredPerformance + (variation * 5),
+            requiredPerformance: baseClient.requiredPerformance + (variation * 3),
             requiredStaff: baseClient.requiredStaff,
-            description: baseClient.description,
+            ticket: baseClient.ticket + (variation * 5),
+            discount: baseClient.discount,
+            desc: baseClient.desc,
             revealed: false
         };
         game.requiredStaff = game.client.requiredStaff;
     }
 
+    function calculateReward() {
+        const ticket = game.client.ticket;
+        const discount = game.client.discount;
+        return Math.floor(ticket * (100 - discount) / 100);
+    }
+
+    // ==================== HR ====================
     function refreshHR() {
         if (game.phase !== 'staffing') return;
         if (game.budget < 1 && !game.hr.frozen) {
-            log("❌ Budget insufficiente per refresh!", "lose");
+            log("❌ Budget insufficiente!", "lose");
             return;
         }
 
-        if (!game.hr.frozen) {
-            game.budget--;
-        }
-
+        if (!game.hr.frozen) game.budget--;
         game.hr.frozen = false;
         game.hr.cards = [];
 
-        // Genera 4 risorse casuali
         const availableIds = Object.keys(RESOURCES);
         const maxTier = Math.min(1 + Math.floor(game.projectNum / 2), 5);
         const filtered = availableIds.filter(id => RESOURCES[id].tier <= maxTier);
@@ -659,30 +860,17 @@
             game.hr.cards.push(createResource(id));
         }
 
-        log("🔄 HR aggiornato con nuove risorse");
+        log("🔄 HR aggiornato");
         updateUI();
     }
 
     function freezeHR() {
         game.hr.frozen = !game.hr.frozen;
-        log(game.hr.frozen ? "❄️ HR congelato per il prossimo progetto" : "🔥 HR scongelato");
+        log(game.hr.frozen ? "❄️ HR congelato" : "🔥 HR scongelato");
         updateUI();
     }
 
-    function log(msg, type = '') {
-        logs.push({ msg, type });
-        if (logs.length > 50) logs.shift();
-        updateLog();
-    }
-
-    function updateLog() {
-        const logDiv = document.getElementById('log');
-        logDiv.innerHTML = logs.map(l => `<div class="${l.type}">${l.msg}</div>`).join('');
-        logDiv.scrollTop = logDiv.scrollHeight;
-    }
-
-    // ==================== AZIONI GIOCATORE ====================
-
+    // ==================== PLAYER ACTIONS ====================
     function hireResource(index) {
         if (game.phase !== 'staffing') return;
 
@@ -690,12 +878,12 @@
         if (!resource) return;
 
         if (game.budget < resource.cost) {
-            log(`❌ Budget insufficiente! Serve ${resource.cost}💰`, "lose");
+            log(`❌ Servono €${resource.cost}k!`, "lose");
             return;
         }
 
         if (game.pool.length >= 8) {
-            log("❌ Pool pieno! Vendi una risorsa prima.", "lose");
+            log("❌ Pool pieno!", "lose");
             return;
         }
 
@@ -706,117 +894,124 @@
         updateUI();
     }
 
-    function staffResource(poolIndex) {
-        if (sellMode) {
-            sellResource('pool', poolIndex);
-            return;
-        }
-
+    function staffFromPool(poolIndex) {
+        if (sellMode) { sellResource('pool', poolIndex); return; }
         if (game.phase !== 'staffing') return;
 
         const resource = game.pool[poolIndex];
         if (!resource) return;
 
         if (game.team.length >= game.requiredStaff) {
-            log("❌ Team già completo!", "lose");
+            log("❌ Team completo!", "lose");
             return;
         }
 
-        // Muovi da pool a team
         game.pool.splice(poolIndex, 1);
         game.team.push(resource);
+        log(`📌 ${resource.name} nel team`);
+        updateUI();
+    }
 
-        // Se è il primo, diventa automaticamente leader
-        if (game.team.length === 1) {
-            game.leaderId = resource.id;
-            log(`👑 ${resource.name} è il Capo Progetto!`, "info");
+    function setAsLeader(source, index) {
+        if (sellMode && source !== 'leader') {
+            sellResource(source, index);
+            return;
+        }
+        if (game.phase !== 'staffing') return;
+
+        let resource = null;
+
+        if (source === 'pool') {
+            resource = game.pool.splice(index, 1)[0];
+        } else if (source === 'team') {
+            resource = game.team.splice(index, 1)[0];
+        } else if (source === 'leader') {
+            // Remove from leader, put back to pool
+            if (game.leader) {
+                game.pool.push(game.leader);
+                log(`↩️ ${game.leader.name} torna nel pool`);
+                game.leader = null;
+                updateUI();
+                return;
+            }
         }
 
-        log(`📌 ${resource.name} staffato sul progetto`);
+        if (!resource) return;
+
+        // If there's already a leader, put them back in pool
+        if (game.leader) {
+            game.pool.push(game.leader);
+            log(`↩️ ${game.leader.name} torna nel pool`);
+        }
+
+        game.leader = resource;
+        log(`👑 ${resource.name} è il Capo Progetto!`, "info");
         updateUI();
     }
 
     function unstaffResource(teamIndex) {
-        if (sellMode) {
-            sellResource('team', teamIndex);
-            return;
-        }
-
+        if (sellMode) { sellResource('team', teamIndex); return; }
         if (game.phase !== 'staffing') return;
 
-        const resource = game.team[teamIndex];
-        if (!resource) return;
-
-        // Rimuovi da team e rimetti nel pool
-        game.team.splice(teamIndex, 1);
-        game.pool.push(resource);
-
-        // Se era il leader, rimuovi
-        if (game.leaderId === resource.id) {
-            game.leaderId = game.team.length > 0 ? game.team[0].id : null;
-            if (game.leaderId) {
-                const newLeader = game.team.find(r => r.id === game.leaderId);
-                log(`👑 ${newLeader.name} è il nuovo Capo Progetto`);
-            }
+        const resource = game.team.splice(teamIndex, 1)[0];
+        if (resource) {
+            game.pool.push(resource);
+            log(`↩️ ${resource.name} torna nel pool`);
+            updateUI();
         }
-
-        log(`↩️ ${resource.name} rimosso dal team`);
-        updateUI();
-    }
-
-    function setLeader(teamIndex) {
-        if (game.phase !== 'staffing') return;
-
-        const resource = game.team[teamIndex];
-        if (!resource) return;
-
-        game.leaderId = resource.id;
-        log(`👑 ${resource.name} nominato Capo Progetto!`, "info");
-        updateUI();
     }
 
     function sellResource(location, index) {
-        const list = location === 'pool' ? game.pool : game.team;
+        let list;
+        if (location === 'pool') list = game.pool;
+        else if (location === 'team') list = game.team;
+        else if (location === 'leader' && game.leader) {
+            const resource = game.leader;
+            game.leader = null;
+            const sellValue = Math.ceil(resource.cost / 2);
+            game.budget += sellValue;
+            log(`💸 Venduto ${resource.name} per €${sellValue}k`, "money");
+            sellMode = false;
+            updateUI();
+            return;
+        }
+        else return;
+
         if (index >= list.length) return;
 
         const resource = list.splice(index, 1)[0];
         const sellValue = Math.ceil(resource.cost / 2);
         game.budget += sellValue;
-
-        if (game.leaderId === resource.id) {
-            game.leaderId = game.team.length > 0 ? game.team[0].id : null;
-        }
-
-        log(`💸 Venduto ${resource.name} per ${sellValue}💰`);
+        log(`💸 Venduto ${resource.name} per €${sellValue}k`, "money");
         sellMode = false;
         updateUI();
     }
 
     function toggleSellMode() {
         sellMode = !sellMode;
-        log(sellMode ? "💸 Modalità vendita attiva - clicca una risorsa" : "Modalità vendita disattivata");
+        log(sellMode ? "💸 Clicca una risorsa per venderla" : "Modalità vendita OFF");
         updateUI();
     }
 
-    // ==================== FASI DI GIOCO ====================
-
+    // ==================== GAME PHASES ====================
     function goToDelivery() {
-        if (game.team.length < game.requiredStaff) {
-            log(`❌ Devi staffare almeno ${game.requiredStaff} risorse!`, "lose");
+        if (!game.leader) {
+            log("❌ Scegli un Capo Progetto!", "lose");
             return;
         }
-
-        if (!game.leaderId) {
-            log("❌ Devi scegliere un Capo Progetto!", "lose");
+        if (game.team.length < game.requiredStaff) {
+            log(`❌ Staffa almeno ${game.requiredStaff} risorse nel team!`, "lose");
             return;
         }
 
         game.phase = 'delivery';
         game.client.revealed = true;
+        sellMode = false;
 
-        log("\n📦 === FASE DELIVERY ===", "info");
+        log("\n📦 === DELIVERY ===", "info");
         log(`🏢 Cliente: ${game.client.name}`, "info");
         log(`📊 Performance richiesta: ${game.client.requiredPerformance}⭐`);
+        log(`💰 Ticket: €${game.client.ticket}k (-${game.client.discount}% sconto)`);
 
         updateUI();
     }
@@ -824,89 +1019,100 @@
     function calculatePerformance() {
         if (game.phase !== 'delivery') return;
 
-        // Calcola performance totale
-        let basePerformance = 0;
-        let leaderBonus = 0;
+        // Calculate performance
+        let teamPerf = game.team.reduce((sum, r) => sum + r.performance, 0);
+        let leaderPerf = game.leader ? game.leader.performance : 0;
+        let leaderBonus = leaderPerf; // Double points for leader
+        let totalPerf = teamPerf + leaderPerf + leaderBonus;
 
-        game.team.forEach(resource => {
-            if (resource.id === game.leaderId) {
-                // Capo progetto: punti doppi
-                basePerformance += resource.performance;
-                leaderBonus = resource.performance; // bonus extra
-            } else {
-                basePerformance += resource.performance;
-            }
-        });
-
-        const totalPerformance = basePerformance + leaderBonus;
-        const required = game.client.requiredPerformance;
-
-        // Aggiorna display
-        document.getElementById('perf-base').textContent = basePerformance;
+        // Update display
+        document.getElementById('perf-base').textContent = teamPerf + leaderPerf;
         document.getElementById('perf-leader').textContent = '+' + leaderBonus;
-        document.getElementById('perf-total').textContent = '=' + totalPerformance;
-        document.getElementById('perf-required').textContent = required;
+        document.getElementById('perf-total').textContent = '=' + totalPerf;
+        document.getElementById('perf-required').textContent = game.client.requiredPerformance;
 
         log(`\n📊 RISULTATO:`, "info");
-        log(`Team base: ${basePerformance}⭐`);
-        log(`Bonus Capo Progetto: +${leaderBonus}⭐`);
-        log(`TOTALE: ${totalPerformance}⭐ vs ${required}⭐ richiesti`);
+        log(`Team + CP: ${teamPerf + leaderPerf}⭐`);
+        log(`Bonus CP (x2): +${leaderBonus}⭐`);
+        log(`TOTALE: ${totalPerf}⭐ vs ${game.client.requiredPerformance}⭐`);
 
-        // Determina risultato
         setTimeout(() => {
-            if (totalPerformance >= required) {
-                showResult(true, totalPerformance, required);
+            if (totalPerf >= game.client.requiredPerformance) {
+                showResult(true, totalPerf);
             } else {
-                showResult(false, totalPerformance, required);
+                showResult(false, totalPerf);
             }
-        }, 1000);
+        }, 800);
     }
 
-    function showResult(victory, achieved, required) {
+    function showResult(victory, achievedPerf) {
         const overlay = document.getElementById('overlay');
         overlay.style.display = 'flex';
         overlay.className = 'overlay ' + (victory ? 'victory' : 'defeat');
 
+        const reward = victory ? calculateReward() : 0;
+
         document.getElementById('overlay-title').textContent = victory ? '🎉 PROGETTO COMPLETATO!' : '💀 PROGETTO FALLITO!';
         document.getElementById('overlay-message').textContent = victory
-            ? `Hai soddisfatto ${game.client.name}!`
+            ? `${game.client.name} è soddisfatto!`
             : `${game.client.name} non è soddisfatto...`;
 
+        document.getElementById('overlay-reward').innerHTML = victory
+            ? `+€${reward}k guadagnati!`
+            : 'Nessun guadagno';
+
         document.getElementById('overlay-stats').innerHTML = `
-            <div style="font-size: 24px; margin-bottom: 10px;">
-                Performance: <span style="color: ${victory ? '#2ecc71' : '#e74c3c'}">${achieved}⭐</span> / ${required}⭐
-            </div>
-            <div>Progetto #${game.projectNum}</div>
+            <div>Performance: ${achievedPerf}⭐ / ${game.client.requiredPerformance}⭐</div>
+            <div style="margin-top:5px;">Progetto #${game.projectNum}</div>
         `;
 
         document.getElementById('btn-next').style.display = victory ? 'inline-block' : 'none';
 
         if (victory) {
-            game.completedProjects++;
-            log(`🎉 VITTORIA! Progetto #${game.projectNum} completato!`, "win");
+            session.projectsCompleted++;
+            session.moneyGenerated += reward;
+            session.totalPerformance += achievedPerf;
+            game.budget += reward;
+
+            log(`🎉 VITTORIA! +€${reward}k`, "win");
         } else {
+            session.totalPerformance += achievedPerf;
             game.gameOver = true;
-            log(`💀 SCONFITTA! Game Over dopo ${game.completedProjects} progetti completati`, "lose");
+
+            // Save to leaderboard
+            saveToLeaderboard({
+                name: session.playerName,
+                sessionNum: session.sessionNum,
+                moneyGenerated: session.moneyGenerated,
+                projectsCompleted: session.projectsCompleted,
+                totalPerformance: session.totalPerformance,
+                date: new Date().toISOString()
+            });
+
+            log(`💀 Game Over! ${session.projectsCompleted} progetti completati`, "lose");
         }
+
+        updateUI();
     }
 
     function nextProject() {
         document.getElementById('overlay').style.display = 'none';
 
-        // Prepara prossimo progetto
         game.projectNum++;
         game.phase = 'staffing';
-        game.budget += 5 + game.projectNum; // Budget crescente
 
-        // Rimetti le risorse del team nel pool
+        // Return team to pool
         game.team.forEach(r => game.pool.push(r));
         game.team = [];
-        game.leaderId = null;
 
-        // Genera nuovo cliente
+        // Return leader to pool
+        if (game.leader) {
+            game.pool.push(game.leader);
+            game.leader = null;
+        }
+
         generateClient();
 
-        // Refresh HR se non frozen
         if (!game.hr.frozen) {
             refreshHR();
         } else {
@@ -914,19 +1120,42 @@
         }
 
         log(`\n📋 === PROGETTO #${game.projectNum} ===`, "info");
-        log(`💰 Budget: ${game.budget}`);
+        log(`💶 Cassa: €${game.budget}k`);
 
         updateUI();
     }
 
-    function newGame() {
+    function backToMenu() {
+        // Save session if game is over
+        if (game.gameOver || session.projectsCompleted > 0) {
+            if (!game.gameOver) {
+                saveToLeaderboard({
+                    name: session.playerName,
+                    sessionNum: session.sessionNum,
+                    moneyGenerated: session.moneyGenerated,
+                    projectsCompleted: session.projectsCompleted,
+                    totalPerformance: session.totalPerformance,
+                    date: new Date().toISOString()
+                });
+            }
+        }
+
         document.getElementById('overlay').style.display = 'none';
-        initGame();
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('welcome-screen').style.display = 'flex';
+        renderLeaderboard();
     }
 
     // ==================== UI ====================
+    function log(msg, type = '') {
+        logs.push({ msg, type });
+        if (logs.length > 50) logs.shift();
+        const logDiv = document.getElementById('log');
+        logDiv.innerHTML = logs.map(l => `<div class="${l.type}">${l.msg}</div>`).join('');
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
 
-    function createResourceCard(resource, onClick, showCost = false, isLeader = false) {
+    function createCardElement(resource, onClick, showCost = false, isLeader = false) {
         const div = document.createElement('div');
         div.className = `card tribe-${resource.tribe}`;
         if (isLeader) div.classList.add('leader');
@@ -936,7 +1165,7 @@
             <div class="card-name">${resource.name}</div>
             <div class="card-role">${resource.tribe.replace('_', ' ')}</div>
             <div class="card-performance">${resource.performance}<span>⭐</span></div>
-            ${showCost ? `<div class="card-cost">💰 ${resource.cost}</div>` : ''}
+            ${showCost ? `<div class="card-cost">€${resource.cost}k</div>` : ''}
         `;
 
         if (onClick) div.onclick = onClick;
@@ -944,10 +1173,15 @@
     }
 
     function updateUI() {
+        // Session stats
+        document.getElementById('stat-player').textContent = session.playerName || '-';
+        document.getElementById('stat-money').textContent = `€${session.moneyGenerated}k`;
+        document.getElementById('stat-projects').textContent = session.projectsCompleted;
+        document.getElementById('stat-perf').textContent = `${session.totalPerformance}⭐`;
+
         // Header
         document.getElementById('project-num').textContent = game.projectNum;
         document.getElementById('budget').textContent = game.budget;
-        document.getElementById('completed').textContent = game.completedProjects;
 
         const phaseBadge = document.getElementById('phase-badge');
         phaseBadge.textContent = game.phase === 'staffing' ? 'STAFFING' : 'DELIVERY';
@@ -959,7 +1193,6 @@
         const freezeBtn = document.getElementById('btn-freeze');
         freezeBtn.textContent = game.hr.frozen ? '🔥 Unfreeze' : '❄️ Freeze';
         freezeBtn.classList.toggle('frozen', game.hr.frozen);
-
         document.getElementById('btn-refresh').disabled = game.budget < 1;
 
         // HR Cards
@@ -967,31 +1200,35 @@
         hrDiv.innerHTML = '';
         game.hr.cards.forEach((res, i) => {
             const canAfford = game.budget >= res.cost && game.pool.length < 8;
-            const el = createResourceCard(res, canAfford ? () => hireResource(i) : null, true);
+            const el = createCardElement(res, canAfford ? () => hireResource(i) : null, true);
             if (!canAfford) el.style.opacity = '0.5';
             hrDiv.appendChild(el);
         });
 
-        // Client Area
+        // Client
         const clientDiv = document.getElementById('client-area');
         clientDiv.innerHTML = '';
-
         const clientCard = document.createElement('div');
         clientCard.className = 'client-card' + (game.client.revealed ? '' : ' hidden');
 
         if (game.client.revealed) {
+            const reward = calculateReward();
             clientCard.innerHTML = `
                 <div class="client-name">${game.client.name}</div>
-                <div class="client-requirement">${game.client.description}</div>
+                <div class="client-desc">${game.client.desc}</div>
                 <div class="required-performance">${game.client.requiredPerformance}⭐</div>
-                <div class="required-staff">Staff richiesto: ${game.client.requiredStaff}</div>
+                <div class="client-details">Staff richiesto: ${game.client.requiredStaff}</div>
+                <div class="ticket-info">
+                    Ticket: €${game.client.ticket}k | Sconto: ${game.client.discount}%<br>
+                    <span class="reward">Guadagno: €${reward}k</span>
+                </div>
             `;
         } else {
             clientCard.innerHTML = `
                 <div class="client-name">???</div>
-                <div class="client-requirement">Cliente nascosto</div>
-                <div class="required-performance" style="font-size: 48px;">?</div>
-                <div class="required-staff">Vai alla Delivery per scoprirlo</div>
+                <div class="client-desc">Cliente nascosto</div>
+                <div class="required-performance" style="font-size:40px;">?</div>
+                <div class="client-details">Vai alla Delivery per scoprirlo</div>
             `;
         }
         clientDiv.appendChild(clientCard);
@@ -1004,8 +1241,21 @@
         document.getElementById('btn-calculate').style.display = game.phase === 'delivery' ? 'inline-block' : 'none';
         document.getElementById('btn-sell').style.display = game.phase === 'staffing' ? 'inline-block' : 'none';
 
-        const canDelivery = game.team.length >= game.requiredStaff && game.leaderId;
+        const canDelivery = game.leader && game.team.length >= game.requiredStaff;
         document.getElementById('btn-delivery').disabled = !canDelivery;
+
+        // Leader Section
+        const leaderDiv = document.getElementById('leader-area');
+        leaderDiv.innerHTML = '';
+        if (game.leader) {
+            const el = createCardElement(game.leader, () => setAsLeader('leader', 0), false, true);
+            leaderDiv.appendChild(el);
+        } else {
+            const slot = document.createElement('div');
+            slot.className = 'empty-slot leader-slot';
+            slot.innerHTML = '👑<br>Trascina qui<br>dal Pool';
+            leaderDiv.appendChild(slot);
+        }
 
         // Team
         document.getElementById('team-count').textContent = game.team.length;
@@ -1013,41 +1263,48 @@
 
         const teamDiv = document.getElementById('team-cards');
         teamDiv.innerHTML = '';
-
-        // Mostra slot richiesti
         for (let i = 0; i < game.requiredStaff; i++) {
             if (i < game.team.length) {
                 const res = game.team[i];
-                const isLeader = res.id === game.leaderId;
-                const el = createResourceCard(res,
-                    game.phase === 'staffing' ? () => unstaffResource(i) : null,
-                    false, isLeader);
+                const el = createCardElement(res, game.phase === 'staffing' ? () => unstaffResource(i) : null);
 
-                // Aggiungi bottone per cambiare leader
-                if (game.phase === 'staffing' && !isLeader) {
+                // Add leader button
+                if (game.phase === 'staffing') {
                     const crownBtn = document.createElement('button');
                     crownBtn.textContent = '👑';
-                    crownBtn.style.cssText = 'position:absolute;top:-10px;left:-5px;font-size:16px;border:none;background:none;cursor:pointer;';
-                    crownBtn.onclick = (e) => { e.stopPropagation(); setLeader(i); };
+                    crownBtn.title = 'Rendi Capo Progetto';
+                    crownBtn.style.cssText = 'position:absolute;top:-8px;left:-5px;font-size:14px;border:none;background:rgba(0,0,0,0.5);border-radius:50%;width:24px;height:24px;cursor:pointer;';
+                    crownBtn.onclick = (e) => { e.stopPropagation(); setAsLeader('team', i); };
                     el.appendChild(crownBtn);
                 }
 
                 teamDiv.appendChild(el);
             } else {
                 const slot = document.createElement('div');
-                slot.className = 'empty-slot' + (i === 0 ? ' leader-slot' : ' required');
-                slot.innerHTML = i === 0 ? '👑<br>Capo Progetto' : `Risorsa ${i + 1}`;
+                slot.className = 'empty-slot required';
+                slot.innerHTML = `Slot ${i + 1}`;
                 teamDiv.appendChild(slot);
             }
         }
 
         // Pool
         document.getElementById('pool-count').textContent = game.pool.length;
-
         const poolDiv = document.getElementById('pool-cards');
         poolDiv.innerHTML = '';
         game.pool.forEach((res, i) => {
-            const el = createResourceCard(res, () => staffResource(i));
+            const el = createCardElement(res, () => staffFromPool(i));
+
+            // Add buttons for staffing during staffing phase
+            if (game.phase === 'staffing') {
+                // Crown button to make leader
+                const crownBtn = document.createElement('button');
+                crownBtn.textContent = '👑';
+                crownBtn.title = 'Rendi Capo Progetto';
+                crownBtn.style.cssText = 'position:absolute;top:-8px;left:-5px;font-size:14px;border:none;background:rgba(241,196,15,0.8);border-radius:50%;width:24px;height:24px;cursor:pointer;';
+                crownBtn.onclick = (e) => { e.stopPropagation(); setAsLeader('pool', i); };
+                el.appendChild(crownBtn);
+            }
+
             poolDiv.appendChild(el);
         });
 
@@ -1056,8 +1313,19 @@
         }
     }
 
-    // Start
-    initGame();
+    // Enable start button when both fields have content
+    document.getElementById('input-nome').addEventListener('input', checkStartButton);
+    document.getElementById('input-cognome').addEventListener('input', checkStartButton);
+
+    function checkStartButton() {
+        const nome = document.getElementById('input-nome').value.trim();
+        const cognome = document.getElementById('input-cognome').value.trim();
+        document.getElementById('btn-start').disabled = !nome || !cognome;
+    }
+
+    // Init
+    checkStartButton();
+    renderLeaderboard();
     </script>
 </body>
 </html>
