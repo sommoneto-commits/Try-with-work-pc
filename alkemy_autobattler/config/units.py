@@ -40,13 +40,13 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # ========================================================================
 
     # --- Management ---
-    "junior_manager": {
-        "id": "junior_manager",
-        "name": "Junior Manager",
+    "account_owner": {
+        "id": "account_owner",
+        "name": "Account Owner",
         "tribe": TribeType.MANAGEMENT,
         "tier": 1,
         "attack": 2,
-        "health": 2,
+        "health": 3,
         "cost": 3,
         "sell_value": 1,
         "ability": "none",
@@ -156,16 +156,16 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # ========================================================================
 
     # --- Management ---
-    "team_lead": {
-        "id": "team_lead",
-        "name": "Team Lead",
+    "anna_cappa": {
+        "id": "anna_cappa",
+        "name": "Anna Cappa",
         "tribe": TribeType.MANAGEMENT,
         "tier": 2,
-        "attack": 2,
-        "health": 3,
+        "attack": 1,
+        "health": 5,
         "cost": 3,
         "sell_value": 1,
-        "ability": "start_combat_buff_all",  # Buffs team at combat start
+        "ability": "none",
         "is_token": False
     },
 
@@ -258,16 +258,16 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # ========================================================================
 
     # --- Management ---
-    "project_manager": {
-        "id": "project_manager",
-        "name": "Project Manager",
+    "industry_leader": {
+        "id": "industry_leader",
+        "name": "Industry Leader",
         "tribe": TribeType.MANAGEMENT,
         "tier": 3,
-        "attack": 3,
-        "health": 4,
-        "cost": 3,
+        "attack": 4,
+        "health": 5,
+        "cost": 4,
         "sell_value": 1,
-        "ability": "taunt",  # Must be attacked first
+        "ability": "none",
         "is_token": False
     },
 
@@ -360,16 +360,29 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # ========================================================================
 
     # --- Management ---
-    "department_head": {
-        "id": "department_head",
-        "name": "Department Head",
+    "oscar_zoggia": {
+        "id": "oscar_zoggia",
+        "name": "Oscar Zoggia",
         "tribe": TribeType.MANAGEMENT,
         "tier": 4,
-        "attack": 4,
-        "health": 5,
-        "cost": 4,
+        "attack": 5,
+        "health": 6,
+        "cost": 5,
         "sell_value": 2,
-        "ability": "start_combat_buff_all",
+        "ability": "none",
+        "is_token": False
+    },
+
+    "silvia_bosani": {
+        "id": "silvia_bosani",
+        "name": "Silvia Bosani",
+        "tribe": TribeType.MANAGEMENT,
+        "tier": 4,
+        "attack": 3,
+        "health": 7,
+        "cost": 5,
+        "sell_value": 2,
+        "ability": "none",
         "is_token": False
     },
 
@@ -405,20 +418,6 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # TIER 5 UNITS - Powerful late game
     # ========================================================================
 
-    # --- Management ---
-    "vice_president": {
-        "id": "vice_president",
-        "name": "Vice President",
-        "tribe": TribeType.MANAGEMENT,
-        "tier": 5,
-        "attack": 5,
-        "health": 6,
-        "cost": 5,
-        "sell_value": 2,
-        "ability": "start_combat_buff_all",
-        "is_token": False
-    },
-
     # --- Tech ---
     "cto": {
         "id": "cto",
@@ -438,16 +437,16 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # ========================================================================
 
     # --- Management ---
-    "ceo": {
-        "id": "ceo",
-        "name": "CEO",
+    "duccio_vitali": {
+        "id": "duccio_vitali",
+        "name": "Duccio Vitali",
         "tribe": TribeType.MANAGEMENT,
         "tier": 6,
         "attack": 6,
-        "health": 8,
+        "health": 10,
         "cost": 6,
         "sell_value": 3,
-        "ability": "start_combat_buff_all",  # Placeholder for stronger ability
+        "ability": "none",
         "is_token": False
     },
 
