@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alkemy Autobattler</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 15px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.4);
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .round { font-size: 26px; color: #e94560; font-weight: bold; }
+        .stats { font-size: 18px; display: flex; gap: 20px; flex-wrap: wrap; }
+        .gold { color: #f1c40f; font-weight: bold; }
+        .health { color: #e74c3c; }
+        .tier { color: #9b59b6; }
+        .ai-stats { color: #ff6b6b; }
+
+        .main {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 900px) {
+            .main { grid-template-columns: 1fr; }
+        }
+
+        .shop {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 15px;
+        }
+        .shop h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #3498db;
+            font-size: 18px;
+        }
+        .shop-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .shop-buttons button {
+            padding: 10px 5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .shop-buttons button:hover:not(:disabled) { transform: scale(1.03); filter: brightness(1.1); }
+        .shop-buttons button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-reroll { background: #3498db; color: white; }
+        .btn-tierup { background: #9b59b6; color: white; }
+        .btn-freeze { background: #1abc9c; color: white; }
+        .btn-freeze.frozen { background: #e74c3c; }
+
+        .game-area { display: flex; flex-direction: column; gap: 12px; }
+
+        .board-section {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .board-section h3 {
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .board-section.enemy h3 { color: #e74c3c; }
+        .board-section.player h3 { color: #3498db; }
+        .board {
+            display: flex;
+            gap: 8px;
+            min-height: 120px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 95px;
+            height: 125px;
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+        .card-name {
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .card-tribe {
+            font-size: 8px;
+            text-align: center;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+        .card-stats {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            flex-grow: 1;
+            align-items: center;
+        }
+        .card-stats .atk { color: #c0392b; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .card-stats .hp { color: #27ae60; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .card-cost {
+            text-align: center;
+            font-size: 11px;
+            color: #f1c40f;
+            font-weight: bold;
+        }
+        .card-badges {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            font-size: 11px;
+        }
+        .empty-slot {
+            width: 95px;
+            height: 125px;
+            border: 2px dashed #444;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 12px;
+        }
+
+        .tribe-STAFF { background: linear-gradient(145deg, #27ae60, #1e8449); }
+        .tribe-CONSULTING { background: linear-gradient(145deg, #3498db, #2980b9); }
+        .tribe-DATA_ANALYTICS { background: linear-gradient(145deg, #f1c40f, #d4ac0d); color: #000; }
+        .tribe-MARKETING_MEDIA { background: linear-gradient(145deg, #e67e22, #d35400); }
+        .tribe-BRAND_EXPERIENCE { background: linear-gradient(145deg, #e74c3c, #c0392b); }
+        .tribe-TECH { background: linear-gradient(145deg, #ecf0f1, #bdc3c7); color: #000; }
+        .tribe-NEUTRAL { background: linear-gradient(145deg, #95a5a6, #7f8c8d); }
+
+        .hand-section {
+            background: rgba(52, 73, 94, 0.6);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .hand-section h3 { color: #95a5a6; margin-bottom: 5px; font-size: 14px; }
+        .hand-hint { font-size: 11px; color: #777; margin-bottom: 8px; }
+
+        .fight-section {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px;
+        }
+        .btn-fight {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 15px 60px;
+            font-size: 22px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+        .btn-fight:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6); }
+        .btn-newgame {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-newgame:hover { transform: scale(1.05); }
+
+        .log-section {
+            background: rgba(0,0,0,0.5);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+        .log-section h3 { margin-bottom: 8px; color: #f39c12; font-size: 14px; }
+        .log {
+            height: 140px;
+            overflow-y: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 11px;
+            color: #0f0;
+            background: #0a0a0a;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .log div { margin-bottom: 2px; }
+        .log .win { color: #f1c40f; }
+        .log .lose { color: #e74c3c; }
+        .log .combat { color: #3498db; }
+
+        .game-over {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .game-over-content {
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(145deg, #16213e, #1a1a2e);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .game-over h1 { font-size: 52px; margin-bottom: 20px; }
+        .game-over.victory h1 { color: #f1c40f; text-shadow: 0 0 20px rgba(241, 196, 15, 0.5); }
+        .game-over.defeat h1 { color: #e74c3c; text-shadow: 0 0 20px rgba(231, 76, 60, 0.5); }
+        .game-over p { margin-bottom: 25px; font-size: 18px; color: #aaa; }
+
+        .tooltip {
+            position: fixed;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            max-width: 200px;
+            z-index: 100;
+            pointer-events: none;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="round">Round <span id="round">1</span></div>
+            <div class="stats">
+                <span class="health">❤️ <span id="player-hp">30</span></span>
+                <span class="gold">💰 <span id="player-gold">3</span></span>
+                <span class="tier">⭐ Tier <span id="player-tier">1</span></span>
+            </div>
+            <div class="stats ai-stats">
+                👹 AI: <span id="ai-hp">30</span> HP
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="shop">
+                <h2>🏪 SHOP</h2>
+                <div class="shop-buttons">
+                    <button class="btn-reroll" id="btn-reroll" onclick="reroll()">🔄 Reroll (1G)</button>
+                    <button class="btn-tierup" id="btn-tierup" onclick="tierUp()">⬆️ Tier Up</button>
+                    <button class="btn-freeze" id="btn-freeze" onclick="freezeShop()">❄️ Freeze</button>
+                    <button class="btn-reroll" onclick="sellMode = !sellMode; updateUI();">💸 Sell Mode</button>
+                </div>
+                <div id="shop-cards" class="board"></div>
+            </div>
+
+            <div class="game-area">
+                <div class="board-section enemy">
+                    <h3>👹 ENEMY BOARD (<span id="enemy-count">0</span>/7)</h3>
+                    <div id="enemy-board" class="board"></div>
+                </div>
+
+                <div class="fight-section">
+                    <button class="btn-fight" onclick="fight()">⚔️ FIGHT!</button>
+                    <button class="btn-newgame" onclick="newGame()">🔄 New Game</button>
+                </div>
+
+                <div class="board-section player">
+                    <h3>🛡️ YOUR BOARD (<span id="player-board-count">0</span>/7)</h3>
+                    <div id="player-board" class="board"></div>
+                </div>
+
+                <div class="hand-section">
+                    <h3>✋ YOUR HAND</h3>
+                    <div class="hand-hint">Click carta per giocarla | Attiva "Sell Mode" per vendere</div>
+                    <div id="player-hand" class="board"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="log-section">
+            <h3>📜 Combat Log</h3>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+
+    <div id="game-over" class="game-over" style="display: none;">
+        <div class="game-over-content">
+            <h1 id="game-over-text"></h1>
+            <p id="game-over-stats"></p>
+            <button class="btn-newgame" onclick="newGame(); document.getElementById('game-over').style.display='none';" style="font-size: 18px; padding: 20px 40px;">
+                🎮 Gioca Ancora
+            </button>
+        </div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+    // ==================== GAME DATA ====================
+    const TRIBES = ['STAFF', 'CONSULTING', 'DATA_ANALYTICS', 'MARKETING_MEDIA', 'BRAND_EXPERIENCE', 'TECH', 'NEUTRAL'];
+
+    const UNITS = {
+        // TIER 1
+        office_assistant: { name: "Office Assistant", tribe: "STAFF", tier: 1, attack: 1, health: 3, cost: 3, ability: "death_buff" },
+        junior_consultant: { name: "Junior Consultant", tribe: "CONSULTING", tier: 1, attack: 3, health: 1, cost: 3 },
+        data_intern: { name: "Data Intern", tribe: "DATA_ANALYTICS", tier: 1, attack: 1, health: 2, cost: 3, ability: "on_attack_buff" },
+        social_media_intern: { name: "Social Media Intern", tribe: "MARKETING_MEDIA", tier: 1, attack: 2, health: 1, cost: 3 },
+        junior_designer: { name: "Junior Designer", tribe: "BRAND_EXPERIENCE", tier: 1, attack: 1, health: 2, cost: 3 },
+        junior_developer: { name: "Junior Developer", tribe: "TECH", tier: 1, attack: 2, health: 2, cost: 3 },
+        freelancer: { name: "Freelancer", tribe: "NEUTRAL", tier: 1, attack: 2, health: 2, cost: 3 },
+        // TIER 2
+        hr_specialist: { name: "HR Specialist", tribe: "STAFF", tier: 2, attack: 1, health: 4, cost: 3, ability: "death_summon" },
+        business_analyst: { name: "Business Analyst", tribe: "CONSULTING", tier: 2, attack: 3, health: 2, cost: 3, ability: "on_kill_buff" },
+        data_analyst: { name: "Data Analyst", tribe: "DATA_ANALYTICS", tier: 2, attack: 2, health: 3, cost: 3 },
+        content_creator: { name: "Content Creator", tribe: "MARKETING_MEDIA", tier: 2, attack: 2, health: 2, cost: 3, ability: "aura_adjacent" },
+        event_coordinator: { name: "Event Coordinator", tribe: "BRAND_EXPERIENCE", tier: 2, attack: 2, health: 3, cost: 3 },
+        backend_developer: { name: "Backend Developer", tribe: "TECH", tier: 2, attack: 3, health: 3, cost: 3 },
+        // TIER 3
+        office_manager: { name: "Office Manager", tribe: "STAFF", tier: 3, attack: 2, health: 5, cost: 3, ability: "death_buff" },
+        senior_consultant: { name: "Senior Consultant", tribe: "CONSULTING", tier: 3, attack: 4, health: 3, cost: 3 },
+        data_scientist: { name: "Data Scientist", tribe: "DATA_ANALYTICS", tier: 3, attack: 3, health: 4, cost: 3 },
+        marketing_manager: { name: "Marketing Manager", tribe: "MARKETING_MEDIA", tier: 3, attack: 3, health: 3, cost: 3 },
+        creative_director: { name: "Creative Director", tribe: "BRAND_EXPERIENCE", tier: 3, attack: 3, health: 4, cost: 3, ability: "divine_shield" },
+        senior_developer: { name: "Senior Developer", tribe: "TECH", tier: 3, attack: 4, health: 4, cost: 3 },
+        // TIER 4
+        tech_lead: { name: "Tech Lead", tribe: "TECH", tier: 4, attack: 5, health: 4, cost: 4 },
+        strategy_director: { name: "Strategy Director", tribe: "CONSULTING", tier: 4, attack: 5, health: 5, cost: 4, ability: "taunt" },
+        // TIER 5
+        cto: { name: "CTO", tribe: "TECH", tier: 5, attack: 6, health: 5, cost: 5 },
+    };
+
+    // ==================== GAME STATE ====================
+    let gameState = {};
+    let sellMode = false;
+    let logMessages = [];
+
+    function createCard(unitId) {
+        const template = UNITS[unitId];
+        return {
+            id: Math.random().toString(36).substr(2, 9),
+            unitId,
+            name: template.name,
+            tribe: template.tribe,
+            tier: template.tier,
+            attack: template.attack,
+            health: template.health,
+            maxHealth: template.health,
+            cost: template.cost,
+            ability: template.ability || null,
+            divineShield: template.ability === 'divine_shield',
+            taunt: template.ability === 'taunt'
+        };
+    }
+
+    function initGame() {
+        gameState = {
+            round: 0,
+            player: { health: 30, gold: 0, tier: 1, board: [], hand: [] },
+            ai: { health: 30, tier: 1, board: [] },
+            shop: { cards: [], frozen: false },
+            gameOver: false
+        };
+        logMessages = [];
+        sellMode = false;
+        log("🎮 Nuovo gioco iniziato!");
+        startNewRound();
+    }
+
+    function startNewRound() {
+        gameState.round++;
+        const p = gameState.player;
+        p.gold = Math.min(10, 2 + gameState.round);
+
+        if (!gameState.shop.frozen) {
+            refreshShop();
+        } else {
+            gameState.shop.frozen = false;
+        }
+
+        // AI gets units
+        gameState.ai.tier = Math.min(6, Math.floor(gameState.round / 2) + 1);
+
+        log(`\n=== ROUND ${gameState.round} ===`);
+        log(`💰 Gold: ${p.gold} | ⭐ Tier: ${p.tier}`);
+        updateUI();
+    }
+
+    function refreshShop() {
+        const tier = gameState.player.tier;
+        const available = Object.keys(UNITS).filter(id => UNITS[id].tier <= tier);
+        const shopSize = Math.min(3 + Math.floor(tier / 2), 6);
+
+        gameState.shop.cards = [];
+        for (let i = 0; i < shopSize; i++) {
+            const unitId = available[Math.floor(Math.random() * available.length)];
+            gameState.shop.cards.push(createCard(unitId));
+        }
+    }
+
+    function log(msg, type = '') {
+        logMessages.push({ msg, type });
+        if (logMessages.length > 100) logMessages.shift();
+    }
+
+    // ==================== PLAYER ACTIONS ====================
+    function buyCard(index) {
+        const p = gameState.player;
+        const card = gameState.shop.cards[index];
+        if (!card) return;
+
+        if (p.gold < card.cost) {
+            log("❌ Non abbastanza gold!");
+            return;
+        }
+        if (p.hand.length >= 10 && p.board.length >= 7) {
+            log("❌ Nessuno spazio!");
+            return;
+        }
+
+        p.gold -= card.cost;
+        gameState.shop.cards.splice(index, 1);
+        log(`✅ Comprato ${card.name}!`);
+
+        // Auto-play if board has space
+        if (p.board.length < 7) {
+            p.board.push(card);
+            log(`▶️ Giocato ${card.name}`);
+        } else {
+            p.hand.push(card);
+        }
+        updateUI();
+    }
+
+    function playCard(index) {
+        const p = gameState.player;
+        if (sellMode) {
+            sellCard('hand', index);
+            return;
+        }
+        if (p.board.length >= 7) {
+            log("❌ Board piena!");
+            return;
+        }
+        const card = p.hand.splice(index, 1)[0];
+        p.board.push(card);
+        log(`▶️ Giocato ${card.name}`);
+        updateUI();
+    }
+
+    function sellCard(location, index) {
+        const p = gameState.player;
+        const list = location === 'board' ? p.board : p.hand;
+        if (index >= list.length) return;
+
+        const card = list.splice(index, 1)[0];
+        const sellValue = 1;
+        p.gold += sellValue;
+        log(`💸 Venduto ${card.name} per ${sellValue}G`);
+        updateUI();
+    }
+
+    function reroll() {
+        const p = gameState.player;
+        if (p.gold < 1) {
+            log("❌ Non abbastanza gold per reroll!");
+            return;
+        }
+        p.gold--;
+        refreshShop();
+        log("🔄 Shop refreshato!");
+        updateUI();
+    }
+
+    function tierUp() {
+        const p = gameState.player;
+        const costs = { 1: 5, 2: 7, 3: 8, 4: 9, 5: 10 };
+        const cost = costs[p.tier] || 999;
+
+        if (p.tier >= 6) {
+            log("❌ Già al tier massimo!");
+            return;
+        }
+        if (p.gold < cost) {
+            log(`❌ Servono ${cost}G per il tier up!`);
+            return;
+        }
+
+        p.gold -= cost;
+        p.tier++;
+        refreshShop();
+        log(`⬆️ Tier Up! Ora sei Tier ${p.tier}`);
+        updateUI();
+    }
+
+    function freezeShop() {
+        gameState.shop.frozen = !gameState.shop.frozen;
+        log(gameState.shop.frozen ? "❄️ Shop congelato!" : "🔥 Shop scongelato!");
+        updateUI();
+    }
+
+    // ==================== COMBAT ====================
+    function fight() {
+        log("\n--- 👹 AI SHOPPING ---", "combat");
+
+        // Simple AI: fill board
+        const ai = gameState.ai;
+        ai.board = [];
+        const aiUnits = Object.keys(UNITS).filter(id => UNITS[id].tier <= ai.tier);
+        const boardSize = Math.min(7, 2 + Math.floor(gameState.round / 2));
+
+        for (let i = 0; i < boardSize; i++) {
+            const unitId = aiUnits[Math.floor(Math.random() * aiUnits.length)];
+            ai.board.push(createCard(unitId));
+        }
+        log(`AI ha ${ai.board.length} unità`);
+
+        // Combat
+        log("\n--- ⚔️ COMBATTIMENTO ---", "combat");
+        const result = resolveCombat();
+
+        if (result.winner === 'player') {
+            const damage = gameState.player.tier + result.surviving;
+            ai.health -= damage;
+            log(`🎉 HAI VINTO! AI prende ${damage} danni`, "win");
+        } else if (result.winner === 'ai') {
+            const damage = ai.tier + result.surviving;
+            gameState.player.health -= damage;
+            log(`💀 HAI PERSO! Prendi ${damage} danni`, "lose");
+        } else {
+            log("🤝 PAREGGIO!", "combat");
+        }
+
+        // Check game over
+        if (gameState.player.health <= 0) {
+            gameState.gameOver = true;
+            showGameOver(false);
+        } else if (ai.health <= 0) {
+            gameState.gameOver = true;
+            showGameOver(true);
+        } else {
+            startNewRound();
+        }
+    }
+
+    function resolveCombat() {
+        // Clone boards for combat
+        const pBoard = gameState.player.board.map(c => ({...c}));
+        const aBoard = gameState.ai.board.map(c => ({...c}));
+
+        let turn = Math.random() < 0.5;
+        let pIndex = 0, aIndex = 0;
+
+        while (pBoard.filter(c => c.health > 0).length > 0 &&
+               aBoard.filter(c => c.health > 0).length > 0) {
+
+            const attackers = turn ? pBoard : aBoard;
+            const defenders = turn ? aBoard : pBoard;
+            const attackerName = turn ? "Tu" : "AI";
+
+            // Get attacker
+            const aliveAttackers = attackers.filter(c => c.health > 0);
+            if (aliveAttackers.length === 0) break;
+            const attacker = aliveAttackers[turn ? (pIndex++ % aliveAttackers.length) : (aIndex++ % aliveAttackers.length)];
+
+            // Get defender (taunt first)
+            let aliveDefenders = defenders.filter(c => c.health > 0);
+            const tauntUnits = aliveDefenders.filter(c => c.taunt);
+            if (tauntUnits.length > 0) aliveDefenders = tauntUnits;
+
+            if (aliveDefenders.length === 0) break;
+            const defender = aliveDefenders[Math.floor(Math.random() * aliveDefenders.length)];
+
+            log(`${attackerName}: ${attacker.name} (${attacker.attack}/${attacker.health}) → ${defender.name}`);
+
+            // Deal damage
+            const atkDmg = attacker.attack;
+            const defDmg = defender.attack;
+
+            if (defender.divineShield) {
+                defender.divineShield = false;
+                log(`  🛡️ Divine Shield assorbe!`);
+            } else {
+                defender.health -= atkDmg;
+            }
+
+            if (attacker.divineShield) {
+                attacker.divineShield = false;
+            } else {
+                attacker.health -= defDmg;
+            }
+
+            if (defender.health <= 0) log(`  💀 ${defender.name} muore!`);
+            if (attacker.health <= 0) log(`  💀 ${attacker.name} muore!`);
+
+            turn = !turn;
+        }
+
+        const pAlive = pBoard.filter(c => c.health > 0).length;
+        const aAlive = aBoard.filter(c => c.health > 0).length;
+
+        if (pAlive > 0 && aAlive === 0) return { winner: 'player', surviving: pAlive };
+        if (aAlive > 0 && pAlive === 0) return { winner: 'ai', surviving: aAlive };
+        return { winner: 'draw', surviving: 0 };
+    }
+
+    function showGameOver(victory) {
+        const overlay = document.getElementById('game-over');
+        overlay.style.display = 'flex';
+        overlay.className = 'game-over ' + (victory ? 'victory' : 'defeat');
+        document.getElementById('game-over-text').textContent = victory ? '🏆 VITTORIA!' : '💀 SCONFITTA';
+        document.getElementById('game-over-stats').textContent =
+            `Round: ${gameState.round} | HP rimasti: ${gameState.player.health}`;
+    }
+
+    function newGame() {
+        document.getElementById('game-over').style.display = 'none';
+        initGame();
+    }
+
+    // ==================== UI ====================
+    function createCardElement(card, onClick, showCost = false) {
+        const div = document.createElement('div');
+        div.className = `card tribe-${card.tribe}`;
+
+        let badges = '';
+        if (card.divineShield) badges += '🛡️';
+        if (card.taunt) badges += '⚔️';
+
+        div.innerHTML = `
+            <div class="card-badges">${badges}</div>
+            <div class="card-name">${card.name}</div>
+            <div class="card-tribe">${card.tribe.replace('_', ' ')}</div>
+            <div class="card-stats">
+                <span class="atk">⚔${card.attack}</span>
+                <span class="hp">♥${card.health}</span>
+            </div>
+            ${showCost ? `<div class="card-cost">💰 ${card.cost}G</div>` : ''}
+        `;
+
+        if (onClick) div.onclick = onClick;
+        return div;
+    }
+
+    function updateUI() {
+        const p = gameState.player;
+        const ai = gameState.ai;
+        const shop = gameState.shop;
+
+        // Header
+        document.getElementById('round').textContent = gameState.round;
+        document.getElementById('player-hp').textContent = p.health;
+        document.getElementById('player-gold').textContent = p.gold;
+        document.getElementById('player-tier').textContent = p.tier;
+        document.getElementById('ai-hp').textContent = ai.health;
+
+        // Buttons
+        const costs = { 1: 5, 2: 7, 3: 8, 4: 9, 5: 10 };
+        const tierCost = costs[p.tier] || 0;
+        document.getElementById('btn-tierup').textContent = p.tier >= 6 ? '⬆️ MAX' : `⬆️ Tier Up (${tierCost}G)`;
+        document.getElementById('btn-tierup').disabled = p.tier >= 6 || p.gold < tierCost;
+        document.getElementById('btn-reroll').disabled = p.gold < 1;
+
+        const freezeBtn = document.getElementById('btn-freeze');
+        freezeBtn.textContent = shop.frozen ? '🔥 Unfreeze' : '❄️ Freeze';
+        freezeBtn.classList.toggle('frozen', shop.frozen);
+
+        // Shop
+        const shopDiv = document.getElementById('shop-cards');
+        shopDiv.innerHTML = '';
+        shop.cards.forEach((card, i) => {
+            const canBuy = p.gold >= card.cost && (p.hand.length < 10 || p.board.length < 7);
+            const el = createCardElement(card, canBuy ? () => buyCard(i) : null, true);
+            if (!canBuy) el.style.opacity = '0.5';
+            shopDiv.appendChild(el);
+        });
+        if (shop.cards.length === 0) {
+            shopDiv.innerHTML = '<div class="empty-slot">Vuoto</div>';
+        }
+
+        // Enemy board
+        document.getElementById('enemy-count').textContent = ai.board.length;
+        const enemyDiv = document.getElementById('enemy-board');
+        enemyDiv.innerHTML = '';
+        if (ai.board.length > 0) {
+            ai.board.forEach(card => {
+                const el = createCardElement(card, null);
+                el.style.cursor = 'default';
+                enemyDiv.appendChild(el);
+            });
+        } else {
+            for (let i = 0; i < 3; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'empty-slot';
+                slot.textContent = '?';
+                slot.style.background = 'rgba(231, 76, 60, 0.2)';
+                enemyDiv.appendChild(slot);
+            }
+        }
+
+        // Player board
+        document.getElementById('player-board-count').textContent = p.board.length;
+        const boardDiv = document.getElementById('player-board');
+        boardDiv.innerHTML = '';
+        p.board.forEach((card, i) => {
+            const el = createCardElement(card, sellMode ? () => sellCard('board', i) : null);
+            if (sellMode) el.style.border = '2px solid #e74c3c';
+            boardDiv.appendChild(el);
+        });
+        if (p.board.length === 0) {
+            boardDiv.innerHTML = '<div class="empty-slot">Vuoto</div>';
+        }
+
+        // Hand
+        const handDiv = document.getElementById('player-hand');
+        handDiv.innerHTML = '';
+        p.hand.forEach((card, i) => {
+            const el = createCardElement(card, () => playCard(i));
+            if (sellMode) el.style.border = '2px solid #e74c3c';
+            handDiv.appendChild(el);
+        });
+        if (p.hand.length === 0) {
+            handDiv.innerHTML = '<div class="empty-slot">Vuoto</div>';
+        }
+
+        // Log
+        const logDiv = document.getElementById('log');
+        logDiv.innerHTML = logMessages.map(l =>
+            `<div class="${l.type}">${l.msg}</div>`
+        ).join('');
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    // Start game
+    initGame();
+    </script>
+</body>
+</html>
