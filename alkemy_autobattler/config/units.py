@@ -39,20 +39,6 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # TIER 1 UNITS - Basic starter units
     # ========================================================================
 
-    # --- Management ---
-    "account_owner": {
-        "id": "account_owner",
-        "name": "Account Owner",
-        "tribe": TribeType.MANAGEMENT,
-        "tier": 1,
-        "attack": 2,
-        "health": 3,
-        "cost": 3,
-        "sell_value": 1,
-        "ability": "none",
-        "is_token": False
-    },
-
     # --- Staff ---
     "office_assistant": {
         "id": "office_assistant",
@@ -155,20 +141,6 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # TIER 2 UNITS - Slightly stronger with some abilities
     # ========================================================================
 
-    # --- Management ---
-    "anna_cappa": {
-        "id": "anna_cappa",
-        "name": "Anna Cappa",
-        "tribe": TribeType.MANAGEMENT,
-        "tier": 2,
-        "attack": 1,
-        "health": 5,
-        "cost": 3,
-        "sell_value": 1,
-        "ability": "none",
-        "is_token": False
-    },
-
     # --- Staff ---
     "hr_specialist": {
         "id": "hr_specialist",
@@ -256,20 +228,6 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # ========================================================================
     # TIER 3 UNITS - Medium power with more abilities
     # ========================================================================
-
-    # --- Management ---
-    "industry_leader": {
-        "id": "industry_leader",
-        "name": "Industry Leader",
-        "tribe": TribeType.MANAGEMENT,
-        "tier": 3,
-        "attack": 4,
-        "health": 5,
-        "cost": 4,
-        "sell_value": 1,
-        "ability": "none",
-        "is_token": False
-    },
 
     # --- Staff ---
     "office_manager": {
@@ -359,33 +317,6 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # TIER 4 UNITS - Strong units, synergy enablers
     # ========================================================================
 
-    # --- Management ---
-    "oscar_zoggia": {
-        "id": "oscar_zoggia",
-        "name": "Oscar Zoggia",
-        "tribe": TribeType.MANAGEMENT,
-        "tier": 4,
-        "attack": 5,
-        "health": 6,
-        "cost": 5,
-        "sell_value": 2,
-        "ability": "none",
-        "is_token": False
-    },
-
-    "silvia_bosani": {
-        "id": "silvia_bosani",
-        "name": "Silvia Bosani",
-        "tribe": TribeType.MANAGEMENT,
-        "tier": 4,
-        "attack": 3,
-        "health": 7,
-        "cost": 5,
-        "sell_value": 2,
-        "ability": "none",
-        "is_token": False
-    },
-
     # --- Tech ---
     "tech_lead": {
         "id": "tech_lead",
@@ -435,20 +366,6 @@ UNITS: Dict[str, Dict[str, Any]] = {
     # ========================================================================
     # TIER 6 UNITS - Legendary game-changers
     # ========================================================================
-
-    # --- Management ---
-    "duccio_vitali": {
-        "id": "duccio_vitali",
-        "name": "Duccio Vitali",
-        "tribe": TribeType.MANAGEMENT,
-        "tier": 6,
-        "attack": 6,
-        "health": 10,
-        "cost": 6,
-        "sell_value": 3,
-        "ability": "none",
-        "is_token": False
-    },
 
     # ========================================================================
     # TOKEN UNITS - Not in shop, summoned by abilities
