@@ -1343,8 +1343,11 @@
         // Pick random client
         const client = CLIENT_LIST[Math.floor(Math.random() * CLIENT_LIST.length)];
 
-        // Calculate required performance based on project number and client strength
-        const basePerf = client.baseStrength + (game.projectNum * 2);
+        // Calculate required performance with scaling difficulty
+        // Base from client strength, scaled by round number (15% increase per round)
+        const roundMultiplier = 1 + (game.projectNum - 1) * 0.15;
+        const scaledClientStrength = Math.floor(client.baseStrength * roundMultiplier);
+        const basePerf = scaledClientStrength + (game.projectNum * 3);
         const variation = Math.floor(Math.random() * 4) - 2; // -2 to +2
 
         game.project = {
