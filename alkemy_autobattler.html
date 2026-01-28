@@ -105,203 +105,212 @@
         .leaderboard-table tr:hover { background: rgba(255,255,255,0.05); }
         .no-data { color: #666; text-align: center; padding: 20px; }
 
-        /* ==================== GAME SCREEN ==================== */
-        .game-screen {
-            display: none;
-            padding: 15px;
-        }
-        .container { max-width: 1200px; margin: 0 auto; }
+        /* ==================== GAME SCREEN - COMPACT LAYOUT ==================== */
+        .game-screen { display: none; padding: 8px; }
+        .container { max-width: 1100px; margin: 0 auto; }
 
-        /* Header */
-        .header {
+        /* Header Row */
+        .header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0,0,0,0.4);
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
         }
-        .player-info {
-            font-size: 14px;
-            color: #aaa;
-        }
-        .player-info strong { color: #e94560; }
-        .project-info {
-            font-size: 20px;
-            color: #e94560;
-            font-weight: bold;
-        }
-        .phase-badge {
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 12px;
-        }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .project-num { font-size: 16px; font-weight: bold; color: #e94560; }
+        .phase-badge { padding: 4px 12px; border-radius: 12px; font-weight: bold; font-size: 11px; }
         .phase-staffing { background: #3498db; }
         .phase-delivery { background: #e67e22; }
-        .stats { font-size: 14px; display: flex; gap: 15px; flex-wrap: wrap; }
-        .money { color: #2ecc71; font-weight: bold; }
-        .budget { color: #f1c40f; }
-        .score { color: #3498db; }
+        .budget-display { font-size: 18px; font-weight: bold; color: #2ecc71; }
+        .btn-menu { background: #34495e; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
 
-        /* Main Layout */
-        .main {
+        /* Top Row: Project + Client */
+        .top-row {
             display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 15px;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
         }
-        @media (max-width: 900px) {
-            .main { grid-template-columns: 1fr; }
+        .card-box {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 8px;
         }
+        .box-title { font-size: 11px; font-weight: bold; margin-bottom: 6px; text-align: center; }
+        .project-box .box-title { color: #3498db; }
+        .client-box .box-title { color: #e74c3c; }
 
-        /* HR Shop */
+        /* Mini Project/Client Cards */
+        .mini-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            min-height: 80px;
+        }
+        .mini-card .name { font-size: 12px; font-weight: bold; color: #fff; margin-bottom: 4px; }
+        .mini-card .desc { font-size: 9px; color: #aaa; margin-bottom: 4px; }
+        .mini-card .perf { font-size: 20px; font-weight: bold; color: #f1c40f; }
+        .mini-card .details { font-size: 9px; color: #888; margin-top: 4px; }
+        .mini-card .synergy { font-size: 9px; color: #1abc9c; }
+        .mini-card .client-effect { font-size: 9px; color: #e67e22; }
+        .mini-card .multiplier { font-size: 10px; color: #f1c40f; }
+        .mini-card.hidden .perf { color: #666; }
+
+        /* HR Panel */
         .hr-panel {
             background: rgba(0,0,0,0.4);
-            border-radius: 12px;
-            padding: 15px;
-        }
-        .hr-panel h2 {
-            text-align: center;
-            margin-bottom: 15px;
-            color: #9b59b6;
-            font-size: 16px;
-        }
-        .hr-buttons {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        .hr-buttons button {
-            flex: 1;
+            border-radius: 10px;
             padding: 8px;
+            margin-bottom: 8px;
+        }
+        .hr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .hr-title { font-size: 12px; font-weight: bold; color: #9b59b6; }
+        .hr-buttons { display: flex; gap: 4px; }
+        .btn-hr { padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .btn-hr:first-child { background: #3498db; color: white; }
+        .btn-hr:last-child { background: #1abc9c; color: white; }
+        .btn-hr.frozen { background: #e74c3c; }
+        .btn-hr:disabled { opacity: 0.5; }
+        .hr-cards { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+
+        /* Performance Summary */
+        .performance-summary {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+        .perf-item { text-align: center; }
+        .perf-item .value { font-size: 20px; font-weight: bold; }
+        .perf-item .label { font-size: 9px; color: #888; }
+        .perf-item.leader .value { color: #f1c40f; }
+        .perf-item.total .value { color: #2ecc71; }
+        .perf-item.required .value { color: #e74c3c; }
+
+        /* Middle Row: Leader + Team */
+        .middle-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .section-box {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 8px;
+        }
+        .section-title { font-size: 11px; font-weight: bold; margin-bottom: 6px; }
+        .leader-box .section-title { color: #f1c40f; }
+        .team-box .section-title { color: #3498db; }
+        .pool-box .section-title { color: #9b59b6; }
+        .cards-row { display: flex; gap: 6px; flex-wrap: wrap; min-height: 90px; align-items: center; }
+        .leader-box .cards-row { justify-content: center; }
+
+        /* Actions */
+        .actions-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .btn-action {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: bold;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 11px;
-            transition: all 0.2s;
         }
-        .hr-buttons button:hover:not(:disabled) { transform: scale(1.03); }
-        .hr-buttons button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-refresh { background: #3498db; color: white; }
-        .btn-freeze { background: #1abc9c; color: white; }
-        .btn-freeze.frozen { background: #e74c3c; }
+        .btn-action:disabled { opacity: 0.5; }
+        .btn-delivery { background: linear-gradient(145deg, #e67e22, #d35400); color: white; }
+        .btn-calculate { background: linear-gradient(145deg, #27ae60, #1e8449); color: white; }
+        .btn-sell { background: linear-gradient(145deg, #e74c3c, #c0392b); color: white; }
 
-        /* Game Area */
-        .game-area { display: flex; flex-direction: column; gap: 10px; }
+        /* Pool */
+        .pool-box { margin-bottom: 8px; }
+        .pool-box .cards-row { justify-content: center; }
 
-        /* Sections */
-        .section {
+        /* Bottom Row: Stats + Log */
+        .bottom-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 8px;
+        }
+        .session-stats-box {
             background: rgba(0,0,0,0.4);
-            border-radius: 12px;
-            padding: 12px;
-        }
-        .section h3 {
-            margin-bottom: 8px;
-            font-size: 13px;
+            border-radius: 8px;
+            padding: 8px;
             display: flex;
-            align-items: center;
-            gap: 8px;
+            flex-direction: column;
+            gap: 4px;
         }
-        .section.client h3 { color: #e74c3c; }
-        .section.leader h3 { color: #f1c40f; }
-        .section.team h3 { color: #3498db; }
-        .section.pool h3 { color: #9b59b6; }
-
-        /* Cards Container */
-        .cards {
-            display: flex;
-            gap: 8px;
-            min-height: 120px;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
+        .stat-item { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+        .stat-label { width: 20px; }
+        .stat-value { font-weight: bold; }
+        .stat-value.money { color: #2ecc71; }
+        .log-box {
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            padding: 6px;
         }
+        .log {
+            height: 70px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 9px;
+            color: #0f0;
+            background: #0a0a0a;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        .log .win { color: #f1c40f; }
+        .log .lose { color: #e74c3c; }
+        .log .info { color: #3498db; }
+        .log .money { color: #2ecc71; }
 
         /* Card Style */
         .card {
-            width: 90px;
-            height: 125px;
-            border-radius: 10px;
-            padding: 8px;
+            width: 75px;
+            height: 100px;
+            border-radius: 8px;
+            padding: 6px;
             display: flex;
             flex-direction: column;
             cursor: pointer;
             transition: all 0.2s;
             position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
             text-align: center;
         }
-        .card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-        }
-        .card.leader {
-            border: 3px solid #f1c40f;
-            box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
-        }
-        .card.leader::after {
-            content: '👑';
-            position: absolute;
-            top: -12px;
-            right: -8px;
-            font-size: 18px;
-        }
-        .card-name {
-            font-size: 10px;
-            font-weight: bold;
-            margin-bottom: 3px;
-            min-height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card-role {
-            font-size: 8px;
-            opacity: 0.8;
-            margin-bottom: 5px;
-        }
-        .card-performance {
-            font-size: 24px;
-            font-weight: bold;
-            color: #f1c40f;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card-performance span { font-size: 10px; margin-left: 2px; }
-        .card-cost {
-            font-size: 10px;
-            color: #2ecc71;
-            font-weight: bold;
-        }
+        .card:hover { transform: translateY(-3px) scale(1.02); }
+        .card.leader { border: 2px solid #f1c40f; }
+        .card.leader::after { content: '👑'; position: absolute; top: -10px; right: -6px; font-size: 14px; }
+        .card-name { font-size: 8px; font-weight: bold; margin-bottom: 2px; min-height: 18px; display: flex; align-items: center; justify-content: center; }
+        .card-role { font-size: 7px; opacity: 0.8; margin-bottom: 2px; }
+        .card-performance { font-size: 20px; font-weight: bold; color: #f1c40f; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+        .card-performance span { font-size: 8px; margin-left: 2px; }
+        .card-cost { font-size: 12px; color: #2ecc71; font-weight: bold; }
         .empty-slot {
-            width: 90px;
-            height: 125px;
+            width: 75px;
+            height: 100px;
             border: 2px dashed #444;
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #555;
-            font-size: 11px;
-            flex-direction: column;
-            gap: 3px;
+            font-size: 9px;
             text-align: center;
-            padding: 5px;
         }
-        .empty-slot.leader-slot {
-            border-color: #f1c40f;
-            color: #f1c40f;
-            background: rgba(241, 196, 15, 0.1);
-        }
-        .empty-slot.required {
-            border-color: #e74c3c;
+        .empty-slot.leader-slot { border-color: #f1c40f; color: #f1c40f; background: rgba(241,196,15,0.1); }
+        .empty-slot.required { border-color: #e74c3c;
             color: #e74c3c;
         }
 
@@ -547,115 +556,88 @@
     <!-- ==================== GAME SCREEN ==================== -->
     <div class="game-screen" id="game-screen">
         <div class="container">
-            <!-- Session Stats -->
-            <div class="session-stats">
-                <div class="session-stat">
-                    <div class="label">Giocatore</div>
-                    <div class="value" id="stat-player">-</div>
+            <!-- Header Row -->
+            <div class="header-row">
+                <div class="header-left">
+                    <span class="project-num">📋 #<span id="project-num">1</span></span>
+                    <span class="phase-badge phase-staffing" id="phase-badge">STAFFING</span>
                 </div>
-                <div class="session-stat money">
-                    <div class="label">Soldi Generati</div>
-                    <div class="value" id="stat-money">€0</div>
+                <div class="header-center">
+                    <span class="budget-display">💶 <span id="budget">0</span> k€</span>
                 </div>
-                <div class="session-stat projects">
-                    <div class="label">Progetti Superati</div>
-                    <div class="value" id="stat-projects">0</div>
-                </div>
-                <div class="session-stat perf">
-                    <div class="label">Performance Totale</div>
-                    <div class="value" id="stat-perf">0⭐</div>
+                <div class="header-right">
+                    <button class="btn-menu" onclick="backToMenu()">🏠</button>
                 </div>
             </div>
 
-            <!-- Header -->
-            <div class="header">
-                <div class="project-info">
-                    📋 Progetto #<span id="project-num">1</span>
+            <!-- Top Row: Project + Client -->
+            <div class="top-row">
+                <div class="card-box project-box">
+                    <div class="box-title">📋 PROGETTO</div>
+                    <div id="project-card-area"></div>
                 </div>
-                <div class="phase-badge phase-staffing" id="phase-badge">STAFFING</div>
-                <div class="stats">
-                    <span class="money">💶 Cassa: €<span id="budget">0</span></span>
+                <div class="card-box client-box">
+                    <div class="box-title">👤 CLIENTE</div>
+                    <div id="client-card-area"></div>
                 </div>
-                <button class="btn-menu" onclick="backToMenu()">🏠 Menu</button>
             </div>
 
-            <div class="main">
-                <!-- HR Panel -->
-                <div class="hr-panel" id="hr-panel">
-                    <h2>👥 HR - Risorse</h2>
+            <!-- HR Panel -->
+            <div class="hr-panel" id="hr-panel">
+                <div class="hr-header">
+                    <span class="hr-title">👥 HR</span>
                     <div class="hr-buttons">
-                        <button class="btn-refresh" id="btn-refresh" onclick="refreshHR()">🔄 Refresh (€1k)</button>
-                        <button class="btn-freeze" id="btn-freeze" onclick="freezeHR()">❄️ Freeze</button>
+                        <button class="btn-hr" id="btn-refresh" onclick="refreshHR()">🔄 1k€</button>
+                        <button class="btn-hr" id="btn-freeze" onclick="freezeHR()">❄️</button>
                     </div>
-                    <div id="hr-cards" class="cards"></div>
                 </div>
+                <div id="hr-cards" class="hr-cards"></div>
+            </div>
 
-                <!-- Game Area -->
-                <div class="game-area">
-                    <!-- Client Section -->
-                    <div class="section client">
-                        <h3>📋 PROGETTO</h3>
-                        <div class="cards" id="client-area"></div>
-                    </div>
+            <!-- Performance Summary (delivery only) -->
+            <div class="performance-summary" id="perf-summary" style="display: none;">
+                <div class="perf-item"><div class="value" id="perf-base">0</div><div class="label">Team</div></div>
+                <div class="perf-item leader"><div class="value" id="perf-leader">+0</div><div class="label">CP</div></div>
+                <div class="perf-item total"><div class="value" id="perf-total">=0</div><div class="label">TOT</div></div>
+                <div class="perf-item required"><div class="value" id="perf-required">0</div><div class="label">REQ</div></div>
+            </div>
 
-                    <!-- Performance Summary -->
-                    <div class="performance-summary" id="perf-summary" style="display: none;">
-                        <h3>📊 CALCOLO PERFORMANCE</h3>
-                        <div class="performance-breakdown">
-                            <div class="perf-item">
-                                <div class="value" id="perf-base">0</div>
-                                <div class="label">Team</div>
-                            </div>
-                            <div class="perf-item leader">
-                                <div class="value" id="perf-leader">+0</div>
-                                <div class="label">Bonus CP</div>
-                            </div>
-                            <div class="perf-item total">
-                                <div class="value" id="perf-total">=0</div>
-                                <div class="label">TOTALE</div>
-                            </div>
-                            <div class="perf-item required">
-                                <div class="value" id="perf-required">0</div>
-                                <div class="label">Richiesto</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="actions">
-                        <button class="btn-action btn-delivery" id="btn-delivery" onclick="goToDelivery()">
-                            📦 VAI ALLA DELIVERY
-                        </button>
-                        <button class="btn-action btn-calculate" id="btn-calculate" onclick="calculatePerformance()" style="display: none;">
-                            📊 CALCOLA PERFORMANCE
-                        </button>
-                        <button class="btn-action btn-sell" id="btn-sell" onclick="toggleSellMode()">💸 Vendi</button>
-                    </div>
-
-                    <!-- Capo Progetto Section (SEPARATE) -->
-                    <div class="section leader">
-                        <h3>👑 CAPO PROGETTO <small style="color: #888; font-weight: normal;">(punti x2)</small></h3>
-                        <div id="leader-area" class="cards"></div>
-                    </div>
-
-                    <!-- Team Section -->
-                    <div class="section team">
-                        <h3>👔 TEAM (<span id="team-count">0</span>/<span id="team-required">2</span>)</h3>
-                        <div id="team-cards" class="cards"></div>
-                    </div>
-
-                    <!-- Pool Section -->
-                    <div class="section pool">
-                        <h3>📁 POOL (<span id="pool-count">0</span>/8)</h3>
-                        <div id="pool-cards" class="cards"></div>
-                    </div>
+            <!-- Middle Row: Leader + Team side by side -->
+            <div class="middle-row">
+                <div class="section-box leader-box">
+                    <div class="section-title">👑 CAPO PROGETTO <small>(x2)</small></div>
+                    <div id="leader-area" class="cards-row"></div>
+                </div>
+                <div class="section-box team-box">
+                    <div class="section-title">👔 TEAM <span id="team-count">0</span>/<span id="team-required">2</span></div>
+                    <div id="team-cards" class="cards-row"></div>
                 </div>
             </div>
 
-            <!-- Log -->
-            <div class="log-section">
-                <h3>📜 Log</h3>
-                <div id="log" class="log"></div>
+            <!-- Actions -->
+            <div class="actions-row">
+                <button class="btn-action btn-delivery" id="btn-delivery" onclick="goToDelivery()">📦 DELIVERY</button>
+                <button class="btn-action btn-calculate" id="btn-calculate" onclick="calculatePerformance()" style="display: none;">📊 CALCOLA</button>
+                <button class="btn-action btn-sell" id="btn-sell" onclick="toggleSellMode()">💸 Vendi</button>
+            </div>
+
+            <!-- Pool Section -->
+            <div class="section-box pool-box">
+                <div class="section-title">📁 POOL <span id="pool-count">0</span>/8</div>
+                <div id="pool-cards" class="cards-row"></div>
+            </div>
+
+            <!-- Bottom Row: Session Stats + Log -->
+            <div class="bottom-row">
+                <div class="session-stats-box">
+                    <div class="stat-item"><span class="stat-label">👤</span><span class="stat-value" id="stat-player">-</span></div>
+                    <div class="stat-item"><span class="stat-label">💰</span><span class="stat-value money" id="stat-money">0k€</span></div>
+                    <div class="stat-item"><span class="stat-label">✅</span><span class="stat-value" id="stat-projects">0</span></div>
+                    <div class="stat-item"><span class="stat-label">⭐</span><span class="stat-value" id="stat-perf">0</span></div>
+                </div>
+                <div class="log-box">
+                    <div id="log" class="log"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -1177,7 +1159,7 @@
                 <td>${i + 1}</td>
                 <td>${entry.name}</td>
                 <td>#${entry.sessionNum}</td>
-                <td style="color:#2ecc71">€${entry.moneyGenerated}k</td>
+                <td style="color:#2ecc71">${entry.moneyGenerated}k€</td>
                 <td>${entry.projectsCompleted}</td>
                 <td style="color:#f1c40f">${entry.totalPerformance}⭐</td>
             </tr>`;
@@ -1366,7 +1348,7 @@
         if (!resource) return;
 
         if (game.budget < resource.cost) {
-            log(`❌ Servono €${resource.cost}k!`, "lose");
+            log(`❌ Servono ${resource.cost}k€!`, "lose");
             return;
         }
 
@@ -1458,7 +1440,7 @@
             game.leader = null;
             const sellValue = resource.sellValue || Math.ceil(resource.cost / 2);
             game.budget += sellValue;
-            log(`💸 Venduto ${resource.name} per €${sellValue}k`, "money");
+            log(`💸 Venduto ${resource.name} per ${sellValue}k€`, "money");
             sellMode = false;
             updateUI();
             return;
@@ -1470,7 +1452,7 @@
         const resource = list.splice(index, 1)[0];
         const sellValue = resource.sellValue || Math.ceil(resource.cost / 2);
         game.budget += sellValue;
-        log(`💸 Venduto ${resource.name} per €${sellValue}k`, "money");
+        log(`💸 Venduto ${resource.name} per ${sellValue}k€`, "money");
         sellMode = false;
         updateUI();
     }
@@ -1503,7 +1485,7 @@
         log(`📊 Performance richiesta: ${game.project.requiredPerformance}⭐`);
         log(`🎯 Abilità progetto: ${game.project.abilityDesc}`);
         log(`✨ Sinergie: ${game.project.synergy.join(', ')}`);
-        log(`💰 Reward: €${calculateReward()}k (x${game.client.moneyMultiplier})`);
+        log(`💰 Reward: ${calculateReward()}k€ (x${game.client.moneyMultiplier})`);
 
         updateUI();
     }
@@ -2098,7 +2080,7 @@
             : `${game.project.name} fallito...`;
 
         document.getElementById('overlay-reward').innerHTML = victory
-            ? `+€${reward}k guadagnati!`
+            ? `+${reward}k€ guadagnati!`
             : 'Nessun guadagno';
 
         document.getElementById('overlay-stats').innerHTML = `
@@ -2114,7 +2096,7 @@
             session.totalPerformance += achievedPerf;
             game.budget += reward;
 
-            log(`🎉 VITTORIA! +€${reward}k`, "win");
+            log(`🎉 VITTORIA! +${reward}k€`, "win");
         } else {
             session.totalPerformance += achievedPerf;
             game.gameOver = true;
@@ -2161,7 +2143,7 @@
 
         log(`\n📋 === PROGETTO #${game.projectNum} ===`, "info");
         log(`📋 ${game.project.name}`, "info");
-        log(`💶 Cassa: €${game.budget}k`);
+        log(`💶 Cassa: ${game.budget}k€`);
 
         updateUI();
     }
@@ -2213,7 +2195,7 @@
             <div class="card-role">${tribeDisplay}</div>
             <div class="card-performance">${resource.performance}<span>⭐</span></div>
             ${abilityHtml}
-            ${showCost ? `<div class="card-cost">€${resource.cost}k</div>` : ''}
+            ${showCost ? `<div class="card-cost">${resource.cost}k€</div>` : ''}
             ${abilityIcon}
         `;
 
@@ -2224,7 +2206,7 @@
     function updateUI() {
         // Session stats
         document.getElementById('stat-player').textContent = session.playerName || '-';
-        document.getElementById('stat-money').textContent = `€${session.moneyGenerated}k`;
+        document.getElementById('stat-money').textContent = `${session.moneyGenerated}k€`;
         document.getElementById('stat-projects').textContent = session.projectsCompleted;
         document.getElementById('stat-perf').textContent = `${session.totalPerformance}⭐`;
 
@@ -2254,48 +2236,56 @@
             hrDiv.appendChild(el);
         });
 
-        // Project Card
-        const clientDiv = document.getElementById('client-area');
-        clientDiv.innerHTML = '';
-        const clientCard = document.createElement('div');
-        clientCard.className = 'client-card' + (game.project.revealed ? '' : ' hidden');
-
+        // Project Card (separate from client)
+        const projectDiv = document.getElementById('project-card-area');
+        projectDiv.innerHTML = '';
         const synergies = game.project.synergy.map(s => s.replace(/_/g, ' ')).join(', ');
+
+        const projectCard = document.createElement('div');
+        projectCard.className = 'mini-card';
 
         if (game.project.revealed) {
             const reward = calculateReward();
-            clientCard.innerHTML = `
-                <div class="client-name">${game.project.name}</div>
-                <div class="client-desc" style="font-size:10px;">${game.project.abilityDesc}</div>
-                <div class="required-performance">${game.project.requiredPerformance}⭐</div>
-                <div class="client-details">
-                    Staff max: ${game.project.staffLimit}<br>
-                    <span style="color:#1abc9c;">Sinergie: ${synergies}</span>
-                </div>
-                <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.2);">
-                    <div style="color:#e74c3c; font-weight:bold; font-size:12px;">👤 ${game.client.name}</div>
-                    <div style="color:#e67e22; font-size:9px;">${game.client.effectDesc}</div>
-                    <div style="color:#f1c40f; font-size:10px;">x${game.client.moneyMultiplier} reward</div>
-                </div>
-                <div class="ticket-info">
-                    <span class="reward">Reward: €${reward}k</span>
-                </div>
+            projectCard.innerHTML = `
+                <div class="name">${game.project.name}</div>
+                <div class="desc">${game.project.abilityDesc}</div>
+                <div class="perf">${game.project.requiredPerformance}⭐</div>
+                <div class="details">Staff max: ${game.project.staffLimit}</div>
+                <div class="synergy">Sinergie: ${synergies}</div>
+                <div style="margin-top:4px; font-size:10px; color:#2ecc71;">Reward: ${reward}k€</div>
             `;
         } else {
-            // Show project name, synergies, and client - hide performance requirement
+            projectCard.innerHTML = `
+                <div class="name">${game.project.name}</div>
+                <div class="desc">${game.project.abilityDesc}</div>
+                <div class="perf" style="color:#666;">?⭐</div>
+                <div class="details">Staff max: ${game.project.staffLimit}</div>
+                <div class="synergy">Sinergie: ${synergies}</div>
+            `;
+        }
+        projectDiv.appendChild(projectCard);
+
+        // Client Card (hidden until delivery)
+        const clientDiv = document.getElementById('client-card-area');
+        clientDiv.innerHTML = '';
+        const clientCard = document.createElement('div');
+        clientCard.className = 'mini-card' + (game.phase === 'delivery' ? '' : ' hidden');
+
+        if (game.phase === 'delivery') {
+            // Show client details in delivery
             clientCard.innerHTML = `
-                <div class="client-name">${game.project.name}</div>
-                <div class="client-desc" style="font-size:10px;">${game.project.abilityDesc}</div>
-                <div class="required-performance" style="font-size:40px;">?⭐</div>
-                <div class="client-details">
-                    Staff max: ${game.project.staffLimit}<br>
-                    <span style="color:#1abc9c;">Sinergie: ${synergies}</span>
-                </div>
-                <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.2);">
-                    <div style="color:#e74c3c; font-weight:bold; font-size:12px;">👤 ${game.client.name}</div>
-                    <div style="color:#e67e22; font-size:9px;">${game.client.effectDesc}</div>
-                    <div style="color:#f1c40f; font-size:10px;">x${game.client.moneyMultiplier} reward</div>
-                </div>
+                <div class="name" style="color:#e74c3c;">${game.client.name}</div>
+                <div class="client-effect">${game.client.effectDesc}</div>
+                <div class="perf">${game.client.baseStrength}⭐</div>
+                <div class="multiplier">x${game.client.moneyMultiplier} reward</div>
+            `;
+        } else {
+            // Client hidden during staffing
+            clientCard.innerHTML = `
+                <div class="name" style="color:#666;">???</div>
+                <div class="desc" style="color:#444;">Cliente sconosciuto</div>
+                <div class="perf" style="color:#444;">?⭐</div>
+                <div class="details" style="color:#444;">Svelato in Delivery</div>
             `;
         }
         clientDiv.appendChild(clientCard);
