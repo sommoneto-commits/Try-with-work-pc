@@ -312,6 +312,33 @@
         .tribe-MARKETING_MEDIA { background: linear-gradient(145deg, #e67e22, #d35400); }
         .tribe-BRAND_EXPERIENCE { background: linear-gradient(145deg, #e74c3c, #c0392b); }
         .tribe-TECH { background: linear-gradient(145deg, #9b59b6, #8e44ad); }
+        .tribe-GO_TO_MARKET { background: linear-gradient(145deg, #1abc9c, #16a085); }
+        .tribe-NEUTRAL { background: linear-gradient(145deg, #7f8c8d, #95a5a6); }
+
+        /* Legendary Card Styling */
+        .card.legendary {
+            border: 3px solid #ff6b6b;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+            animation: legendaryGlow 2s ease-in-out infinite alternate;
+        }
+        @keyframes legendaryGlow {
+            from { box-shadow: 0 0 15px rgba(255, 107, 107, 0.4); }
+            to { box-shadow: 0 0 25px rgba(255, 107, 107, 0.8); }
+        }
+        .card .ability-icon {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 12px;
+        }
+        .card-ability {
+            font-size: 7px;
+            color: rgba(255,255,255,0.8);
+            margin-top: 2px;
+            line-height: 1.2;
+            max-height: 24px;
+            overflow: hidden;
+        }
 
         /* Client Card */
         .client-card {
@@ -676,6 +703,119 @@
         senior_developer: { name: "Senior Developer", tribe: "TECH", tier: 3, performance: 6, cost: 6 },
         tech_lead: { name: "Tech Lead", tribe: "TECH", tier: 4, performance: 8, cost: 8 },
         cto: { name: "CTO", tribe: "TECH", tier: 5, performance: 10, cost: 10 },
+
+        // ==================== LEGENDARY (TIER 5) ====================
+        // CONSULTING LEGENDS
+        buca_losco: {
+            name: "Buca Losco",
+            tribe: "CONSULTING",
+            tier: 5,
+            performance: 11,
+            cost: 12,
+            sellValue: 6,
+            ability: "top2_boost",
+            abilityDesc: "Solo i 2 migliori contribuiscono, +3 perf"
+        },
+        marco_chicken: {
+            name: "Marco Chicken",
+            tribe: "CONSULTING",
+            tier: 5,
+            performance: 12,
+            cost: 12,
+            sellValue: 6,
+            ability: "consulting_boost",
+            abilityDesc: "CONSULTING +2 perf, ignora penalità"
+        },
+
+        // DATA & ANALYTICS LEGENDS
+        alberto_saccardi: {
+            name: "Professor Saccardius",
+            tribe: "DATA_ANALYTICS",
+            tier: 5,
+            performance: 7,
+            cost: 10,
+            sellValue: 5,
+            ability: "double_buffs",
+            abilityDesc: "DATA buff x2, no effetti random"
+        },
+        massimiliano_trotta: {
+            name: "Max Trottamelier",
+            tribe: "DATA_ANALYTICS",
+            tier: 5,
+            performance: 8,
+            cost: 10,
+            sellValue: 5,
+            ability: "data_random_boost",
+            abilityDesc: "Ogni DATA dà +1 a unità random"
+        },
+
+        // MARKETING LEGEND
+        mario_varriale: {
+            name: "Mario Rocknrolliale",
+            tribe: "MARKETING_MEDIA",
+            tier: 5,
+            performance: 6,
+            cost: 9,
+            sellValue: 4,
+            ability: "marketing_double",
+            abilityDesc: "MARKETING contribuisce x2"
+        },
+
+        // BRAND EXPERIENCE LEGEND
+        jan_mattassi: {
+            name: "Jan the Kind",
+            tribe: "BRAND_EXPERIENCE",
+            tier: 5,
+            performance: 7,
+            cost: 9,
+            sellValue: 4,
+            ability: "bx_reroll",
+            abilityDesc: "BX ritirano, tengono il migliore"
+        },
+
+        // GO TO MARKET LEGENDS
+        oscar_zoggia: {
+            name: "Oscar Vulcania",
+            tribe: "GO_TO_MARKET",
+            tier: 5,
+            performance: 9,
+            cost: 11,
+            sellValue: 5,
+            ability: "gtm_vs_data",
+            abilityDesc: "Disabilita DATA, GTM +2 perf"
+        },
+        enrico_meacci: {
+            name: "Enrico Chaos",
+            tribe: "GO_TO_MARKET",
+            tier: 5,
+            performance: 8,
+            cost: 10,
+            sellValue: 5,
+            ability: "ignore_abilities",
+            abilityDesc: "Ignora tutte le abilità progetto"
+        },
+
+        // NEUTRAL LEGENDS
+        ducchio: {
+            name: "Ducchio",
+            tribe: "NEUTRAL",
+            tier: 5,
+            performance: 10,
+            cost: 13,
+            sellValue: 6,
+            ability: "diversity_team",
+            abilityDesc: "Tutti +1 per ogni CC diverso"
+        },
+        dru_so: {
+            name: "Dru.so",
+            tribe: "NEUTRAL",
+            tier: 5,
+            performance: 9,
+            cost: 12,
+            sellValue: 6,
+            ability: "diversity_self",
+            abilityDesc: "+2 per ogni CC diverso nel team"
+        },
     };
 
     // ==================== CLIENTS ====================
@@ -812,7 +952,10 @@
             tribe: template.tribe,
             tier: template.tier,
             performance: template.performance,
-            cost: template.cost
+            cost: template.cost,
+            sellValue: template.sellValue || Math.ceil(template.cost / 2),
+            ability: template.ability || null,
+            abilityDesc: template.abilityDesc || null
         };
     }
 
@@ -968,7 +1111,7 @@
         else if (location === 'leader' && game.leader) {
             const resource = game.leader;
             game.leader = null;
-            const sellValue = Math.ceil(resource.cost / 2);
+            const sellValue = resource.sellValue || Math.ceil(resource.cost / 2);
             game.budget += sellValue;
             log(`💸 Venduto ${resource.name} per €${sellValue}k`, "money");
             sellMode = false;
@@ -980,7 +1123,7 @@
         if (index >= list.length) return;
 
         const resource = list.splice(index, 1)[0];
-        const sellValue = Math.ceil(resource.cost / 2);
+        const sellValue = resource.sellValue || Math.ceil(resource.cost / 2);
         game.budget += sellValue;
         log(`💸 Venduto ${resource.name} per €${sellValue}k`, "money");
         sellMode = false;
@@ -1019,20 +1162,162 @@
     function calculatePerformance() {
         if (game.phase !== 'delivery') return;
 
-        // Calculate performance
-        let teamPerf = game.team.reduce((sum, r) => sum + r.performance, 0);
-        let leaderPerf = game.leader ? game.leader.performance : 0;
-        let leaderBonus = leaderPerf; // Double points for leader
-        let totalPerf = teamPerf + leaderPerf + leaderBonus;
+        // Gather all units (team + leader)
+        const allUnits = [...game.team];
+        if (game.leader) allUnits.push(game.leader);
+
+        // Find all active abilities
+        const activeAbilities = allUnits.filter(u => u.ability).map(u => u.ability);
+
+        // Check for ability that ignores all abilities
+        const ignoreAllAbilities = activeAbilities.includes('ignore_abilities');
+
+        // Build performance calculation with ability effects
+        let abilityBonuses = 0;
+        let abilityLog = [];
+
+        // Count competence centers for diversity bonuses
+        const competenceCenters = new Set(allUnits.map(u => u.tribe));
+        const numCCs = competenceCenters.size;
+
+        // Clone units for performance calculation (to apply temporary buffs)
+        let unitPerfs = allUnits.map(u => ({ ...u, calcPerf: u.performance }));
+
+        if (!ignoreAllAbilities) {
+            // Process each legendary ability
+            allUnits.forEach(unit => {
+                if (!unit.ability) return;
+
+                switch(unit.ability) {
+                    case 'top2_boost': // Buca Losco
+                        // Will be handled in final calculation
+                        abilityLog.push(`🎯 ${unit.name}: Solo top 2 contano (+3)`);
+                        break;
+
+                    case 'consulting_boost': // Marco Chicken
+                        unitPerfs.forEach(u => {
+                            if (u.tribe === 'CONSULTING') {
+                                u.calcPerf += 2;
+                                abilityLog.push(`📈 ${u.name} +2 (Consulting boost)`);
+                            }
+                        });
+                        break;
+
+                    case 'double_buffs': // Professor Saccardius
+                        // DATA units apply buffs twice (simplified: +50% perf)
+                        unitPerfs.forEach(u => {
+                            if (u.tribe === 'DATA_ANALYTICS' && u.id !== unit.id) {
+                                const bonus = Math.floor(u.calcPerf * 0.5);
+                                u.calcPerf += bonus;
+                                abilityLog.push(`📊 ${u.name} +${bonus} (buff x2)`);
+                            }
+                        });
+                        break;
+
+                    case 'data_random_boost': // Max Trottamelier
+                        const dataUnits = unitPerfs.filter(u => u.tribe === 'DATA_ANALYTICS');
+                        const otherUnits = unitPerfs.filter(u => u.tribe !== 'DATA_ANALYTICS');
+                        dataUnits.forEach(() => {
+                            if (otherUnits.length > 0) {
+                                const target = otherUnits[Math.floor(Math.random() * otherUnits.length)];
+                                target.calcPerf += 1;
+                                abilityLog.push(`🎲 ${target.name} +1 (DATA random)`);
+                            }
+                        });
+                        break;
+
+                    case 'marketing_double': // Mario Rocknrolliale
+                        unitPerfs.forEach(u => {
+                            if (u.tribe === 'MARKETING_MEDIA') {
+                                u.calcPerf *= 2;
+                                abilityLog.push(`📢 ${u.name} x2 (Marketing double)`);
+                            }
+                        });
+                        break;
+
+                    case 'bx_reroll': // Jan the Kind
+                        // BX units get best of 2 rolls (simplified: +20% perf)
+                        unitPerfs.forEach(u => {
+                            if (u.tribe === 'BRAND_EXPERIENCE') {
+                                const bonus = Math.ceil(u.calcPerf * 0.2);
+                                u.calcPerf += bonus;
+                                abilityLog.push(`🎨 ${u.name} +${bonus} (BX reroll)`);
+                            }
+                        });
+                        break;
+
+                    case 'gtm_vs_data': // Oscar Vulcania
+                        // Disable DATA abilities, boost GTM
+                        unitPerfs.forEach(u => {
+                            if (u.tribe === 'DATA_ANALYTICS') {
+                                u.abilityDisabled = true;
+                            }
+                            if (u.tribe === 'GO_TO_MARKET') {
+                                u.calcPerf += 2;
+                                abilityLog.push(`🚀 ${u.name} +2 (GTM boost)`);
+                            }
+                        });
+                        break;
+
+                    case 'diversity_team': // Ducchio
+                        const teamBonus = numCCs;
+                        unitPerfs.forEach(u => {
+                            u.calcPerf += teamBonus;
+                        });
+                        abilityLog.push(`🦆 Tutti +${teamBonus} (${numCCs} CC diversi)`);
+                        break;
+
+                    case 'diversity_self': // Dru.so
+                        const selfBonus = numCCs * 2;
+                        const druUnit = unitPerfs.find(u => u.id === unit.id);
+                        if (druUnit) {
+                            druUnit.calcPerf += selfBonus;
+                            abilityLog.push(`🤖 Dru.so +${selfBonus} (${numCCs} CC)`);
+                        }
+                        break;
+                }
+            });
+        } else {
+            abilityLog.push(`⚡ Enrico Chaos: Tutte le abilità ignorate!`);
+        }
+
+        // Handle Buca Losco's top2_boost ability
+        let finalPerf = 0;
+        const hasBucaLosco = !ignoreAllAbilities && activeAbilities.includes('top2_boost');
+
+        if (hasBucaLosco) {
+            // Sort by performance and take top 2
+            unitPerfs.sort((a, b) => b.calcPerf - a.calcPerf);
+            const top2 = unitPerfs.slice(0, 2);
+            top2.forEach(u => u.calcPerf += 3);
+            finalPerf = top2.reduce((sum, u) => sum + u.calcPerf, 0);
+            abilityLog.push(`🎯 Top 2: ${top2.map(u => u.name).join(', ')}`);
+        } else {
+            finalPerf = unitPerfs.reduce((sum, u) => sum + u.calcPerf, 0);
+        }
+
+        // Calculate leader bonus (double points)
+        let leaderBonus = 0;
+        if (game.leader) {
+            const leaderUnit = unitPerfs.find(u => u.id === game.leader.id);
+            leaderBonus = leaderUnit ? leaderUnit.calcPerf : game.leader.performance;
+        }
+
+        let totalPerf = finalPerf + leaderBonus;
 
         // Update display
-        document.getElementById('perf-base').textContent = teamPerf + leaderPerf;
+        const basePerf = finalPerf;
+        document.getElementById('perf-base').textContent = basePerf;
         document.getElementById('perf-leader').textContent = '+' + leaderBonus;
         document.getElementById('perf-total').textContent = '=' + totalPerf;
         document.getElementById('perf-required').textContent = game.client.requiredPerformance;
 
         log(`\n📊 RISULTATO:`, "info");
-        log(`Team + CP: ${teamPerf + leaderPerf}⭐`);
+
+        // Log ability effects
+        abilityLog.forEach(msg => log(msg, "info"));
+
+        log(`Base: ${basePerf}⭐`);
         log(`Bonus CP (x2): +${leaderBonus}⭐`);
         log(`TOTALE: ${totalPerf}⭐ vs ${game.client.requiredPerformance}⭐`);
 
@@ -1159,13 +1444,21 @@
         const div = document.createElement('div');
         div.className = `card tribe-${resource.tribe}`;
         if (isLeader) div.classList.add('leader');
+        if (resource.tier === 5) div.classList.add('legendary');
         if (sellMode) div.style.border = '3px solid #e74c3c';
+
+        const tribeDisplay = resource.tribe.replace(/_/g, ' ');
+        const abilityHtml = resource.ability ?
+            `<div class="card-ability" title="${resource.abilityDesc}">${resource.abilityDesc}</div>` : '';
+        const abilityIcon = resource.ability ? '<span class="ability-icon">✨</span>' : '';
 
         div.innerHTML = `
             <div class="card-name">${resource.name}</div>
-            <div class="card-role">${resource.tribe.replace('_', ' ')}</div>
+            <div class="card-role">${tribeDisplay}</div>
             <div class="card-performance">${resource.performance}<span>⭐</span></div>
+            ${abilityHtml}
             ${showCost ? `<div class="card-cost">€${resource.cost}k</div>` : ''}
+            ${abilityIcon}
         `;
 
         if (onClick) div.onclick = onClick;
