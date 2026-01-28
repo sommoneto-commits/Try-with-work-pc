@@ -305,8 +305,7 @@
             color: #e74c3c;
         }
 
-        /* Tribe Colors */
-        .tribe-STAFF { background: linear-gradient(145deg, #27ae60, #1e8449); }
+        /* Tribe Colors - 6 Competence Centers + Neutral for Legends */
         .tribe-CONSULTING { background: linear-gradient(145deg, #3498db, #2980b9); }
         .tribe-DATA_ANALYTICS { background: linear-gradient(145deg, #f1c40f, #d4ac0d); color: #000; }
         .tribe-MARKETING_MEDIA { background: linear-gradient(145deg, #e67e22, #d35400); }
@@ -676,33 +675,145 @@
     <script>
     // ==================== RESOURCES ====================
     const RESOURCES = {
-        // STAFF
-        office_assistant: { name: "Office Assistant", tribe: "STAFF", tier: 1, performance: 2, cost: 2 },
-        hr_specialist: { name: "HR Specialist", tribe: "STAFF", tier: 2, performance: 3, cost: 3 },
-        office_manager: { name: "Office Manager", tribe: "STAFF", tier: 3, performance: 5, cost: 5 },
-        // CONSULTING
-        junior_consultant: { name: "Junior Consultant", tribe: "CONSULTING", tier: 1, performance: 3, cost: 3 },
-        business_analyst: { name: "Business Analyst", tribe: "CONSULTING", tier: 2, performance: 4, cost: 4 },
-        senior_consultant: { name: "Senior Consultant", tribe: "CONSULTING", tier: 3, performance: 6, cost: 6 },
-        strategy_director: { name: "Strategy Director", tribe: "CONSULTING", tier: 4, performance: 8, cost: 8 },
-        // DATA & ANALYTICS
-        data_intern: { name: "Data Intern", tribe: "DATA_ANALYTICS", tier: 1, performance: 2, cost: 2 },
-        data_analyst: { name: "Data Analyst", tribe: "DATA_ANALYTICS", tier: 2, performance: 4, cost: 4 },
-        data_scientist: { name: "Data Scientist", tribe: "DATA_ANALYTICS", tier: 3, performance: 6, cost: 6 },
-        // MARKETING
-        social_media_intern: { name: "Social Media Intern", tribe: "MARKETING_MEDIA", tier: 1, performance: 2, cost: 2 },
-        content_creator: { name: "Content Creator", tribe: "MARKETING_MEDIA", tier: 2, performance: 3, cost: 3 },
-        marketing_manager: { name: "Marketing Manager", tribe: "MARKETING_MEDIA", tier: 3, performance: 5, cost: 5 },
-        // BRAND EXPERIENCE
-        junior_designer: { name: "Junior Designer", tribe: "BRAND_EXPERIENCE", tier: 1, performance: 2, cost: 2 },
-        event_coordinator: { name: "Event Coordinator", tribe: "BRAND_EXPERIENCE", tier: 2, performance: 4, cost: 4 },
-        creative_director: { name: "Creative Director", tribe: "BRAND_EXPERIENCE", tier: 3, performance: 6, cost: 6 },
-        // TECH
-        junior_developer: { name: "Junior Developer", tribe: "TECH", tier: 1, performance: 3, cost: 3 },
-        backend_developer: { name: "Backend Developer", tribe: "TECH", tier: 2, performance: 4, cost: 4 },
-        senior_developer: { name: "Senior Developer", tribe: "TECH", tier: 3, performance: 6, cost: 6 },
-        tech_lead: { name: "Tech Lead", tribe: "TECH", tier: 4, performance: 8, cost: 8 },
-        cto: { name: "CTO", tribe: "TECH", tier: 5, performance: 10, cost: 10 },
+        // ==================== CONSULTING ====================
+        consulting_junior_analyst: {
+            name: "Junior Analyst", tribe: "CONSULTING", tier: 1, performance: 3, cost: 4, sellValue: 2,
+            ability: null, abilityDesc: null
+        },
+        consulting_business_analyst: {
+            name: "Business Analyst", tribe: "CONSULTING", tier: 1, performance: 4, cost: 5, sellValue: 2,
+            ability: "battlecry_consulting_synergy", abilityDesc: "+1 perf se con altro CONSULTING"
+        },
+        consulting_consultant: {
+            name: "Consultant", tribe: "CONSULTING", tier: 2, performance: 6, cost: 7, sellValue: 3,
+            ability: "start_self_boost", abilityDesc: "+1 perf a inizio progetto"
+        },
+        consulting_senior_consultant: {
+            name: "Senior Consultant", tribe: "CONSULTING", tier: 2, performance: 7, cost: 8, sellValue: 4,
+            ability: "aura_consulting", abilityDesc: "Altri CONSULTING +1 perf"
+        },
+        consulting_manager: {
+            name: "Manager", tribe: "CONSULTING", tier: 3, performance: 9, cost: 10, sellValue: 5,
+            ability: "always_contributes", abilityDesc: "Contribuisce sempre anche con limiti"
+        },
+        consulting_principal: {
+            name: "Principal", tribe: "CONSULTING", tier: 4, performance: 11, cost: 12, sellValue: 6,
+            ability: "start_consulting_boost", abilityDesc: "CONSULTING +2 perf a inizio"
+        },
+
+        // ==================== DATA & ANALYTICS ====================
+        data_junior_analyst: {
+            name: "Junior Data Analyst", tribe: "DATA_ANALYTICS", tier: 1, performance: 2, cost: 3, sellValue: 1,
+            ability: "end_random_boost", abilityDesc: "+1 perf a unità random"
+        },
+        data_reporting_analyst: {
+            name: "Reporting Analyst", tribe: "DATA_ANALYTICS", tier: 1, performance: 3, cost: 4, sellValue: 2,
+            ability: "battlecry_random_boost", abilityDesc: "+1 perf a unità random"
+        },
+        data_data_scientist: {
+            name: "Data Scientist", tribe: "DATA_ANALYTICS", tier: 2, performance: 4, cost: 5, sellValue: 2,
+            ability: "aura_all", abilityDesc: "Altre unità +1 perf"
+        },
+        data_senior_data_scientist: {
+            name: "Senior Data Scientist", tribe: "DATA_ANALYTICS", tier: 2, performance: 5, cost: 6, sellValue: 3,
+            ability: "start_all_boost", abilityDesc: "+1 perf a tutte le unità"
+        },
+        data_lead_data_scientist: {
+            name: "Lead Data Scientist", tribe: "DATA_ANALYTICS", tier: 3, performance: 6, cost: 8, sellValue: 4,
+            ability: "data_buff_amplifier", abilityDesc: "Buff DATA danno +1 extra"
+        },
+        data_head_of_data: {
+            name: "Head of Data", tribe: "DATA_ANALYTICS", tier: 4, performance: 8, cost: 10, sellValue: 5,
+            ability: "double_data_buffs", abilityDesc: "Raddoppia buff DATA"
+        },
+
+        // ==================== MARKETING & MEDIA ====================
+        marketing_junior_marketer: {
+            name: "Junior Marketer", tribe: "MARKETING_MEDIA", tier: 1, performance: 1, cost: 2, sellValue: 1,
+            ability: null, abilityDesc: null
+        },
+        marketing_content_creator: {
+            name: "Content Creator", tribe: "MARKETING_MEDIA", tier: 1, performance: 2, cost: 3, sellValue: 1,
+            ability: "battlecry_marketing_synergy", abilityDesc: "+1 perf se con altro MARKETING"
+        },
+        marketing_marketing_analyst: {
+            name: "Marketing Analyst", tribe: "MARKETING_MEDIA", tier: 2, performance: 3, cost: 4, sellValue: 2,
+            ability: "aura_marketing", abilityDesc: "MARKETING +1 perf"
+        },
+        marketing_media_planner: {
+            name: "Media Planner", tribe: "MARKETING_MEDIA", tier: 2, performance: 3, cost: 4, sellValue: 2,
+            ability: "marketing_cost_reduction", abilityDesc: "MARKETING costa 1 meno"
+        },
+        marketing_senior_marketer: {
+            name: "Senior Marketer", tribe: "MARKETING_MEDIA", tier: 3, performance: 4, cost: 5, sellValue: 2,
+            ability: "low_perf_double", abilityDesc: "Unità perf ≤3 contano x2"
+        },
+        marketing_marketing_manager: {
+            name: "Marketing Manager", tribe: "MARKETING_MEDIA", tier: 4, performance: 6, cost: 7, sellValue: 3,
+            ability: "start_marketing_boost", abilityDesc: "MARKETING +2 perf a inizio"
+        },
+
+        // ==================== BRAND EXPERIENCE (BX) ====================
+        bx_junior_designer: {
+            name: "Junior Designer", tribe: "BRAND_EXPERIENCE", tier: 1, performance: 2, cost: 3, sellValue: 1,
+            ability: "start_random_self_boost", abilityDesc: "+1 o +2 perf random"
+        },
+        bx_copywriter: {
+            name: "Copywriter", tribe: "BRAND_EXPERIENCE", tier: 1, performance: 2, cost: 3, sellValue: 1,
+            ability: "battlecry_reroll", abilityDesc: "Perf random 2-4"
+        },
+        bx_ux_designer: {
+            name: "UX Designer", tribe: "BRAND_EXPERIENCE", tier: 2, performance: 3, cost: 4, sellValue: 2,
+            ability: "copy_random_perf", abilityDesc: "Copia perf di unità random"
+        },
+        bx_service_designer: {
+            name: "Service Designer", tribe: "BRAND_EXPERIENCE", tier: 2, performance: 3, cost: 4, sellValue: 2,
+            ability: "end_random_self_boost", abilityDesc: "+1 perf random"
+        },
+        bx_bx_lead: {
+            name: "BX Lead", tribe: "BRAND_EXPERIENCE", tier: 3, performance: 5, cost: 6, sellValue: 3,
+            ability: "bx_double_random", abilityDesc: "BX random x2, tiene migliore"
+        },
+        bx_creative_director: {
+            name: "Creative Director", tribe: "BRAND_EXPERIENCE", tier: 4, performance: 6, cost: 8, sellValue: 4,
+            ability: "bx_reroll_all", abilityDesc: "Ritira tutti BX, tiene migliori"
+        },
+
+        // ==================== TECH ====================
+        tech_junior_dev: {
+            name: "Junior Developer", tribe: "TECH", tier: 1, performance: 2, cost: 2, sellValue: 1,
+            ability: "tech_synergy_self", abilityDesc: "+1 perf per ogni altro TECH"
+        },
+        tech_dev: {
+            name: "Developer", tribe: "TECH", tier: 1, performance: 3, cost: 3, sellValue: 1,
+            ability: "battlecry_tech_threshold", abilityDesc: "+1 perf se 2+ TECH"
+        },
+        tech_backend_dev: {
+            name: "Backend Developer", tribe: "TECH", tier: 2, performance: 4, cost: 4, sellValue: 2,
+            ability: "aura_tech", abilityDesc: "TECH +1 perf"
+        },
+        tech_frontend_dev: {
+            name: "Frontend Developer", tribe: "TECH", tier: 2, performance: 4, cost: 4, sellValue: 2,
+            ability: "start_tech_count_boost", abilityDesc: "+1 perf per ogni TECH"
+        },
+        tech_tech_lead: {
+            name: "Tech Lead", tribe: "TECH", tier: 3, performance: 6, cost: 6, sellValue: 3,
+            ability: "tech_threshold_boost", abilityDesc: "TECH +2 se 3+ TECH"
+        },
+        tech_solution_architect: {
+            name: "Solution Architect", tribe: "TECH", tier: 4, performance: 8, cost: 8, sellValue: 4,
+            ability: "start_tech_double_count", abilityDesc: "+1 perf per TECH (di nuovo)"
+        },
+
+        // ==================== GO TO MARKET ====================
+        gtm_account_owner: {
+            name: "Account Owner", tribe: "GO_TO_MARKET", tier: 3, performance: 6, cost: 7, sellValue: 3,
+            ability: "protect_best_from_client", abilityDesc: "Protegge migliore da cliente"
+        },
+        gtm_industry_leader: {
+            name: "Industry Leader", tribe: "GO_TO_MARKET", tier: 4, performance: 8, cost: 9, sellValue: 4,
+            ability: "reduce_client_effect", abilityDesc: "Effetto cliente -50%"
+        },
 
         // ==================== LEGENDARY (TIER 5) ====================
         // CONSULTING LEGENDS
@@ -1534,31 +1645,248 @@
             }
         }
 
-        // ========== UNIT LEGENDARY ABILITIES ==========
+        // ========== UNIT ABILITIES ==========
+        const noRandomEffects = projectAbility === 'risk_control';
+
+        // Count units by tribe for synergy calculations
+        const countByTribe = {};
+        unitPerfs.forEach(u => {
+            countByTribe[u.tribe] = (countByTribe[u.tribe] || 0) + 1;
+        });
+
+        // Check for GTM protection abilities
+        const hasProtectBest = activeAbilities.includes('protect_best_from_client');
+        const hasReduceClient = activeAbilities.includes('reduce_client_effect');
+
+        // Check for data buff amplifier
+        const hasDataBuffAmplifier = activeAbilities.includes('data_buff_amplifier');
+        const hasDoubleDataBuffs = activeAbilities.includes('double_data_buffs');
+
+        // Track buff multiplier for DATA abilities
+        let dataBuffMultiplier = 1;
+        if (hasDataBuffAmplifier) dataBuffMultiplier += 0.5;
+        if (hasDoubleDataBuffs) dataBuffMultiplier *= 2;
+
+        // Check for BX double random
+        const hasBxDoubleRandom = activeAbilities.includes('bx_double_random');
+        const hasBxRerollAll = activeAbilities.includes('bx_reroll_all');
+
+        // Check for low perf double
+        const hasLowPerfDouble = activeAbilities.includes('low_perf_double');
+
+        // Check for always contributes
+        const alwaysContributesUnits = unitPerfs.filter(u => u.ability === 'always_contributes').map(u => u.id);
+
         if (!ignoreAllAbilities) {
             allUnits.forEach(unit => {
-                if (!unit.ability) return;
+                if (!unit.ability || unit.abilityDisabled) return;
 
-                // Check if random effects are disabled (risk_control project or double_buffs unit)
-                const noRandomEffects = projectAbility === 'risk_control';
+                const unitPerf = unitPerfs.find(u => u.id === unit.id);
+                if (!unitPerf) return;
 
                 switch(unit.ability) {
-                    case 'top2_boost': // Buca Losco - handled later
-                        abilityLog.push(`🎯 ${unit.name}: Solo top 2 contano (+3)`);
+                    // ===== CONSULTING =====
+                    case 'battlecry_consulting_synergy':
+                        if (countByTribe['CONSULTING'] >= 2) {
+                            unitPerf.calcPerf += 1;
+                            abilityLog.push(`💼 ${unit.name} +1 (synergy CONSULTING)`);
+                        }
                         break;
 
-                    case 'consulting_boost': // Marco Chicken
+                    case 'start_self_boost':
+                        unitPerf.calcPerf += 1;
+                        abilityLog.push(`📈 ${unit.name} +1 (self boost)`);
+                        break;
+
+                    case 'aura_consulting':
                         unitPerfs.forEach(u => {
-                            if (u.tribe === 'CONSULTING') {
-                                u.calcPerf += 2;
-                                abilityLog.push(`📈 ${u.name} +2 (Consulting)`);
+                            if (u.tribe === 'CONSULTING' && u.id !== unit.id) {
+                                u.calcPerf += 1;
+                                abilityLog.push(`🔵 ${u.name} +1 (aura Consulting)`);
                             }
                         });
                         break;
 
-                    case 'double_buffs': // Professor Saccardius
+                    case 'start_consulting_boost':
+                        unitPerfs.forEach(u => {
+                            if (u.tribe === 'CONSULTING') {
+                                u.calcPerf += 2;
+                                abilityLog.push(`💼 ${u.name} +2 (Principal)`);
+                            }
+                        });
+                        break;
+
+                    // ===== DATA & ANALYTICS =====
+                    case 'end_random_boost':
+                    case 'battlecry_random_boost':
+                        if (!noRandomEffects) {
+                            const others = unitPerfs.filter(u => u.id !== unit.id);
+                            if (others.length > 0) {
+                                const target = others[Math.floor(Math.random() * others.length)];
+                                const bonus = Math.ceil(1 * dataBuffMultiplier);
+                                target.calcPerf += bonus;
+                                abilityLog.push(`📊 ${target.name} +${bonus} (DATA buff)`);
+                            }
+                        }
+                        break;
+
+                    case 'aura_all':
+                        unitPerfs.forEach(u => {
+                            if (u.id !== unit.id) {
+                                const bonus = Math.ceil(1 * dataBuffMultiplier);
+                                u.calcPerf += bonus;
+                            }
+                        });
+                        abilityLog.push(`📊 Tutti +${Math.ceil(1 * dataBuffMultiplier)} (Data Scientist)`);
+                        break;
+
+                    case 'start_all_boost':
+                        unitPerfs.forEach(u => {
+                            const bonus = Math.ceil(1 * dataBuffMultiplier);
+                            u.calcPerf += bonus;
+                        });
+                        abilityLog.push(`📊 Tutti +${Math.ceil(1 * dataBuffMultiplier)} (Sr Data Scientist)`);
+                        break;
+
+                    // ===== MARKETING =====
+                    case 'battlecry_marketing_synergy':
+                        if (countByTribe['MARKETING_MEDIA'] >= 2) {
+                            unitPerf.calcPerf += 1;
+                            abilityLog.push(`📢 ${unit.name} +1 (synergy Marketing)`);
+                        }
+                        break;
+
+                    case 'aura_marketing':
+                        unitPerfs.forEach(u => {
+                            if (u.tribe === 'MARKETING_MEDIA') {
+                                u.calcPerf += 1;
+                                abilityLog.push(`📢 ${u.name} +1 (aura Marketing)`);
+                            }
+                        });
+                        break;
+
+                    case 'start_marketing_boost':
+                        unitPerfs.forEach(u => {
+                            if (u.tribe === 'MARKETING_MEDIA') {
+                                u.calcPerf += 2;
+                                abilityLog.push(`📢 ${u.name} +2 (Marketing Manager)`);
+                            }
+                        });
+                        break;
+
+                    // ===== BRAND EXPERIENCE =====
+                    case 'start_random_self_boost':
+                        if (!noRandomEffects) {
+                            let bonus = Math.random() < 0.5 ? 1 : 2;
+                            if (hasBxDoubleRandom) {
+                                const bonus2 = Math.random() < 0.5 ? 1 : 2;
+                                bonus = Math.max(bonus, bonus2);
+                            }
+                            unitPerf.calcPerf += bonus;
+                            abilityLog.push(`🎨 ${unit.name} +${bonus} (random)`);
+                        }
+                        break;
+
+                    case 'battlecry_reroll':
+                        if (!noRandomEffects) {
+                            let newPerf = Math.floor(Math.random() * 3) + 2; // 2-4
+                            if (hasBxDoubleRandom) {
+                                const newPerf2 = Math.floor(Math.random() * 3) + 2;
+                                newPerf = Math.max(newPerf, newPerf2);
+                            }
+                            unitPerf.calcPerf = newPerf;
+                            abilityLog.push(`🎨 ${unit.name} reroll: ${newPerf}`);
+                        }
+                        break;
+
+                    case 'copy_random_perf':
+                        if (!noRandomEffects) {
+                            const others = unitPerfs.filter(u => u.id !== unit.id);
+                            if (others.length > 0) {
+                                let target = others[Math.floor(Math.random() * others.length)];
+                                if (hasBxDoubleRandom) {
+                                    const target2 = others[Math.floor(Math.random() * others.length)];
+                                    if (target2.calcPerf > target.calcPerf) target = target2;
+                                }
+                                unitPerf.calcPerf = target.calcPerf;
+                                abilityLog.push(`🎨 ${unit.name} copia ${target.name}: ${target.calcPerf}`);
+                            }
+                        }
+                        break;
+
+                    case 'end_random_self_boost':
+                        if (!noRandomEffects) {
+                            let bonus = 1;
+                            if (hasBxDoubleRandom && Math.random() < 0.5) bonus = 2;
+                            unitPerf.calcPerf += bonus;
+                            abilityLog.push(`🎨 ${unit.name} +${bonus} (random end)`);
+                        }
+                        break;
+
+                    // ===== TECH =====
+                    case 'tech_synergy_self':
+                        const otherTech = (countByTribe['TECH'] || 0) - 1;
+                        if (otherTech > 0) {
+                            unitPerf.calcPerf += otherTech;
+                            abilityLog.push(`💻 ${unit.name} +${otherTech} (TECH synergy)`);
+                        }
+                        break;
+
+                    case 'battlecry_tech_threshold':
+                        if ((countByTribe['TECH'] || 0) >= 2) {
+                            unitPerf.calcPerf += 1;
+                            abilityLog.push(`💻 ${unit.name} +1 (2+ TECH)`);
+                        }
+                        break;
+
+                    case 'aura_tech':
+                        unitPerfs.forEach(u => {
+                            if (u.tribe === 'TECH') {
+                                u.calcPerf += 1;
+                                abilityLog.push(`💻 ${u.name} +1 (aura Tech)`);
+                            }
+                        });
+                        break;
+
+                    case 'start_tech_count_boost':
+                        const techCount = countByTribe['TECH'] || 0;
+                        unitPerf.calcPerf += techCount;
+                        abilityLog.push(`💻 ${unit.name} +${techCount} (per TECH)`);
+                        break;
+
+                    case 'tech_threshold_boost':
+                        if ((countByTribe['TECH'] || 0) >= 3) {
+                            unitPerfs.forEach(u => {
+                                if (u.tribe === 'TECH') {
+                                    u.calcPerf += 2;
+                                    abilityLog.push(`💻 ${u.name} +2 (Tech Lead 3+)`);
+                                }
+                            });
+                        }
+                        break;
+
+                    case 'start_tech_double_count':
+                        const techCount2 = countByTribe['TECH'] || 0;
+                        unitPerf.calcPerf += techCount2;
+                        abilityLog.push(`💻 ${unit.name} +${techCount2} (Architect)`);
+                        break;
+
+                    // ===== LEGENDARY =====
+                    case 'top2_boost':
+                        abilityLog.push(`🎯 ${unit.name}: Solo top 2 contano (+3)`);
+                        break;
+
+                    case 'consulting_boost':
+                        unitPerfs.forEach(u => {
+                            if (u.tribe === 'CONSULTING') {
+                                u.calcPerf += 2;
+                                abilityLog.push(`📈 ${u.name} +2 (Marco Chicken)`);
+                            }
+                        });
+                        break;
+
+                    case 'double_buffs':
                         if (projectAbility === 'insight_driven') {
-                            // Buffs already doubled by project, apply again
                             unitPerfs.forEach(u => {
                                 if (u.tribe === 'DATA_ANALYTICS' && u.id !== unit.id) {
                                     const bonus = Math.floor(u.calcPerf * 0.5);
@@ -1569,7 +1897,7 @@
                         }
                         break;
 
-                    case 'data_random_boost': // Max Trottamelier
+                    case 'data_random_boost':
                         if (!noRandomEffects) {
                             const dataUnits = unitPerfs.filter(u => u.tribe === 'DATA_ANALYTICS');
                             const otherUnits = unitPerfs.filter(u => u.tribe !== 'DATA_ANALYTICS');
@@ -1577,65 +1905,70 @@
                                 if (otherUnits.length > 0) {
                                     const target = otherUnits[Math.floor(Math.random() * otherUnits.length)];
                                     target.calcPerf += 1;
-                                    abilityLog.push(`🎲 ${target.name} +1 (DATA random)`);
+                                    abilityLog.push(`🎲 ${target.name} +1 (Max Trottamelier)`);
                                 }
                             });
-                        } else {
-                            abilityLog.push(`🚫 Effetti random disabilitati`);
                         }
                         break;
 
-                    case 'marketing_double': // Mario Rocknrolliale
+                    case 'marketing_double':
                         unitPerfs.forEach(u => {
                             if (u.tribe === 'MARKETING_MEDIA') {
                                 u.calcPerf *= 2;
-                                abilityLog.push(`📢 ${u.name} x2 (Marketing)`);
+                                abilityLog.push(`📢 ${u.name} x2 (Rocknrolliale)`);
                             }
                         });
                         break;
 
-                    case 'bx_reroll': // Jan the Kind
+                    case 'bx_reroll':
                         if (!noRandomEffects) {
                             unitPerfs.forEach(u => {
                                 if (u.tribe === 'BRAND_EXPERIENCE') {
                                     const bonus = Math.ceil(u.calcPerf * 0.2);
                                     u.calcPerf += bonus;
-                                    abilityLog.push(`🎨 ${u.name} +${bonus} (BX reroll)`);
+                                    abilityLog.push(`🎨 ${u.name} +${bonus} (Jan the Kind)`);
                                 }
                             });
                         }
                         break;
 
-                    case 'gtm_vs_data': // Oscar Vulcania
+                    case 'gtm_vs_data':
                         unitPerfs.forEach(u => {
                             if (u.tribe === 'DATA_ANALYTICS') {
                                 u.abilityDisabled = true;
                             }
                             if (u.tribe === 'GO_TO_MARKET') {
                                 u.calcPerf += 2;
-                                abilityLog.push(`🚀 ${u.name} +2 (GTM boost)`);
+                                abilityLog.push(`🚀 ${u.name} +2 (Oscar Vulcania)`);
                             }
                         });
                         break;
 
-                    case 'diversity_team': // Ducchio
+                    case 'diversity_team':
                         const teamBonus = numCCs;
                         unitPerfs.forEach(u => {
                             u.calcPerf += teamBonus;
                         });
-                        abilityLog.push(`🦆 Tutti +${teamBonus} (${numCCs} CC)`);
+                        abilityLog.push(`🦆 Tutti +${teamBonus} (Ducchio - ${numCCs} CC)`);
                         break;
 
-                    case 'diversity_self': // Dru.so
+                    case 'diversity_self':
                         const selfBonus = numCCs * 2;
-                        const druUnit = unitPerfs.find(u => u.id === unit.id);
-                        if (druUnit) {
-                            druUnit.calcPerf += selfBonus;
-                            abilityLog.push(`🤖 Dru.so +${selfBonus} (${numCCs} CC)`);
-                        }
+                        unitPerf.calcPerf += selfBonus;
+                        abilityLog.push(`🤖 Dru.so +${selfBonus} (${numCCs} CC)`);
                         break;
                 }
             });
+
+            // Apply low perf double (Senior Marketer)
+            if (hasLowPerfDouble) {
+                unitPerfs.forEach(u => {
+                    if (u.performance <= 3) { // Original performance
+                        u.calcPerf *= 2;
+                        abilityLog.push(`📢 ${u.name} x2 (Sr Marketer: perf ≤3)`);
+                    }
+                });
+            }
         } else {
             abilityLog.push(`⚡ Enrico Chaos: Tutte le abilità ignorate!`);
         }
@@ -1643,25 +1976,45 @@
         // ========== APPLY PROJECT FILTERING ABILITIES ==========
         let contributingUnits = [...unitPerfs];
 
+        // Units with "always_contributes" ability bypass filtering
+        const alwaysContributes = unitPerfs.filter(u => u.ability === 'always_contributes');
+
         if (!ignoreAllAbilities) {
             switch(projectAbility) {
                 case 'only_top_performers': // Strategic Transformation: only top 3
                     contributingUnits.sort((a, b) => b.calcPerf - a.calcPerf);
-                    contributingUnits = contributingUnits.slice(0, 3);
+                    let top3 = contributingUnits.slice(0, 3);
+                    // Add always_contributes units if not already included
+                    alwaysContributes.forEach(ac => {
+                        if (!top3.find(u => u.id === ac.id)) {
+                            top3.push(ac);
+                            abilityLog.push(`👔 ${ac.name} contribuisce sempre!`);
+                        }
+                    });
+                    contributingUnits = top3;
                     abilityLog.push(`🎯 Progetto: Solo top 3 contano`);
                     break;
 
                 case 'quality_focus': // Customer Care: lowest = 0
+                    // Don't set lowest to 0 if it has always_contributes
                     contributingUnits.sort((a, b) => a.calcPerf - b.calcPerf);
-                    if (contributingUnits.length > 0) {
-                        const lowest = contributingUnits[0];
+                    const lowest = contributingUnits.find(u => u.ability !== 'always_contributes');
+                    if (lowest) {
                         lowest.calcPerf = 0;
                         abilityLog.push(`📉 ${lowest.name} = 0 (quality focus)`);
                     }
                     break;
 
                 case 'time_to_market': // E-commerce: only first 4
-                    contributingUnits = contributingUnits.slice(0, 4);
+                    let first4 = contributingUnits.slice(0, 4);
+                    // Add always_contributes units if not already included
+                    alwaysContributes.forEach(ac => {
+                        if (!first4.find(u => u.id === ac.id)) {
+                            first4.push(ac);
+                            abilityLog.push(`👔 ${ac.name} contribuisce sempre!`);
+                        }
+                    });
+                    contributingUnits = first4;
                     abilityLog.push(`⏱️ Progetto: Solo primi 4 contano`);
                     break;
             }
@@ -1673,10 +2026,16 @@
 
         if (hasBucaLosco) {
             contributingUnits.sort((a, b) => b.calcPerf - a.calcPerf);
-            const top2 = contributingUnits.slice(0, 2);
-            top2.forEach(u => u.calcPerf += 3);
+            let top2 = contributingUnits.slice(0, 2);
+            // Add always_contributes units
+            alwaysContributes.forEach(ac => {
+                if (!top2.find(u => u.id === ac.id)) {
+                    top2.push(ac);
+                }
+            });
+            top2.slice(0, 2).forEach(u => u.calcPerf += 3); // +3 only to actual top 2
             finalPerf = top2.reduce((sum, u) => sum + u.calcPerf, 0);
-            abilityLog.push(`🎯 Buca Losco Top 2: ${top2.map(u => u.name).join(', ')}`);
+            abilityLog.push(`🎯 Buca Losco Top 2: ${top2.slice(0, 2).map(u => u.name).join(', ')}`);
         } else {
             finalPerf = contributingUnits.reduce((sum, u) => sum + u.calcPerf, 0);
         }
