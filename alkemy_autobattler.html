@@ -959,6 +959,76 @@
 
     const PROJECT_LIST = Object.values(PROJECTS);
 
+    // ==================== CLIENTS ====================
+    const CLIENTS = {
+        concetta_frog: {
+            id: "concetta_frog",
+            name: "Concetta Frog",
+            baseStrength: 8,
+            moneyMultiplier: 2.0,
+            effect: "remove_data",
+            effectDesc: "Rimuove 1 unità DATA random dal team"
+        },
+        costantino_finesso: {
+            id: "costantino_finesso",
+            name: "Costantino Finesso",
+            baseStrength: 10,
+            moneyMultiplier: 2.5,
+            effect: "disable_ability",
+            effectDesc: "Disabilita 1 abilità non-GTM random"
+        },
+        fabio_trentalance: {
+            id: "fabio_trentalance",
+            name: "Fabio Trentalance",
+            baseStrength: 9,
+            moneyMultiplier: 1.8,
+            effect: "random_perf",
+            effectDesc: "Tutte le unità: +2 o -2 perf random"
+        },
+        jonathan_albergo: {
+            id: "jonathan_albergo",
+            name: "Jonathan Albergo",
+            baseStrength: 6,
+            moneyMultiplier: 1.4,
+            effect: "data_zero",
+            effectDesc: "Unità DATA hanno 0 performance"
+        },
+        alessandro_marocash: {
+            id: "alessandro_marocash",
+            name: "Alessandro Marocash",
+            baseStrength: 7,
+            moneyMultiplier: 1.9,
+            effect: "expensive_zero",
+            effectDesc: "L'unità più costosa contribuisce 0"
+        },
+        riccardo_striscia: {
+            id: "riccardo_striscia",
+            name: "Riccardo Striscia",
+            baseStrength: 7,
+            moneyMultiplier: 1.6,
+            effect: "consulting_penalty",
+            effectDesc: "CONSULTING -1 performance"
+        },
+        flusso_rosso: {
+            id: "flusso_rosso",
+            name: "Flusso Rosso",
+            baseStrength: 9,
+            moneyMultiplier: 2.1,
+            effect: "no_synergy",
+            effectDesc: "Nessun bonus sinergia"
+        },
+        stefano_nonripete: {
+            id: "stefano_nonripete",
+            name: "Stefano Non Ripete",
+            baseStrength: 6,
+            moneyMultiplier: 1.3,
+            effect: "high_tier_penalty",
+            effectDesc: "Unità tier 3+ perdono 2 perf"
+        }
+    };
+
+    const CLIENT_LIST = Object.values(CLIENTS);
+
     // ==================== GAME STATE ====================
     let game = {};
     let session = {};
@@ -1102,8 +1172,11 @@
         const project = available[Math.floor(Math.random() * available.length)];
         game.usedProjects.push(project.id);
 
-        // Calculate required performance based on project number
-        const basePerf = 8 + (game.projectNum * 3);
+        // Pick random client
+        const client = CLIENT_LIST[Math.floor(Math.random() * CLIENT_LIST.length)];
+
+        // Calculate required performance based on project number and client strength
+        const basePerf = client.baseStrength + (game.projectNum * 2);
         const variation = Math.floor(Math.random() * 4) - 2; // -2 to +2
 
         game.project = {
@@ -1111,14 +1184,16 @@
             requiredPerformance: basePerf + variation,
             revealed: false
         };
+        game.client = client;
         game.requiredStaff = project.staffLimit;
     }
 
     function calculateReward() {
-        // Base reward from project + scaling with project number
+        // Base reward from project × client multiplier
         const baseReward = game.project.reward;
         const scaling = Math.floor(game.projectNum / 3);
-        return baseReward + scaling;
+        const multiplier = game.client ? game.client.moneyMultiplier : 1;
+        return Math.floor((baseReward + scaling) * multiplier);
     }
 
     function getSynergyBonus(units) {
@@ -1312,10 +1387,12 @@
 
         log("\n📦 === DELIVERY ===", "info");
         log(`📋 ${game.project.name}`, "info");
+        log(`👤 Cliente: ${game.client.name}`, "info");
+        log(`⚠️ Effetto: ${game.client.effectDesc}`, "lose");
         log(`📊 Performance richiesta: ${game.project.requiredPerformance}⭐`);
-        log(`🎯 Abilità: ${game.project.abilityDesc}`);
+        log(`🎯 Abilità progetto: ${game.project.abilityDesc}`);
         log(`✨ Sinergie: ${game.project.synergy.join(', ')}`);
-        log(`💰 Reward: €${calculateReward()}k`);
+        log(`💰 Reward: €${calculateReward()}k (x${game.client.moneyMultiplier})`);
 
         updateUI();
     }
@@ -1345,7 +1422,82 @@
         // Clone units for performance calculation
         let unitPerfs = allUnits.map(u => ({ ...u, calcPerf: u.performance }));
 
-        // ========== PROJECT ABILITIES (applied first) ==========
+        // ========== CLIENT NEGATIVE EFFECTS (applied first) ==========
+        const clientEffect = game.client ? game.client.effect : null;
+        let skipSynergyBonus = false;
+
+        if (clientEffect && !ignoreAllAbilities) {
+            switch(clientEffect) {
+                case 'remove_data': // Concetta Frog: remove 1 random DATA unit
+                    const dataUnitsForRemoval = unitPerfs.filter(u => u.tribe === 'DATA_ANALYTICS');
+                    if (dataUnitsForRemoval.length > 0) {
+                        const toRemove = dataUnitsForRemoval[Math.floor(Math.random() * dataUnitsForRemoval.length)];
+                        toRemove.calcPerf = 0;
+                        toRemove.removed = true;
+                        abilityLog.push(`🐸 ${game.client.name}: ${toRemove.name} rimosso!`);
+                    }
+                    break;
+
+                case 'disable_ability': // Costantino Finesso: disable 1 non-GTM ability
+                    const unitsWithAbility = unitPerfs.filter(u => u.ability && u.tribe !== 'GO_TO_MARKET');
+                    if (unitsWithAbility.length > 0) {
+                        const target = unitsWithAbility[Math.floor(Math.random() * unitsWithAbility.length)];
+                        target.abilityDisabled = true;
+                        abilityLog.push(`👔 ${game.client.name}: ${target.name} abilità disabilitata!`);
+                    }
+                    break;
+
+                case 'random_perf': // Fabio Trentalance: +2 or -2 random to all
+                    unitPerfs.forEach(u => {
+                        const change = Math.random() < 0.5 ? -2 : 2;
+                        u.calcPerf = Math.max(0, u.calcPerf + change);
+                        abilityLog.push(`🎰 ${u.name} ${change > 0 ? '+' : ''}${change}`);
+                    });
+                    break;
+
+                case 'data_zero': // Jonathan Albergo: DATA = 0 performance
+                    unitPerfs.forEach(u => {
+                        if (u.tribe === 'DATA_ANALYTICS') {
+                            u.calcPerf = 0;
+                            abilityLog.push(`🏨 ${u.name} = 0 (DATA penalizzato)`);
+                        }
+                    });
+                    break;
+
+                case 'expensive_zero': // Alessandro Marocash: most expensive = 0
+                    const sortedByCost = [...unitPerfs].sort((a, b) => b.cost - a.cost);
+                    if (sortedByCost.length > 0) {
+                        sortedByCost[0].calcPerf = 0;
+                        abilityLog.push(`💰 ${sortedByCost[0].name} = 0 (più costoso)`);
+                    }
+                    break;
+
+                case 'consulting_penalty': // Riccardo Striscia: CONSULTING -1
+                    unitPerfs.forEach(u => {
+                        if (u.tribe === 'CONSULTING') {
+                            u.calcPerf = Math.max(0, u.calcPerf - 1);
+                            abilityLog.push(`📉 ${u.name} -1 (Consulting)`);
+                        }
+                    });
+                    break;
+
+                case 'no_synergy': // Flusso Rosso: no synergy bonus
+                    skipSynergyBonus = true;
+                    abilityLog.push(`🔴 ${game.client.name}: Nessun bonus sinergia!`);
+                    break;
+
+                case 'high_tier_penalty': // Stefano Non Ripete: tier 3+ lose 2
+                    unitPerfs.forEach(u => {
+                        if (u.tier >= 3) {
+                            u.calcPerf = Math.max(0, u.calcPerf - 2);
+                            abilityLog.push(`⬇️ ${u.name} -2 (tier ${u.tier})`);
+                        }
+                    });
+                    break;
+            }
+        }
+
+        // ========== PROJECT ABILITIES ==========
         if (!ignoreAllAbilities) {
             switch(projectAbility) {
                 case 'narrative_shift': // Brand Repositioning: BX random perf 2-6
@@ -1529,11 +1681,13 @@
             finalPerf = contributingUnits.reduce((sum, u) => sum + u.calcPerf, 0);
         }
 
-        // Add synergy bonus
-        const synergyBonus = getSynergyBonus(allUnits);
-        if (synergyBonus > 0) {
-            abilityLog.push(`✨ Sinergia: +${synergyBonus}`);
-            finalPerf += synergyBonus;
+        // Add synergy bonus (unless blocked by client effect)
+        if (!skipSynergyBonus) {
+            const synergyBonus = getSynergyBonus(allUnits);
+            if (synergyBonus > 0) {
+                abilityLog.push(`✨ Sinergia: +${synergyBonus}`);
+                finalPerf += synergyBonus;
+            }
         }
 
         // Add cross_functional bonus if applicable
@@ -1747,9 +1901,10 @@
         const clientCard = document.createElement('div');
         clientCard.className = 'client-card' + (game.project.revealed ? '' : ' hidden');
 
+        const synergies = game.project.synergy.map(s => s.replace(/_/g, ' ')).join(', ');
+
         if (game.project.revealed) {
             const reward = calculateReward();
-            const synergies = game.project.synergy.map(s => s.replace(/_/g, ' ')).join(', ');
             clientCard.innerHTML = `
                 <div class="client-name">${game.project.name}</div>
                 <div class="client-desc" style="font-size:10px;">${game.project.abilityDesc}</div>
@@ -1758,13 +1913,17 @@
                     Staff max: ${game.project.staffLimit}<br>
                     <span style="color:#1abc9c;">Sinergie: ${synergies}</span>
                 </div>
+                <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.2);">
+                    <div style="color:#e74c3c; font-weight:bold; font-size:12px;">👤 ${game.client.name}</div>
+                    <div style="color:#e67e22; font-size:9px;">${game.client.effectDesc}</div>
+                    <div style="color:#f1c40f; font-size:10px;">x${game.client.moneyMultiplier} reward</div>
+                </div>
                 <div class="ticket-info">
                     <span class="reward">Reward: €${reward}k</span>
                 </div>
             `;
         } else {
-            // Show project name and synergies but hide performance requirement
-            const synergies = game.project.synergy.map(s => s.replace(/_/g, ' ')).join(', ');
+            // Show project name, synergies, and client - hide performance requirement
             clientCard.innerHTML = `
                 <div class="client-name">${game.project.name}</div>
                 <div class="client-desc" style="font-size:10px;">${game.project.abilityDesc}</div>
@@ -1772,6 +1931,11 @@
                 <div class="client-details">
                     Staff max: ${game.project.staffLimit}<br>
                     <span style="color:#1abc9c;">Sinergie: ${synergies}</span>
+                </div>
+                <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.2);">
+                    <div style="color:#e74c3c; font-weight:bold; font-size:12px;">👤 ${game.client.name}</div>
+                    <div style="color:#e67e22; font-size:9px;">${game.client.effectDesc}</div>
+                    <div style="color:#f1c40f; font-size:10px;">x${game.client.moneyMultiplier} reward</div>
                 </div>
             `;
         }
