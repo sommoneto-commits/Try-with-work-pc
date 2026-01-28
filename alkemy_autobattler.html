@@ -124,7 +124,16 @@
         .phase-badge { padding: 4px 12px; border-radius: 12px; font-weight: bold; font-size: 11px; }
         .phase-staffing { background: #3498db; }
         .phase-delivery { background: #e67e22; }
-        .budget-display { font-size: 18px; font-weight: bold; color: #2ecc71; }
+        .budget-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2ecc71;
+            background: rgba(46, 204, 113, 0.15);
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: 2px solid #2ecc71;
+            text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+        }
         .btn-menu { background: #34495e; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
 
         /* Top Row: Project + Client */
@@ -346,6 +355,62 @@
             line-height: 1.2;
             max-height: 24px;
             overflow: hidden;
+        }
+
+        /* Card Hover Preview Overlay */
+        .card-preview-overlay {
+            position: fixed;
+            z-index: 2000;
+            pointer-events: none;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.95);
+            border-radius: 15px;
+            border: 2px solid #f1c40f;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            min-width: 180px;
+            text-align: center;
+            display: none;
+        }
+        .card-preview-overlay.visible { display: block; }
+        .card-preview-overlay .preview-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        .card-preview-overlay .preview-tribe {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+        .card-preview-overlay .preview-perf {
+            font-size: 36px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+        .card-preview-overlay .preview-ability {
+            font-size: 12px;
+            color: #3498db;
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(52, 152, 219, 0.2);
+            border-radius: 8px;
+        }
+        .card-preview-overlay .preview-cost {
+            font-size: 14px;
+            color: #2ecc71;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        .card-preview-overlay .preview-tier {
+            font-size: 10px;
+            color: #9b59b6;
+            margin-top: 5px;
+        }
+        .card-preview-overlay.legendary {
+            border-color: #ff6b6b;
+            box-shadow: 0 10px 40px rgba(255, 107, 107, 0.4);
         }
 
         /* Client Card */
@@ -640,6 +705,16 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Card Preview Overlay -->
+    <div id="card-preview" class="card-preview-overlay">
+        <div class="preview-name" id="preview-name">Card Name</div>
+        <div class="preview-tribe" id="preview-tribe">TRIBE</div>
+        <div class="preview-perf" id="preview-perf">0⭐</div>
+        <div class="preview-ability" id="preview-ability" style="display:none;"></div>
+        <div class="preview-cost" id="preview-cost">0k€</div>
+        <div class="preview-tier" id="preview-tier">Tier 1</div>
     </div>
 
     <!-- Result Overlay -->
@@ -1465,15 +1540,7 @@
 
     // ==================== GAME PHASES ====================
     function goToDelivery() {
-        if (!game.leader) {
-            log("❌ Scegli un Capo Progetto!", "lose");
-            return;
-        }
-        if (game.team.length < game.requiredStaff) {
-            log(`❌ Staffa almeno ${game.requiredStaff} risorse nel team!`, "lose");
-            return;
-        }
-
+        // User can go to delivery anytime - no restrictions
         game.phase = 'delivery';
         game.project.revealed = true;
         sellMode = false;
@@ -2178,6 +2245,49 @@
         logDiv.scrollTop = logDiv.scrollHeight;
     }
 
+    // Card Preview Functions
+    function showCardPreview(resource, event) {
+        const preview = document.getElementById('card-preview');
+
+        document.getElementById('preview-name').textContent = resource.name;
+        document.getElementById('preview-tribe').textContent = resource.tribe.replace(/_/g, ' ');
+        document.getElementById('preview-perf').textContent = resource.performance + '⭐';
+        document.getElementById('preview-cost').textContent = resource.cost + 'k€';
+        document.getElementById('preview-tier').textContent = 'Tier ' + resource.tier;
+
+        const abilityDiv = document.getElementById('preview-ability');
+        if (resource.ability && resource.abilityDesc) {
+            abilityDiv.textContent = resource.abilityDesc;
+            abilityDiv.style.display = 'block';
+        } else {
+            abilityDiv.style.display = 'none';
+        }
+
+        // Set legendary class
+        preview.classList.toggle('legendary', resource.tier === 5);
+
+        // Position the preview
+        const rect = event.target.closest('.card').getBoundingClientRect();
+        let left = rect.right + 10;
+        let top = rect.top;
+
+        // Keep within viewport
+        if (left + 200 > window.innerWidth) {
+            left = rect.left - 200;
+        }
+        if (top + 200 > window.innerHeight) {
+            top = window.innerHeight - 220;
+        }
+
+        preview.style.left = left + 'px';
+        preview.style.top = top + 'px';
+        preview.classList.add('visible');
+    }
+
+    function hideCardPreview() {
+        document.getElementById('card-preview').classList.remove('visible');
+    }
+
     function createCardElement(resource, onClick, showCost = false, isLeader = false) {
         const div = document.createElement('div');
         div.className = `card tribe-${resource.tribe}`;
@@ -2198,6 +2308,10 @@
             ${showCost ? `<div class="card-cost">${resource.cost}k€</div>` : ''}
             ${abilityIcon}
         `;
+
+        // Hover preview
+        div.addEventListener('mouseenter', (e) => showCardPreview(resource, e));
+        div.addEventListener('mouseleave', hideCardPreview);
 
         if (onClick) div.onclick = onClick;
         return div;
@@ -2298,8 +2412,8 @@
         document.getElementById('btn-calculate').style.display = game.phase === 'delivery' ? 'inline-block' : 'none';
         document.getElementById('btn-sell').style.display = game.phase === 'staffing' ? 'inline-block' : 'none';
 
-        const canDelivery = game.leader && game.team.length >= game.requiredStaff;
-        document.getElementById('btn-delivery').disabled = !canDelivery;
+        // User can go to delivery anytime
+        document.getElementById('btn-delivery').disabled = false;
 
         // Leader Section
         const leaderDiv = document.getElementById('leader-area');
