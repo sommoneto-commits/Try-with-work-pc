@@ -595,7 +595,7 @@
                 <div class="game-area">
                     <!-- Client Section -->
                     <div class="section client">
-                        <h3>🏢 CLIENTE</h3>
+                        <h3>📋 PROGETTO</h3>
                         <div class="cards" id="client-area"></div>
                     </div>
 
@@ -818,16 +818,146 @@
         },
     };
 
-    // ==================== CLIENTS ====================
-    const CLIENTS = [
-        { name: "Startup Innovativa", requiredPerformance: 8, requiredStaff: 2, ticket: 15, discount: 20, desc: "Progetto semplice" },
-        { name: "PMI Tradizionale", requiredPerformance: 12, requiredStaff: 2, ticket: 20, discount: 15, desc: "Progetto standard" },
-        { name: "Azienda Media", requiredPerformance: 18, requiredStaff: 3, ticket: 30, discount: 10, desc: "Progetto impegnativo" },
-        { name: "Grande Impresa", requiredPerformance: 25, requiredStaff: 3, ticket: 45, discount: 15, desc: "Progetto complesso" },
-        { name: "Multinazionale", requiredPerformance: 35, requiredStaff: 4, ticket: 60, discount: 20, desc: "Progetto sfidante" },
-        { name: "Enterprise Global", requiredPerformance: 45, requiredStaff: 4, ticket: 80, discount: 25, desc: "Progetto critico" },
-        { name: "Governo", requiredPerformance: 55, requiredStaff: 5, ticket: 100, discount: 30, desc: "Progetto strategico" },
-    ];
+    // ==================== PROJECTS ====================
+    const PROJECTS = {
+        strategic_transformation: {
+            id: "strategic_transformation",
+            name: "Strategic Transformation",
+            staffLimit: 4,
+            ability: "only_top_performers",
+            abilityDesc: "Solo i 3 migliori contribuiscono",
+            synergy: ["CONSULTING"],
+            reward: 10
+        },
+        customer_care_excellence: {
+            id: "customer_care_excellence",
+            name: "Customer Care Excellence",
+            staffLimit: 5,
+            ability: "quality_focus",
+            abilityDesc: "Il peggiore contribuisce 0",
+            synergy: ["BRAND_EXPERIENCE", "TECH"],
+            reward: 8
+        },
+        business_intelligence_redesign: {
+            id: "business_intelligence_redesign",
+            name: "Business Intelligence Redesign",
+            staffLimit: 4,
+            ability: "insight_driven",
+            abilityDesc: "Buff raddoppiati",
+            synergy: ["DATA_ANALYTICS"],
+            reward: 9
+        },
+        due_diligence: {
+            id: "due_diligence",
+            name: "Due Diligence",
+            staffLimit: 3,
+            ability: "risk_control",
+            abilityDesc: "Effetti random disabilitati",
+            synergy: ["CONSULTING", "DATA_ANALYTICS"],
+            reward: 10
+        },
+        marketing_campaign: {
+            id: "marketing_campaign",
+            name: "Marketing Campaign",
+            staffLimit: 5,
+            ability: "high_volume",
+            abilityDesc: "Unità con perf ≤3 contano x2",
+            synergy: ["MARKETING_MEDIA"],
+            reward: 7
+        },
+        website_development: {
+            id: "website_development",
+            name: "Website Development",
+            staffLimit: 4,
+            ability: "iterative_delivery",
+            abilityDesc: "TECH +1 perf per turno assegnato",
+            synergy: ["TECH"],
+            reward: 8
+        },
+        crm_implementation: {
+            id: "crm_implementation",
+            name: "CRM Implementation",
+            staffLimit: 5,
+            ability: "process_heavy",
+            abilityDesc: "Abilità solo a fine progetto",
+            synergy: ["TECH", "GO_TO_MARKET"],
+            reward: 9
+        },
+        gen_ai_rag_deployment: {
+            id: "gen_ai_rag_deployment",
+            name: "Gen-AI RAG Deployment",
+            staffLimit: 4,
+            ability: "model_training",
+            abilityDesc: "DATA +2 da sinergia (invece di +1)",
+            synergy: ["DATA_ANALYTICS", "TECH"],
+            reward: 11
+        },
+        advertising_production: {
+            id: "advertising_production",
+            name: "Advertising Production",
+            staffLimit: 4,
+            ability: "creative_burst",
+            abilityDesc: "BX triggera effetti x2",
+            synergy: ["MARKETING_MEDIA", "BRAND_EXPERIENCE"],
+            reward: 8
+        },
+        pricing_strategy: {
+            id: "pricing_strategy",
+            name: "Pricing Strategy",
+            staffLimit: 3,
+            ability: "elasticity_model",
+            abilityDesc: "GTM ignora penalità progetto",
+            synergy: ["CONSULTING", "GO_TO_MARKET"],
+            reward: 9
+        },
+        digital_transformation: {
+            id: "digital_transformation",
+            name: "Digital Transformation",
+            staffLimit: 5,
+            ability: "cross_functional",
+            abilityDesc: "+1 perf per ogni CC diverso",
+            synergy: ["TECH", "CONSULTING", "DATA_ANALYTICS"],
+            reward: 12
+        },
+        ecommerce_launch: {
+            id: "ecommerce_launch",
+            name: "E-commerce Launch",
+            staffLimit: 5,
+            ability: "time_to_market",
+            abilityDesc: "Solo i primi 4 assegnati contano",
+            synergy: ["TECH", "MARKETING_MEDIA", "GO_TO_MARKET"],
+            reward: 10
+        },
+        brand_repositioning: {
+            id: "brand_repositioning",
+            name: "Brand Repositioning",
+            staffLimit: 4,
+            ability: "narrative_shift",
+            abilityDesc: "BX: perf random tra 2 e 6",
+            synergy: ["BRAND_EXPERIENCE", "MARKETING_MEDIA"],
+            reward: 9
+        },
+        sales_enablement: {
+            id: "sales_enablement",
+            name: "Sales Enablement",
+            staffLimit: 4,
+            ability: "conversion_focus",
+            abilityDesc: "GTM +2 performance",
+            synergy: ["GO_TO_MARKET"],
+            reward: 8
+        },
+        data_governance_program: {
+            id: "data_governance_program",
+            name: "Data Governance Program",
+            staffLimit: 3,
+            ability: "compliance_first",
+            abilityDesc: "Abilità max 1 volta per unità",
+            synergy: ["DATA_ANALYTICS"],
+            reward: 9
+        }
+    };
+
+    const PROJECT_LIST = Object.values(PROJECTS);
 
     // ==================== GAME STATE ====================
     let game = {};
@@ -928,14 +1058,15 @@
             team: [],
             leader: null,
             hr: { cards: [], frozen: false },
-            client: null,
+            project: null,
             requiredStaff: 2,
-            gameOver: false
+            gameOver: false,
+            usedProjects: [] // Track used projects
         };
         logs = [];
         sellMode = false;
 
-        generateClient();
+        generateProject();
         refreshHR();
         log("🎮 Nuova sessione iniziata!", "info");
         log(`👤 Giocatore: ${session.playerName}`, "info");
@@ -959,27 +1090,55 @@
         };
     }
 
-    function generateClient() {
-        const difficulty = Math.min(game.projectNum - 1, CLIENTS.length - 1);
-        const baseClient = CLIENTS[difficulty];
-        const variation = Math.floor(game.projectNum / 3);
+    function generateProject() {
+        // Get available projects (not used recently)
+        let available = PROJECT_LIST.filter(p => !game.usedProjects.includes(p.id));
+        if (available.length === 0) {
+            game.usedProjects = [];
+            available = PROJECT_LIST;
+        }
 
-        game.client = {
-            name: baseClient.name,
-            requiredPerformance: baseClient.requiredPerformance + (variation * 3),
-            requiredStaff: baseClient.requiredStaff,
-            ticket: baseClient.ticket + (variation * 5),
-            discount: baseClient.discount,
-            desc: baseClient.desc,
+        // Pick random project
+        const project = available[Math.floor(Math.random() * available.length)];
+        game.usedProjects.push(project.id);
+
+        // Calculate required performance based on project number
+        const basePerf = 8 + (game.projectNum * 3);
+        const variation = Math.floor(Math.random() * 4) - 2; // -2 to +2
+
+        game.project = {
+            ...project,
+            requiredPerformance: basePerf + variation,
             revealed: false
         };
-        game.requiredStaff = game.client.requiredStaff;
+        game.requiredStaff = project.staffLimit;
     }
 
     function calculateReward() {
-        const ticket = game.client.ticket;
-        const discount = game.client.discount;
-        return Math.floor(ticket * (100 - discount) / 100);
+        // Base reward from project + scaling with project number
+        const baseReward = game.project.reward;
+        const scaling = Math.floor(game.projectNum / 3);
+        return baseReward + scaling;
+    }
+
+    function getSynergyBonus(units) {
+        if (!game.project || !game.project.synergy) return 0;
+
+        let bonus = 0;
+        const synergies = game.project.synergy;
+
+        units.forEach(unit => {
+            if (synergies.includes(unit.tribe)) {
+                // Check for model_training ability (DATA gets +2 instead of +1)
+                if (game.project.ability === 'model_training' && unit.tribe === 'DATA_ANALYTICS') {
+                    bonus += 2;
+                } else {
+                    bonus += 1;
+                }
+            }
+        });
+
+        return bonus;
     }
 
     // ==================== HR ====================
@@ -1148,13 +1307,15 @@
         }
 
         game.phase = 'delivery';
-        game.client.revealed = true;
+        game.project.revealed = true;
         sellMode = false;
 
         log("\n📦 === DELIVERY ===", "info");
-        log(`🏢 Cliente: ${game.client.name}`, "info");
-        log(`📊 Performance richiesta: ${game.client.requiredPerformance}⭐`);
-        log(`💰 Ticket: €${game.client.ticket}k (-${game.client.discount}% sconto)`);
+        log(`📋 ${game.project.name}`, "info");
+        log(`📊 Performance richiesta: ${game.project.requiredPerformance}⭐`);
+        log(`🎯 Abilità: ${game.project.abilityDesc}`);
+        log(`✨ Sinergie: ${game.project.synergy.join(', ')}`);
+        log(`💰 Reward: €${calculateReward()}k`);
 
         updateUI();
     }
@@ -1166,31 +1327,71 @@
         const allUnits = [...game.team];
         if (game.leader) allUnits.push(game.leader);
 
-        // Find all active abilities
+        // Find all active unit abilities
         const activeAbilities = allUnits.filter(u => u.ability).map(u => u.ability);
 
-        // Check for ability that ignores all abilities
+        // Check for ability that ignores all abilities (Enrico Chaos)
         const ignoreAllAbilities = activeAbilities.includes('ignore_abilities');
 
-        // Build performance calculation with ability effects
-        let abilityBonuses = 0;
+        // Get project ability
+        const projectAbility = game.project.ability;
+
         let abilityLog = [];
 
         // Count competence centers for diversity bonuses
         const competenceCenters = new Set(allUnits.map(u => u.tribe));
         const numCCs = competenceCenters.size;
 
-        // Clone units for performance calculation (to apply temporary buffs)
+        // Clone units for performance calculation
         let unitPerfs = allUnits.map(u => ({ ...u, calcPerf: u.performance }));
 
+        // ========== PROJECT ABILITIES (applied first) ==========
         if (!ignoreAllAbilities) {
-            // Process each legendary ability
+            switch(projectAbility) {
+                case 'narrative_shift': // Brand Repositioning: BX random perf 2-6
+                    unitPerfs.forEach(u => {
+                        if (u.tribe === 'BRAND_EXPERIENCE') {
+                            u.calcPerf = Math.floor(Math.random() * 5) + 2; // 2-6
+                            abilityLog.push(`🎭 ${u.name} perf random: ${u.calcPerf}`);
+                        }
+                    });
+                    break;
+
+                case 'conversion_focus': // Sales Enablement: GTM +2
+                    unitPerfs.forEach(u => {
+                        if (u.tribe === 'GO_TO_MARKET') {
+                            u.calcPerf += 2;
+                            abilityLog.push(`📈 ${u.name} +2 (GTM focus)`);
+                        }
+                    });
+                    break;
+
+                case 'high_volume': // Marketing Campaign: perf ≤3 count x2
+                    unitPerfs.forEach(u => {
+                        if (u.calcPerf <= 3) {
+                            u.calcPerf *= 2;
+                            abilityLog.push(`📢 ${u.name} x2 (high volume)`);
+                        }
+                    });
+                    break;
+
+                case 'cross_functional': // Digital Transformation: +1 per CC
+                    const ccBonus = numCCs;
+                    abilityLog.push(`🔀 +${ccBonus} totale (${numCCs} CC diversi)`);
+                    break;
+            }
+        }
+
+        // ========== UNIT LEGENDARY ABILITIES ==========
+        if (!ignoreAllAbilities) {
             allUnits.forEach(unit => {
                 if (!unit.ability) return;
 
+                // Check if random effects are disabled (risk_control project or double_buffs unit)
+                const noRandomEffects = projectAbility === 'risk_control';
+
                 switch(unit.ability) {
-                    case 'top2_boost': // Buca Losco
-                        // Will be handled in final calculation
+                    case 'top2_boost': // Buca Losco - handled later
                         abilityLog.push(`🎯 ${unit.name}: Solo top 2 contano (+3)`);
                         break;
 
@@ -1198,56 +1399,62 @@
                         unitPerfs.forEach(u => {
                             if (u.tribe === 'CONSULTING') {
                                 u.calcPerf += 2;
-                                abilityLog.push(`📈 ${u.name} +2 (Consulting boost)`);
+                                abilityLog.push(`📈 ${u.name} +2 (Consulting)`);
                             }
                         });
                         break;
 
                     case 'double_buffs': // Professor Saccardius
-                        // DATA units apply buffs twice (simplified: +50% perf)
-                        unitPerfs.forEach(u => {
-                            if (u.tribe === 'DATA_ANALYTICS' && u.id !== unit.id) {
-                                const bonus = Math.floor(u.calcPerf * 0.5);
-                                u.calcPerf += bonus;
-                                abilityLog.push(`📊 ${u.name} +${bonus} (buff x2)`);
-                            }
-                        });
+                        if (projectAbility === 'insight_driven') {
+                            // Buffs already doubled by project, apply again
+                            unitPerfs.forEach(u => {
+                                if (u.tribe === 'DATA_ANALYTICS' && u.id !== unit.id) {
+                                    const bonus = Math.floor(u.calcPerf * 0.5);
+                                    u.calcPerf += bonus;
+                                    abilityLog.push(`📊 ${u.name} +${bonus} (buff x2)`);
+                                }
+                            });
+                        }
                         break;
 
                     case 'data_random_boost': // Max Trottamelier
-                        const dataUnits = unitPerfs.filter(u => u.tribe === 'DATA_ANALYTICS');
-                        const otherUnits = unitPerfs.filter(u => u.tribe !== 'DATA_ANALYTICS');
-                        dataUnits.forEach(() => {
-                            if (otherUnits.length > 0) {
-                                const target = otherUnits[Math.floor(Math.random() * otherUnits.length)];
-                                target.calcPerf += 1;
-                                abilityLog.push(`🎲 ${target.name} +1 (DATA random)`);
-                            }
-                        });
+                        if (!noRandomEffects) {
+                            const dataUnits = unitPerfs.filter(u => u.tribe === 'DATA_ANALYTICS');
+                            const otherUnits = unitPerfs.filter(u => u.tribe !== 'DATA_ANALYTICS');
+                            dataUnits.forEach(() => {
+                                if (otherUnits.length > 0) {
+                                    const target = otherUnits[Math.floor(Math.random() * otherUnits.length)];
+                                    target.calcPerf += 1;
+                                    abilityLog.push(`🎲 ${target.name} +1 (DATA random)`);
+                                }
+                            });
+                        } else {
+                            abilityLog.push(`🚫 Effetti random disabilitati`);
+                        }
                         break;
 
                     case 'marketing_double': // Mario Rocknrolliale
                         unitPerfs.forEach(u => {
                             if (u.tribe === 'MARKETING_MEDIA') {
                                 u.calcPerf *= 2;
-                                abilityLog.push(`📢 ${u.name} x2 (Marketing double)`);
+                                abilityLog.push(`📢 ${u.name} x2 (Marketing)`);
                             }
                         });
                         break;
 
                     case 'bx_reroll': // Jan the Kind
-                        // BX units get best of 2 rolls (simplified: +20% perf)
-                        unitPerfs.forEach(u => {
-                            if (u.tribe === 'BRAND_EXPERIENCE') {
-                                const bonus = Math.ceil(u.calcPerf * 0.2);
-                                u.calcPerf += bonus;
-                                abilityLog.push(`🎨 ${u.name} +${bonus} (BX reroll)`);
-                            }
-                        });
+                        if (!noRandomEffects) {
+                            unitPerfs.forEach(u => {
+                                if (u.tribe === 'BRAND_EXPERIENCE') {
+                                    const bonus = Math.ceil(u.calcPerf * 0.2);
+                                    u.calcPerf += bonus;
+                                    abilityLog.push(`🎨 ${u.name} +${bonus} (BX reroll)`);
+                                }
+                            });
+                        }
                         break;
 
                     case 'gtm_vs_data': // Oscar Vulcania
-                        // Disable DATA abilities, boost GTM
                         unitPerfs.forEach(u => {
                             if (u.tribe === 'DATA_ANALYTICS') {
                                 u.abilityDisabled = true;
@@ -1264,7 +1471,7 @@
                         unitPerfs.forEach(u => {
                             u.calcPerf += teamBonus;
                         });
-                        abilityLog.push(`🦆 Tutti +${teamBonus} (${numCCs} CC diversi)`);
+                        abilityLog.push(`🦆 Tutti +${teamBonus} (${numCCs} CC)`);
                         break;
 
                     case 'diversity_self': // Dru.so
@@ -1281,48 +1488,83 @@
             abilityLog.push(`⚡ Enrico Chaos: Tutte le abilità ignorate!`);
         }
 
+        // ========== APPLY PROJECT FILTERING ABILITIES ==========
+        let contributingUnits = [...unitPerfs];
+
+        if (!ignoreAllAbilities) {
+            switch(projectAbility) {
+                case 'only_top_performers': // Strategic Transformation: only top 3
+                    contributingUnits.sort((a, b) => b.calcPerf - a.calcPerf);
+                    contributingUnits = contributingUnits.slice(0, 3);
+                    abilityLog.push(`🎯 Progetto: Solo top 3 contano`);
+                    break;
+
+                case 'quality_focus': // Customer Care: lowest = 0
+                    contributingUnits.sort((a, b) => a.calcPerf - b.calcPerf);
+                    if (contributingUnits.length > 0) {
+                        const lowest = contributingUnits[0];
+                        lowest.calcPerf = 0;
+                        abilityLog.push(`📉 ${lowest.name} = 0 (quality focus)`);
+                    }
+                    break;
+
+                case 'time_to_market': // E-commerce: only first 4
+                    contributingUnits = contributingUnits.slice(0, 4);
+                    abilityLog.push(`⏱️ Progetto: Solo primi 4 contano`);
+                    break;
+            }
+        }
+
         // Handle Buca Losco's top2_boost ability
         let finalPerf = 0;
         const hasBucaLosco = !ignoreAllAbilities && activeAbilities.includes('top2_boost');
 
         if (hasBucaLosco) {
-            // Sort by performance and take top 2
-            unitPerfs.sort((a, b) => b.calcPerf - a.calcPerf);
-            const top2 = unitPerfs.slice(0, 2);
+            contributingUnits.sort((a, b) => b.calcPerf - a.calcPerf);
+            const top2 = contributingUnits.slice(0, 2);
             top2.forEach(u => u.calcPerf += 3);
             finalPerf = top2.reduce((sum, u) => sum + u.calcPerf, 0);
-            abilityLog.push(`🎯 Top 2: ${top2.map(u => u.name).join(', ')}`);
+            abilityLog.push(`🎯 Buca Losco Top 2: ${top2.map(u => u.name).join(', ')}`);
         } else {
-            finalPerf = unitPerfs.reduce((sum, u) => sum + u.calcPerf, 0);
+            finalPerf = contributingUnits.reduce((sum, u) => sum + u.calcPerf, 0);
+        }
+
+        // Add synergy bonus
+        const synergyBonus = getSynergyBonus(allUnits);
+        if (synergyBonus > 0) {
+            abilityLog.push(`✨ Sinergia: +${synergyBonus}`);
+            finalPerf += synergyBonus;
+        }
+
+        // Add cross_functional bonus if applicable
+        if (!ignoreAllAbilities && projectAbility === 'cross_functional') {
+            finalPerf += numCCs;
         }
 
         // Calculate leader bonus (double points)
         let leaderBonus = 0;
         if (game.leader) {
-            const leaderUnit = unitPerfs.find(u => u.id === game.leader.id);
+            const leaderUnit = contributingUnits.find(u => u.id === game.leader.id);
             leaderBonus = leaderUnit ? leaderUnit.calcPerf : game.leader.performance;
         }
 
         let totalPerf = finalPerf + leaderBonus;
 
         // Update display
-        const basePerf = finalPerf;
-        document.getElementById('perf-base').textContent = basePerf;
+        document.getElementById('perf-base').textContent = finalPerf;
         document.getElementById('perf-leader').textContent = '+' + leaderBonus;
         document.getElementById('perf-total').textContent = '=' + totalPerf;
-        document.getElementById('perf-required').textContent = game.client.requiredPerformance;
+        document.getElementById('perf-required').textContent = game.project.requiredPerformance;
 
         log(`\n📊 RISULTATO:`, "info");
-
-        // Log ability effects
+        log(`📋 ${game.project.name}`, "info");
         abilityLog.forEach(msg => log(msg, "info"));
-
-        log(`Base: ${basePerf}⭐`);
+        log(`Base: ${finalPerf}⭐`);
         log(`Bonus CP (x2): +${leaderBonus}⭐`);
-        log(`TOTALE: ${totalPerf}⭐ vs ${game.client.requiredPerformance}⭐`);
+        log(`TOTALE: ${totalPerf}⭐ vs ${game.project.requiredPerformance}⭐`);
 
         setTimeout(() => {
-            if (totalPerf >= game.client.requiredPerformance) {
+            if (totalPerf >= game.project.requiredPerformance) {
                 showResult(true, totalPerf);
             } else {
                 showResult(false, totalPerf);
@@ -1339,15 +1581,15 @@
 
         document.getElementById('overlay-title').textContent = victory ? '🎉 PROGETTO COMPLETATO!' : '💀 PROGETTO FALLITO!';
         document.getElementById('overlay-message').textContent = victory
-            ? `${game.client.name} è soddisfatto!`
-            : `${game.client.name} non è soddisfatto...`;
+            ? `${game.project.name} completato con successo!`
+            : `${game.project.name} fallito...`;
 
         document.getElementById('overlay-reward').innerHTML = victory
             ? `+€${reward}k guadagnati!`
             : 'Nessun guadagno';
 
         document.getElementById('overlay-stats').innerHTML = `
-            <div>Performance: ${achievedPerf}⭐ / ${game.client.requiredPerformance}⭐</div>
+            <div>Performance: ${achievedPerf}⭐ / ${game.project.requiredPerformance}⭐</div>
             <div style="margin-top:5px;">Progetto #${game.projectNum}</div>
         `;
 
@@ -1396,7 +1638,7 @@
             game.leader = null;
         }
 
-        generateClient();
+        generateProject();
 
         if (!game.hr.frozen) {
             refreshHR();
@@ -1405,6 +1647,7 @@
         }
 
         log(`\n📋 === PROGETTO #${game.projectNum} ===`, "info");
+        log(`📋 ${game.project.name}`, "info");
         log(`💶 Cassa: €${game.budget}k`);
 
         updateUI();
@@ -1498,30 +1741,38 @@
             hrDiv.appendChild(el);
         });
 
-        // Client
+        // Project Card
         const clientDiv = document.getElementById('client-area');
         clientDiv.innerHTML = '';
         const clientCard = document.createElement('div');
-        clientCard.className = 'client-card' + (game.client.revealed ? '' : ' hidden');
+        clientCard.className = 'client-card' + (game.project.revealed ? '' : ' hidden');
 
-        if (game.client.revealed) {
+        if (game.project.revealed) {
             const reward = calculateReward();
+            const synergies = game.project.synergy.map(s => s.replace(/_/g, ' ')).join(', ');
             clientCard.innerHTML = `
-                <div class="client-name">${game.client.name}</div>
-                <div class="client-desc">${game.client.desc}</div>
-                <div class="required-performance">${game.client.requiredPerformance}⭐</div>
-                <div class="client-details">Staff richiesto: ${game.client.requiredStaff}</div>
+                <div class="client-name">${game.project.name}</div>
+                <div class="client-desc" style="font-size:10px;">${game.project.abilityDesc}</div>
+                <div class="required-performance">${game.project.requiredPerformance}⭐</div>
+                <div class="client-details">
+                    Staff max: ${game.project.staffLimit}<br>
+                    <span style="color:#1abc9c;">Sinergie: ${synergies}</span>
+                </div>
                 <div class="ticket-info">
-                    Ticket: €${game.client.ticket}k | Sconto: ${game.client.discount}%<br>
-                    <span class="reward">Guadagno: €${reward}k</span>
+                    <span class="reward">Reward: €${reward}k</span>
                 </div>
             `;
         } else {
+            // Show project name and synergies but hide performance requirement
+            const synergies = game.project.synergy.map(s => s.replace(/_/g, ' ')).join(', ');
             clientCard.innerHTML = `
-                <div class="client-name">???</div>
-                <div class="client-desc">Cliente nascosto</div>
-                <div class="required-performance" style="font-size:40px;">?</div>
-                <div class="client-details">Vai alla Delivery per scoprirlo</div>
+                <div class="client-name">${game.project.name}</div>
+                <div class="client-desc" style="font-size:10px;">${game.project.abilityDesc}</div>
+                <div class="required-performance" style="font-size:40px;">?⭐</div>
+                <div class="client-details">
+                    Staff max: ${game.project.staffLimit}<br>
+                    <span style="color:#1abc9c;">Sinergie: ${synergies}</span>
+                </div>
             `;
         }
         clientDiv.appendChild(clientCard);
