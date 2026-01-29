@@ -1368,23 +1368,9 @@
     }
 
     function getSynergyBonus(units) {
-        if (!game.project || !game.project.synergy) return 0;
-
-        let bonus = 0;
-        const synergies = game.project.synergy;
-
-        units.forEach(unit => {
-            if (synergies.includes(unit.tribe)) {
-                // Check for model_training ability (DATA gets +2 instead of +1)
-                if (game.project.ability === 'model_training' && unit.tribe === 'DATA_ANALYTICS') {
-                    bonus += 2;
-                } else {
-                    bonus += 1;
-                }
-            }
-        });
-
-        return bonus;
+        // This function is now deprecated - synergies apply x2 directly to units
+        // Kept for backwards compatibility but returns 0
+        return 0;
     }
 
     // ==================== HR ====================
@@ -2025,6 +2011,18 @@
             abilityLog.push(`⚡ Enrico Chaos: Tutte le abilità ignorate!`);
         }
 
+        // ========== APPLY SYNERGY x2 MULTIPLIER ==========
+        if (!skipSynergyBonus && game.project && game.project.synergy) {
+            const synergies = game.project.synergy;
+            unitPerfs.forEach(u => {
+                if (synergies.includes(u.tribe) && !u.removed) {
+                    const oldPerf = u.calcPerf;
+                    u.calcPerf *= 2;
+                    abilityLog.push(`✨ ${u.name} x2 (${u.tribe} sinergico): ${oldPerf} → ${u.calcPerf}`);
+                }
+            });
+        }
+
         // ========== APPLY PROJECT FILTERING ABILITIES ==========
         let contributingUnits = [...unitPerfs];
 
@@ -2092,14 +2090,7 @@
             finalPerf = contributingUnits.reduce((sum, u) => sum + u.calcPerf, 0);
         }
 
-        // Add synergy bonus (unless blocked by client effect)
-        if (!skipSynergyBonus) {
-            const synergyBonus = getSynergyBonus(allUnits);
-            if (synergyBonus > 0) {
-                abilityLog.push(`✨ Sinergia: +${synergyBonus}`);
-                finalPerf += synergyBonus;
-            }
-        }
+        // Note: Synergy x2 is now applied earlier to individual units
 
         // Add cross_functional bonus if applicable
         if (!ignoreAllAbilities && projectAbility === 'cross_functional') {
