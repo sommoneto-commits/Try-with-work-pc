@@ -199,28 +199,20 @@
         .perf-item { text-align: center; }
         .perf-item .value { font-size: 20px; font-weight: bold; }
         .perf-item .label { font-size: 9px; color: #888; }
-        .perf-item.leader .value { color: #f1c40f; }
         .perf-item.total .value { color: #2ecc71; }
         .perf-item.required .value { color: #e74c3c; }
 
-        /* Middle Row: Leader + Team */
-        .middle-row {
-            display: grid;
-            grid-template-columns: 120px 1fr;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
+        /* Team Section */
         .section-box {
             background: rgba(0,0,0,0.4);
             border-radius: 10px;
             padding: 8px;
+            margin-bottom: 8px;
         }
         .section-title { font-size: 11px; font-weight: bold; margin-bottom: 6px; }
-        .leader-box .section-title { color: #f1c40f; }
         .team-box .section-title { color: #3498db; }
         .pool-box .section-title { color: #9b59b6; }
-        .cards-row { display: flex; gap: 6px; flex-wrap: wrap; min-height: 90px; align-items: center; }
-        .leader-box .cards-row { justify-content: center; }
+        .cards-row { display: flex; gap: 6px; flex-wrap: wrap; min-height: 90px; align-items: center; justify-content: center; }
 
         /* Actions */
         .actions-row {
@@ -299,8 +291,6 @@
             text-align: center;
         }
         .card:hover { transform: translateY(-3px) scale(1.02); }
-        .card.leader { border: 2px solid #f1c40f; }
-        .card.leader::after { content: '👑'; position: absolute; top: -10px; right: -6px; font-size: 14px; }
         .card-name { font-size: 8px; font-weight: bold; margin-bottom: 2px; min-height: 18px; display: flex; align-items: center; justify-content: center; }
         .card-role { font-size: 7px; opacity: 0.8; margin-bottom: 2px; }
         .card-performance { font-size: 20px; font-weight: bold; color: #f1c40f; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
@@ -318,7 +308,6 @@
             font-size: 9px;
             text-align: center;
         }
-        .empty-slot.leader-slot { border-color: #f1c40f; color: #f1c40f; background: rgba(241,196,15,0.1); }
         .empty-slot.required { border-color: #e74c3c;
             color: #e74c3c;
         }
@@ -501,7 +490,6 @@
         .perf-item .label { font-size: 10px; color: #aaa; }
         .perf-item.total .value { color: #2ecc71; }
         .perf-item.required .value { color: #e74c3c; }
-        .perf-item.leader .value { color: #f1c40f; }
 
         /* Log */
         .log-section {
@@ -661,22 +649,14 @@
 
             <!-- Performance Summary (delivery only) -->
             <div class="performance-summary" id="perf-summary" style="display: none;">
-                <div class="perf-item"><div class="value" id="perf-base">0</div><div class="label">Team</div></div>
-                <div class="perf-item leader"><div class="value" id="perf-leader">+0</div><div class="label">CP</div></div>
-                <div class="perf-item total"><div class="value" id="perf-total">=0</div><div class="label">TOT</div></div>
+                <div class="perf-item total"><div class="value" id="perf-total">0</div><div class="label">TEAM</div></div>
                 <div class="perf-item required"><div class="value" id="perf-required">0</div><div class="label">REQ</div></div>
             </div>
 
-            <!-- Middle Row: Leader + Team side by side -->
-            <div class="middle-row">
-                <div class="section-box leader-box">
-                    <div class="section-title">👑 CAPO PROGETTO <small>(x2)</small></div>
-                    <div id="leader-area" class="cards-row"></div>
-                </div>
-                <div class="section-box team-box">
-                    <div class="section-title">👔 TEAM <span id="team-count">0</span>/<span id="team-required">2</span></div>
-                    <div id="team-cards" class="cards-row"></div>
-                </div>
+            <!-- Team Section -->
+            <div class="section-box team-box">
+                <div class="section-title">👔 TEAM <span id="team-count">0</span>/<span id="team-required">2</span></div>
+                <div id="team-cards" class="cards-row"></div>
             </div>
 
             <!-- Actions -->
@@ -1294,7 +1274,6 @@
             budget: 10, // Starting budget in thousands
             pool: [],
             team: [],
-            leader: null,
             hr: { cards: [], frozen: false },
             project: null,
             requiredStaff: 2,
@@ -1446,43 +1425,6 @@
         updateUI();
     }
 
-    function setAsLeader(source, index) {
-        if (sellMode && source !== 'leader') {
-            sellResource(source, index);
-            return;
-        }
-        if (game.phase !== 'staffing') return;
-
-        let resource = null;
-
-        if (source === 'pool') {
-            resource = game.pool.splice(index, 1)[0];
-        } else if (source === 'team') {
-            resource = game.team.splice(index, 1)[0];
-        } else if (source === 'leader') {
-            // Remove from leader, put back to pool
-            if (game.leader) {
-                game.pool.push(game.leader);
-                log(`↩️ ${game.leader.name} torna nel pool`);
-                game.leader = null;
-                updateUI();
-                return;
-            }
-        }
-
-        if (!resource) return;
-
-        // If there's already a leader, put them back in pool
-        if (game.leader) {
-            game.pool.push(game.leader);
-            log(`↩️ ${game.leader.name} torna nel pool`);
-        }
-
-        game.leader = resource;
-        log(`👑 ${resource.name} è il Capo Progetto!`, "info");
-        updateUI();
-    }
-
     function unstaffResource(teamIndex) {
         if (sellMode) { sellResource('team', teamIndex); return; }
         if (game.phase !== 'staffing') return;
@@ -1499,16 +1441,6 @@
         let list;
         if (location === 'pool') list = game.pool;
         else if (location === 'team') list = game.team;
-        else if (location === 'leader' && game.leader) {
-            const resource = game.leader;
-            game.leader = null;
-            const sellValue = resource.sellValue || Math.ceil(resource.cost / 2);
-            game.budget += sellValue;
-            log(`💸 Venduto ${resource.name} per ${sellValue}k€`, "money");
-            sellMode = false;
-            updateUI();
-            return;
-        }
         else return;
 
         if (index >= list.length) return;
@@ -1549,9 +1481,8 @@
     function calculatePerformance() {
         if (game.phase !== 'delivery') return;
 
-        // Gather all units (team + leader)
+        // Gather all units from team
         const allUnits = [...game.team];
-        if (game.leader) allUnits.push(game.leader);
 
         // Find all active unit abilities
         const activeAbilities = allUnits.filter(u => u.ability).map(u => u.ability);
@@ -2097,26 +2028,15 @@
             finalPerf += numCCs;
         }
 
-        // Calculate leader bonus (double points)
-        let leaderBonus = 0;
-        if (game.leader) {
-            const leaderUnit = contributingUnits.find(u => u.id === game.leader.id);
-            leaderBonus = leaderUnit ? leaderUnit.calcPerf : game.leader.performance;
-        }
-
-        let totalPerf = finalPerf + leaderBonus;
+        let totalPerf = finalPerf;
 
         // Update display
-        document.getElementById('perf-base').textContent = finalPerf;
-        document.getElementById('perf-leader').textContent = '+' + leaderBonus;
-        document.getElementById('perf-total').textContent = '=' + totalPerf;
+        document.getElementById('perf-total').textContent = totalPerf;
         document.getElementById('perf-required').textContent = game.project.requiredPerformance;
 
         log(`\n📊 RISULTATO:`, "info");
         log(`📋 ${game.project.name}`, "info");
         abilityLog.forEach(msg => log(msg, "info"));
-        log(`Base: ${finalPerf}⭐`);
-        log(`Bonus CP (x2): +${leaderBonus}⭐`);
         log(`TOTALE: ${totalPerf}⭐ vs ${game.project.requiredPerformance}⭐`);
 
         setTimeout(() => {
@@ -2187,12 +2107,6 @@
         // Return team to pool
         game.team.forEach(r => game.pool.push(r));
         game.team = [];
-
-        // Return leader to pool
-        if (game.leader) {
-            game.pool.push(game.leader);
-            game.leader = null;
-        }
 
         generateProject();
 
@@ -2282,10 +2196,9 @@
         document.getElementById('card-preview').classList.remove('visible');
     }
 
-    function createCardElement(resource, onClick, showCost = false, isLeader = false) {
+    function createCardElement(resource, onClick, showCost = false) {
         const div = document.createElement('div');
         div.className = `card tribe-${resource.tribe}`;
-        if (isLeader) div.classList.add('leader');
         if (resource.tier === 5) div.classList.add('legendary');
         if (sellMode) div.style.border = '3px solid #e74c3c';
 
@@ -2409,19 +2322,6 @@
         // User can go to delivery anytime
         document.getElementById('btn-delivery').disabled = false;
 
-        // Leader Section
-        const leaderDiv = document.getElementById('leader-area');
-        leaderDiv.innerHTML = '';
-        if (game.leader) {
-            const el = createCardElement(game.leader, () => setAsLeader('leader', 0), false, true);
-            leaderDiv.appendChild(el);
-        } else {
-            const slot = document.createElement('div');
-            slot.className = 'empty-slot leader-slot';
-            slot.innerHTML = '👑<br>Trascina qui<br>dal Pool';
-            leaderDiv.appendChild(slot);
-        }
-
         // Team
         document.getElementById('team-count').textContent = game.team.length;
         document.getElementById('team-required').textContent = game.requiredStaff;
@@ -2432,17 +2332,6 @@
             if (i < game.team.length) {
                 const res = game.team[i];
                 const el = createCardElement(res, game.phase === 'staffing' ? () => unstaffResource(i) : null);
-
-                // Add leader button
-                if (game.phase === 'staffing') {
-                    const crownBtn = document.createElement('button');
-                    crownBtn.textContent = '👑';
-                    crownBtn.title = 'Rendi Capo Progetto';
-                    crownBtn.style.cssText = 'position:absolute;top:-8px;left:-5px;font-size:14px;border:none;background:rgba(0,0,0,0.5);border-radius:50%;width:24px;height:24px;cursor:pointer;';
-                    crownBtn.onclick = (e) => { e.stopPropagation(); setAsLeader('team', i); };
-                    el.appendChild(crownBtn);
-                }
-
                 teamDiv.appendChild(el);
             } else {
                 const slot = document.createElement('div');
@@ -2458,18 +2347,6 @@
         poolDiv.innerHTML = '';
         game.pool.forEach((res, i) => {
             const el = createCardElement(res, () => staffFromPool(i));
-
-            // Add buttons for staffing during staffing phase
-            if (game.phase === 'staffing') {
-                // Crown button to make leader
-                const crownBtn = document.createElement('button');
-                crownBtn.textContent = '👑';
-                crownBtn.title = 'Rendi Capo Progetto';
-                crownBtn.style.cssText = 'position:absolute;top:-8px;left:-5px;font-size:14px;border:none;background:rgba(241,196,15,0.8);border-radius:50%;width:24px;height:24px;cursor:pointer;';
-                crownBtn.onclick = (e) => { e.stopPropagation(); setAsLeader('pool', i); };
-                el.appendChild(crownBtn);
-            }
-
             poolDiv.appendChild(el);
         });
 
