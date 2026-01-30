@@ -2030,6 +2030,23 @@
 
         let totalPerf = finalPerf;
 
+        // Calculate unnecessary resources (overstaffing penalty)
+        let unnecessaryCount = 0;
+        if (totalPerf >= game.project.requiredPerformance) {
+            // Sort by calcPerf ascending (lowest first)
+            const sortedUnits = [...contributingUnits].sort((a, b) => a.calcPerf - b.calcPerf);
+            let tempPerf = totalPerf;
+            for (const unit of sortedUnits) {
+                // Check if we can remove this unit and still win
+                if (tempPerf - unit.calcPerf >= game.project.requiredPerformance) {
+                    unnecessaryCount++;
+                    tempPerf -= unit.calcPerf;
+                } else {
+                    break; // Can't remove more units
+                }
+            }
+        }
+
         // Update display
         document.getElementById('perf-total').textContent = totalPerf;
         document.getElementById('perf-required').textContent = game.project.requiredPerformance;
@@ -2038,46 +2055,65 @@
         log(`📋 ${game.project.name}`, "info");
         abilityLog.forEach(msg => log(msg, "info"));
         log(`TOTALE: ${totalPerf}⭐ vs ${game.project.requiredPerformance}⭐`);
+        if (unnecessaryCount > 0) {
+            log(`⚠️ Overstaffing: ${unnecessaryCount} risorse non necessarie (-${unnecessaryCount * 2}k€)`, "lose");
+        }
 
         setTimeout(() => {
             if (totalPerf >= game.project.requiredPerformance) {
-                showResult(true, totalPerf);
+                showResult(true, totalPerf, unnecessaryCount);
             } else {
-                showResult(false, totalPerf);
+                showResult(false, totalPerf, 0);
             }
         }, 800);
     }
 
-    function showResult(victory, achievedPerf) {
+    function showResult(victory, achievedPerf, unnecessaryCount = 0) {
         const overlay = document.getElementById('overlay');
         overlay.style.display = 'flex';
         overlay.className = 'overlay ' + (victory ? 'victory' : 'defeat');
 
-        const reward = victory ? calculateReward() : 0;
+        const baseReward = victory ? calculateReward() : 0;
+        const penalty = unnecessaryCount * 2;
+        const netReward = Math.max(0, baseReward - penalty);
 
         document.getElementById('overlay-title').textContent = victory ? '🎉 PROGETTO COMPLETATO!' : '💀 PROGETTO FALLITO!';
         document.getElementById('overlay-message').textContent = victory
             ? `${game.project.name} completato con successo!`
             : `${game.project.name} fallito...`;
 
-        document.getElementById('overlay-reward').innerHTML = victory
-            ? `+${reward}k€ guadagnati!`
-            : 'Nessun guadagno';
+        let rewardHtml = '';
+        if (victory) {
+            if (penalty > 0) {
+                rewardHtml = `+${baseReward}k€ - ${penalty}k€ (overstaffing) = <strong>+${netReward}k€</strong>`;
+            } else {
+                rewardHtml = `+${netReward}k€ guadagnati!`;
+            }
+        } else {
+            rewardHtml = 'Nessun guadagno';
+        }
+        document.getElementById('overlay-reward').innerHTML = rewardHtml;
 
-        document.getElementById('overlay-stats').innerHTML = `
-            <div>Performance: ${achievedPerf}⭐ / ${game.project.requiredPerformance}⭐</div>
-            <div style="margin-top:5px;">Progetto #${game.projectNum}</div>
-        `;
+        let statsHtml = `<div>Performance: ${achievedPerf}⭐ / ${game.project.requiredPerformance}⭐</div>`;
+        if (unnecessaryCount > 0) {
+            statsHtml += `<div style="color:#e67e22; margin-top:5px;">⚠️ ${unnecessaryCount} risorse non necessarie</div>`;
+        }
+        statsHtml += `<div style="margin-top:5px;">Progetto #${game.projectNum}</div>`;
+        document.getElementById('overlay-stats').innerHTML = statsHtml;
 
         document.getElementById('btn-next').style.display = victory ? 'inline-block' : 'none';
 
         if (victory) {
             session.projectsCompleted++;
-            session.moneyGenerated += reward;
+            session.moneyGenerated += netReward;
             session.totalPerformance += achievedPerf;
-            game.budget += reward;
+            game.budget += netReward;
 
-            log(`🎉 VITTORIA! +${reward}k€`, "win");
+            if (penalty > 0) {
+                log(`🎉 VITTORIA! +${baseReward}k€ -${penalty}k€ = +${netReward}k€`, "win");
+            } else {
+                log(`🎉 VITTORIA! +${netReward}k€`, "win");
+            }
         } else {
             session.totalPerformance += achievedPerf;
             game.gameOver = true;
